@@ -1,0 +1,1 @@
+supabase login --no-browser
