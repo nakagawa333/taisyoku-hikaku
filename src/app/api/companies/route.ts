@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js'
+import { Service } from "@/types/service";
 
 /**
  * @swagger
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     const fieldMap = new Map([
         ["serviceName", {field: "service_name", type: "string"}],
-        ["free_consultation", {field: "free_consultation", type: "boolean"}],
+        ["freeConsultation", {field: "free_consultation", type: "boolean"}],
         ["guaranteeSystem", {field: "guarantee_system", type: "boolean"}],
         ["freeGift", {field: "free_gift", type: "boolean"}],
         ["hourService", {field: "hour_service", type: "boolean"}],
@@ -88,10 +89,32 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         console.error(servicesQueryError);
         return NextResponse.json({"msg":"退職サービス一覧情報の取得に失敗しました"},{status:500});
     }
+
+    const services:Service[] = [];
+    for(let servicesQuery of servicesQueryData){
+        const contactInformationNames:string[] = [];
+        for(let serviceManagement of servicesQuery.service_managements){
+            let contactInformationName = serviceManagement.contact_information.contact_information_name;
+            contactInformationNames.push(contactInformationName);
+        }
+
+        let service:Service = {
+            serviceId:servicesQuery.service_id,
+            serviceName:servicesQuery.service_name,
+            price:servicesQuery.price,
+            managementName:servicesQuery.managements.management_name,
+            contactInformationNames:contactInformationNames,
+            freeConsultation:servicesQuery.free_consultation,
+            guaranteeSystem:servicesQuery.guaranteeSystem,
+            freeGift:servicesQuery.freeGift,
+            hourService:servicesQuery.hourService
+        }
+        services.push(service);
+    }
     
     let res:any = {
-        "services":servicesQueryData,
+        "services":services,
     }
 
-    return NextResponse.json({res});
+    return NextResponse.json(res);
 }
