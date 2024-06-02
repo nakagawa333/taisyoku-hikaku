@@ -48,88 +48,33 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     `)
 
     const fieldMap = new Map([
-        ["serviceName","service_name"],
-        ["free_consultation","free_consultation"],
-        ["guaranteeSystem","guarantee_system"],
-        ["freeGift","free_gift"],
-        ["hourService","hour_service"],
-        ["managementId","management_id"],
-        ["contactInformationId","contact_information_id"]
+        ["serviceName", {field: "service_name", type: "string"}],
+        ["free_consultation", {field: "free_consultation", type: "boolean"}],
+        ["guaranteeSystem", {field: "guarantee_system", type: "boolean"}],
+        ["freeGift", {field: "free_gift", type: "boolean"}],
+        ["hourService", {field: "hour_service", type: "boolean"}],
+        ["managementId", {field: "management_id", type: "array"}],
+        ["contactInformationId", {field: "contact_information_id", type: "array"}]
     ]);
 
-    //サービス名
-    if(params.has("serviceName")){
-        let value:string | null = params.get("serviceName");
-        if(value !== null){
-            let field:string | undefined = fieldMap.get("serviceName");
-            if(field !== undefined) servicesQuery = servicesQuery.eq(field,value);
-        }
-    }
-
-    //運営元
-    if(params.has("managementId")){
-        let value:string[] | undefined = params.get("managementId")?.split(",");
-        if(value !== undefined){
-            let field:string | undefined = fieldMap.get("managementId");
-            //複数条件
-            if(field !== undefined) servicesQuery = servicesQuery.in(field,value);
-        }
-    }
-
-    //連絡先
-    if(params.has("contactInformationId")){
-        let value:string[] | undefined = params.get("contactInformationId")?.split(",");
-        if(value !== undefined){
-            let field:string | undefined = fieldMap.get("contactInformationId");
-            //複数条件
-            if(field !== undefined) servicesQuery = servicesQuery.in(field,value);
-        }
-    }
-
-    //無料相談
-    if(params.has("freeConsultation")){
-        let value:string | null = params.get("freeConsultation");
-        if(value !== null){
-            let field:string | undefined = fieldMap.get("freeConsultation");
-            if(value === "true" || value === "false"){
-                let bool:boolean = value === "true";
-                if(field !== undefined) servicesQuery = servicesQuery.eq(field,bool);                
-            }
-        }
-    }
-
-    //保証制度
-    if(params.get("guaranteeSystem")){
-        let value:string | null = params.get("guaranteeSystem");
-        if(value !== null){
-            let field:string | undefined = fieldMap.get("guaranteeSystem");
-            if(value === "true" || value === "false"){
-                let bool:boolean = value === "true";
-                if(field !== undefined) servicesQuery = servicesQuery.eq(field,bool);                
-            }
-        }
-    }
-
-    //24時間受付
-    if(params.get("hourService")){
-        let value:string | null = params.get("hourService");
-        if(value !== null){
-            let field:string | undefined = fieldMap.get("hourService");
-            if(value === "true" || value === "false"){
-                let bool:boolean = value === "true";
-                if(field !== undefined) servicesQuery = servicesQuery.eq(field,bool);                
-            }
-        }
-    }
-
-    //無料プレゼント
-    if(params.get("freeGift")){
-        let value:string | null = params.get("freeGift");
-        if(value !== null){
-            let field:string | undefined = fieldMap.get("freeGift");
-            if(value === "true" || value === "false"){
-                let bool:boolean = value === "true";
-                if(field !== undefined) servicesQuery = servicesQuery.eq(field,bool);                
+    for (let [param, {field, type}] of fieldMap) {
+        if (params.has(param)) {
+            let value = params.get(param);
+            if (value !== null) {
+                if (type === "string") {
+                    //サービス名のみLIKE検索
+                    if(param === "serviceName"){
+                        servicesQuery = servicesQuery.like(field, `%${value}%`);
+                    } else {
+                        servicesQuery = servicesQuery.eq(field, value);
+                    }
+                } else if (type === "boolean" && (value === "true" || value === "false")) {
+                    let bool = value === "true";
+                    servicesQuery = servicesQuery.eq(field, bool);
+                } else if (type === "array") {
+                    let values = value.split(",");
+                    servicesQuery = servicesQuery.in(field, values);
+                }
             }
         }
     }
