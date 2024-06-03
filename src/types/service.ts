@@ -7,5 +7,6 @@ export type Service = {
     freeConsultation?:boolean,
     guaranteeSystem?:boolean,
     freeGift?:boolean,
-    hourService?:boolean
+    hourService?:boolean,
+    imgUrl?:string
 }

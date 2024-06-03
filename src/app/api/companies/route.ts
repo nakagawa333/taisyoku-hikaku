@@ -37,6 +37,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
        guarantee_system,
        free_gift,
        image_file_path,
+       image_bucketss,
        hour_service,
        managements(
         management_name
@@ -98,6 +99,8 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             contactInformationNames.push(contactInformationName);
         }
 
+        const { data } = supabase.storage.from('images').getPublicUrl(servicesQuery.image_file_path);
+
         let service:Service = {
             serviceId:servicesQuery.service_id,
             serviceName:servicesQuery.service_name,
@@ -107,7 +110,8 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             freeConsultation:servicesQuery.free_consultation,
             guaranteeSystem:servicesQuery.guaranteeSystem,
             freeGift:servicesQuery.freeGift,
-            hourService:servicesQuery.hourService
+            hourService:servicesQuery.hourService,
+            imgUrl:data.publicUrl
         }
         services.push(service);
     }
@@ -117,4 +121,8 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     }
 
     return NextResponse.json(res);
+}
+
+const batchCreateSignedUrl = async() => {
+
 }
