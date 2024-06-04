@@ -115,14 +115,6 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         }
         services.push(service);
     }
-    
-    let res:any = {
-        "services":services,
-    }
 
-    return NextResponse.json(res);
-}
-
-const batchCreateSignedUrl = async() => {
-
+    return NextResponse.json({"services":services});
 }
