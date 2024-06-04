@@ -5,7 +5,7 @@ import validate from "@/utils/api/validate/company";
 
 /**
  * @swagger
- * /api/companies:
+ * /api/company:
  *   get:
  *     summary: 退職代行サービス取得API
  *     description: 退職代行サービス取得
