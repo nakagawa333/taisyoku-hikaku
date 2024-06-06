@@ -19,7 +19,7 @@ import validate from "@/utils/api/validate/company";
  */
 export async function GET(request: NextRequest):Promise<NextResponse> {
     const params:URLSearchParams = request.nextUrl.searchParams;
-    const serviceId:string | null = params.get("service_id");
+    const serviceId:string | null = params.get("serviceId");
 
     //バリデーションチェック
     let validateError = validate(serviceId);
