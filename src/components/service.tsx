@@ -16,6 +16,17 @@ export default function Page(){
 
     const [{fetchService}] = useService();
     const {data,isLoading,isError} = fetchService(id);
+
+    const fields:any = {
+        "serviceName":"サービス名",
+        "price":"料金",
+        "managementName":"運営元",
+        "contactInformationNames":"連絡先",
+        "freeConsultation":"無料相談",
+        "guaranteeSystem":"保障制度",
+        "freeGift":"無料相談",
+        "hourService":"24時間対応"
+    }
     
     return(
         <div className="container">
@@ -41,7 +52,7 @@ export default function Page(){
                                                 return(
                                                     <tr>
                                                         <td className="border px-6 py-3 text-gray-800">
-                                                            {key}
+                                                            {fields[key]}
                                                         </td>
 
                                                         <td className="border px-6 py-3 text-gray-800">
