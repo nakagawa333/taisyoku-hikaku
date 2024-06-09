@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
 import validate from "@/utils/api/validate/company";
+import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 
 /**
  * @swagger
@@ -79,27 +80,47 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     }
 
     let serviceQueryData = servicesQueryData[0];
-    const contactInformationNames:string[] = [];
-    for(let serviceManagement of serviceQueryData.service_managements){
+    let contactInformationNames:string = "";
+
+    const serviceManagements = serviceQueryData.service_managements;
+    const serviceManagementLength:number = serviceManagements.length;
+
+    for(let i = 0; i < serviceManagementLength; i++){
+        let serviceManagement = serviceManagements[i];
         let contactInformationName = serviceManagement.contact_information.contact_information_name;
-        contactInformationNames.push(contactInformationName);
+        contactInformationNames += contactInformationName;
+        if(i !== serviceManagementLength - 1){
+            contactInformationNames += ",";
+        }
     }
+
+    if(!contactInformationNames) contactInformationNames = "なし";
 
     //ストレージから画像取得
     const { data } = supabase.storage.from('images').getPublicUrl(serviceQueryData.image_file_path);
 
-    let service:Service = {
-        serviceId:serviceQueryData.service_id,
+    let freeConsultation:string = serviceQueryData.free_consultation ? "あり" : "なし";
+    let guaranteeSystem:string = serviceQueryData.guarantee_system ? "あり" : "なし";
+    let freeGift:string = serviceQueryData.free_gift ? "あり" : "なし";
+    let hourService:string = serviceQueryData.hour_service ? "あり" : "なし";
+
+    let service:ServiceResponse = {
         serviceName:serviceQueryData.service_name,
         price:serviceQueryData.price,
         managementName:serviceQueryData.managements.management_name,
         contactInformationNames:contactInformationNames,
-        freeConsultation:serviceQueryData.free_consultation,
-        guaranteeSystem:serviceQueryData.guaranteeSystem,
-        freeGift:serviceQueryData.freeGift,
-        hourService:serviceQueryData.hourService,
-        imgUrl:data.publicUrl
+        freeConsultation:freeConsultation,
+        guaranteeSystem:guaranteeSystem,
+        freeGift:freeGift,
+        hourService:hourService,
     }
-    return NextResponse.json({"service":service});
+
+    return NextResponse.json(
+        {
+            "service":service,
+            "serviceId":serviceId,
+            "imgUrl":data.publicUrl
+        }
+    );
 
 }

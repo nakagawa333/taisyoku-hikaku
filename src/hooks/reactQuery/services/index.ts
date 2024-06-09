@@ -1,8 +1,8 @@
 "use client";
 import axios from 'axios';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import ReactQueryKeys from '@/constants/reactQueryKeys';
-import { Endpoints } from '@/constants/endpoints';
+import ReactQueryKeys from '@/constants/common/reactQueryKeys';
+import { Endpoints } from '@/constants/common/endpoints';
 
 export const useServices = () => {
     const fetchServices = () => {

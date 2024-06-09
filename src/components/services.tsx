@@ -22,7 +22,7 @@ export default function Services(){
     }
 
     return(
-        <div className="container">
+        <div className="container m-auto">
             {
                 isLoading && !isError && (
                     <Loading 
@@ -31,38 +31,59 @@ export default function Services(){
                 )
             }
 
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 flex justify-around">
                 {
                     Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
                         return (
-                            <div className="" key={index}>
-                                <div className="items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                    <div className="">
+                                <div 
+                                  className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
+                                  key={index}
+                                >
                                         {
                                             service.imgUrl && (
-                                                <img 
+                                                <img
+                                                    className="w-full"
                                                     src={service.imgUrl}
                                                     alt="image"
-                                                />       
+                                                />
                                             )
                                         }
+                                    <div className="px-6 py-4">
+                                            <div className="font-bold text-xl mb-2">
+                                                {service.serviceName}
+                                            </div>
+                                            <p className="text-gray-700 text-base">
+
+                                            </p>
                                     </div>
-                                    <div className="">
-                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                            {service.serviceName}
-                                        </h5>
-                                        <a 
-                                          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                          onClick={() => detailButtonClick(service.serviceId)}  
-                                        >
-                                            詳細
-                                            <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                            </svg>
-                                        </a>
+
+
+                                    <div className="px-6">
+                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            #photography
+                                        </span>
+                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            #travel
+                                        </span>
+                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            #winter
+                                        </span>
+                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            #winter
+                                        </span>                     
+                                    </div>
+
+                                    <div className="flex">
+                                        <div className="ml-auto">
+                                            <a 
+                                            className="mb-3 mr-3 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                            onClick={() => detailButtonClick(service.serviceId)}  
+                                            >
+                                                詳細
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                         )
                     })
                 }
