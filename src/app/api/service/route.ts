@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
-import validate from "@/utils/api/validate/company";
+import validate from "@/utils/api/validate/service";
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 
 /**
  * @swagger
- * /api/company:
+ * /api/service:
  *   get:
  *     summary: 退職代行サービス取得API
  *     description: 退職代行サービス取得

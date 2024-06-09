@@ -4,7 +4,7 @@ import { Service } from "@/types/service";
 
 /**
  * @swagger
- * /api/companies:
+ * /api/services:
  *   get:
  *     summary: 退職代行取得一覧API
  *     description: 退職代行取得一覧API
