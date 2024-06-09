@@ -4,11 +4,12 @@ import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 export default function Header(){
 
     const isMobileSize:boolean = useMatchMedia("(max-width: 599px)");
-    
+    const headerClass:string = isMobileSize ? "pb-16" : "";
+    const divClass:string = isMobileSize ? "flex bg-gray-400 h-16 fixed w-full items-center" : "flex bg-gray-400 h-10 items-center"
     return(
         <>
-        <header>
-            <div className="flex bg-gray-400">
+        <header className={headerClass}>
+            <div className={divClass}>
                 <img src="/test.png"></img>
                 <p className="text-white text-2xl ml-5">退職代行比較.com</p>
 
