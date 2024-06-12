@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
 import validate from "@/utils/api/validate/service";
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
+import { TableNames } from "@/constants/db/tableName";
 
 /**
  * @swagger
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     const supabase = createClient(SUPABASE_URL, API_KEY);
     let servicesQuery = supabase
-    .from("services")
+    .from(TableNames.SERVICES)
     .select(`
         service_id,
         service_name,

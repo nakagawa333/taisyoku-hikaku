@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
+import { TableNames } from "@/constants/db/tableName";
+import validate from "@/utils/api/validate/services";
 
 /**
  * @swagger
@@ -17,6 +19,16 @@ import { Service } from "@/types/service";
 export async function GET(request: NextRequest):Promise<NextResponse> {
     const params:URLSearchParams = request.nextUrl.searchParams;
 
+    const minPrice:string | null = params.get("minPrice");
+    const maxPrice:string | null = params.get("maxPrice");
+
+    //料金の大小チェック
+    if(minPrice && maxPrice){
+        //バリデーションチェック
+        let validateError = validate(Number(minPrice),Number(maxPrice));
+        if(validateError) return NextResponse.json({"msg":validateError.details[0].message},{status:400});
+    }
+
     const SUPABASE_URL:string | undefined = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const API_KEY:string | undefined = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -28,7 +40,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     const supabase = createClient(SUPABASE_URL, API_KEY);
     let servicesQuery = supabase
-    .from("services")
+    .from(TableNames.SERVICES)
     .select(`
        service_id,
        service_name,
@@ -50,33 +62,34 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     `)
 
     const fieldMap = new Map([
-        ["serviceName", {field: "service_name", type: "string"}],
+        ["minPrice", {field: "price", type: "string"}],
+        ["maxPrice", {field: "price", type: "string"}],
         ["freeConsultation", {field: "free_consultation", type: "boolean"}],
         ["guaranteeSystem", {field: "guarantee_system", type: "boolean"}],
         ["freeGift", {field: "free_gift", type: "boolean"}],
         ["hourService", {field: "hour_service", type: "boolean"}],
-        ["managementId", {field: "management_id", type: "array"}],
-        ["contactInformationId", {field: "contact_information_id", type: "array"}]
+        ["managements", {field: "management_id", type: "array"}],
+        ["contactInformations", {field: "contact_information_id", type: "array"}]
     ]);
 
-    for (let [param, {field, type}] of fieldMap) {
-        if (params.has(param)) {
-            let value = params.get(param);
-            if (value !== null) {
-                if (type === "string") {
-                    //サービス名のみLIKE検索
-                    if(param === "serviceName"){
-                        servicesQuery = servicesQuery.like(field, `%${value}%`);
-                    } else {
-                        servicesQuery = servicesQuery.eq(field, value);
-                    }
-                } else if (type === "boolean" && (value === "true" || value === "false")) {
-                    let bool = value === "true";
-                    servicesQuery = servicesQuery.eq(field, bool);
-                } else if (type === "array") {
-                    let values = value.split(",");
-                    servicesQuery = servicesQuery.in(field, values);
-                }
+    for(let key of params.keys()){
+        let value = fieldMap.get(key);
+        let param = params.get(key);
+        if (value !== undefined && param !== null) {
+            let type = value.type;
+            let field = value.field;
+            if (type === "boolean" && (param === "true" || param === "false")) {
+                let bool = param === "true";
+                servicesQuery = servicesQuery.eq(field, bool);
+            } else if (type === "array") {
+                let values = param.split(",");
+                servicesQuery = servicesQuery.in(field, values);
+            }
+
+            if(key === "minPrice"){
+                servicesQuery = servicesQuery.lte(field, Number(param));
+            } else if(key === "maxPrice"){
+                servicesQuery = servicesQuery.gte(field, Number(param));
             }
         }
     }

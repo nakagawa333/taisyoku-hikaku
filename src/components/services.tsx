@@ -4,12 +4,15 @@ import { useServices } from "@/hooks/reactQuery/services";
 import Loading from "./loading";
 import Image from "next/image";
 import { Service } from "@/types/service";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
+import { Paths } from "@/constants/common/paths";
 
 export default function Services(){
+    const searchParams = useSearchParams();
     const router = useRouter();
+
     const [{fetchServices}] = useServices();
-    const {data,isLoading,isError} = fetchServices();
+    const {data,isLoading,isError} = fetchServices(searchParams);
 
     /**
      * 詳細ボタンクリック
@@ -17,7 +20,7 @@ export default function Services(){
     const detailButtonClick = (serviceId:string) => {
         if(serviceId){
             //ページ遷移
-            router.push(`/service/${serviceId}`);
+            router.push(`${Paths.SERVICE}/${serviceId}`);
         }
     }
 
