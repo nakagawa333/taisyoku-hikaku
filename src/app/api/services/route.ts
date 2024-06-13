@@ -87,9 +87,9 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             }
 
             if(key === "minPrice"){
-                servicesQuery = servicesQuery.lte(field, Number(param));
-            } else if(key === "maxPrice"){
                 servicesQuery = servicesQuery.gte(field, Number(param));
+            } else if(key === "maxPrice"){
+                servicesQuery = servicesQuery.lte(field, Number(param));
             }
         }
     }
