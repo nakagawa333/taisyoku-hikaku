@@ -42,6 +42,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     let servicesQuery = supabase
     .from(TableNames.SERVICES)
     .select(`
+       contact_information_id
        service_id,
        service_name,
        price,
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         ["freeGift", {field: "free_gift", type: "boolean"}],
         ["hourService", {field: "hour_service", type: "boolean"}],
         ["managements", {field: "management_id", type: "array"}],
-        ["contactInformations", {field: "contact_information_id", type: "array"}]
+        ["contactInformations", {field: "contact_information.contact_information_id", type: "array"}]
     ]);
 
     for(let key of params.keys()){
