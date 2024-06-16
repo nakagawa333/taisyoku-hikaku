@@ -42,7 +42,6 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
     let servicesQuery = supabase
     .from(TableNames.SERVICES)
     .select(`
-       contact_information_id
        service_id,
        service_name,
        price,

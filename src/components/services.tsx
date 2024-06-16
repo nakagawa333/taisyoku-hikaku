@@ -6,6 +6,8 @@ import Image from "next/image";
 import { Service } from "@/types/service";
 import { useRouter,useSearchParams } from "next/navigation";
 import { Paths } from "@/constants/common/paths";
+import Header from "./header";
+import Footer from "./footer";
 
 export default function Services(){
     const searchParams = useSearchParams();
@@ -25,72 +27,76 @@ export default function Services(){
     }
 
     return(
-        <div className="container m-auto">
-            {
-                isLoading && !isError && (
-                    <Loading 
-                        isOpen={isLoading}
-                    />
-                )
-            }
-
-            <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 flex justify-around">
+        <>
+            <Header />
+            <div className="container m-auto">
                 {
-                    Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
-                        return (
-                                <div 
-                                  className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
-                                  key={index}
-                                >
-                                        {
-                                            service.imgUrl && (
-                                                <img
-                                                    className="w-full"
-                                                    src={service.imgUrl}
-                                                    alt="image"
-                                                />
-                                            )
-                                        }
-                                    <div className="px-6 py-4">
-                                            <div className="font-bold text-xl mb-2">
-                                                {service.serviceName}
+                    isLoading && !isError && (
+                        <Loading 
+                            isOpen={isLoading}
+                        />
+                    )
+                }
+
+                <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 flex justify-around">
+                    {
+                        Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
+                            return (
+                                    <div 
+                                    className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
+                                    key={index}
+                                    >
+                                            {
+                                                service.imgUrl && (
+                                                    <img
+                                                        className="w-full"
+                                                        src={service.imgUrl}
+                                                        alt="image"
+                                                    />
+                                                )
+                                            }
+                                        <div className="px-6 py-4">
+                                                <div className="font-bold text-xl mb-2">
+                                                    {service.serviceName}
+                                                </div>
+                                                <p className="text-gray-700 text-base">
+
+                                                </p>
+                                        </div>
+
+
+                                        <div className="px-6">
+                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                #photography
+                                            </span>
+                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                #travel
+                                            </span>
+                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                #winter
+                                            </span>
+                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                #winter
+                                            </span>                     
+                                        </div>
+
+                                        <div className="flex">
+                                            <div className="ml-auto">
+                                                <a 
+                                                className="mb-3 mr-3 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                onClick={() => detailButtonClick(service.serviceId)}  
+                                                >
+                                                    詳細
+                                                </a>
                                             </div>
-                                            <p className="text-gray-700 text-base">
-
-                                            </p>
-                                    </div>
-
-
-                                    <div className="px-6">
-                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            #photography
-                                        </span>
-                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            #travel
-                                        </span>
-                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            #winter
-                                        </span>
-                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            #winter
-                                        </span>                     
-                                    </div>
-
-                                    <div className="flex">
-                                        <div className="ml-auto">
-                                            <a 
-                                            className="mb-3 mr-3 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                            onClick={() => detailButtonClick(service.serviceId)}  
-                                            >
-                                                詳細
-                                            </a>
                                         </div>
                                     </div>
-                                </div>
-                        )
-                    })
-                }
+                            )
+                        })
+                    }
+                </div>
             </div>
-        </div>
+            <Footer />
+        </>
     )
 }
