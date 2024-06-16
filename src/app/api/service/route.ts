@@ -5,6 +5,7 @@ import validate from "@/utils/api/validate/service";
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { TableNames } from "@/constants/db/tableName";
 import prisma from "@/libs/prisma/prismaClient";
+import supabase from "@/libs/supabase/supabaseClient";
 
 /**
  * @swagger
@@ -99,6 +100,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     } catch(error:any){
         console.error(error);
+        return NextResponse.json({"msg":"連絡先取得に失敗しました"},{status:400});     
     }
 
     let contactInformationNames:string = "";
@@ -116,9 +118,17 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     if(!contactInformationNames) contactInformationNames = "なし";
 
-    const supabase = createClient(SUPABASE_URL,API_KEY);
+    let imgData:any;
+    try{
     //ストレージから画像取得
-    const { data } = supabase.storage.from('images').getPublicUrl(service.image_file_path);
+    const res:any = supabase.storage.from('images').getPublicUrl(service.image_file_path);
+    imgData = res.data;
+    } catch(error:any){
+        console.error(serviceId,"画像取得に失敗しました");
+        console.error(error);
+        return NextResponse.json({"msg":"画像取得に失敗しました"},{status:400});     
+    }
+
 
     let freeConsultation:string = service.free_consultation ? "あり" : "なし";
     let guaranteeSystem:string = service.guarantee_system ? "あり" : "なし";
@@ -140,7 +150,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         {
             "service":serviceResponse,
             "serviceId":serviceId,
-            "imgUrl":data.publicUrl
+            "imgUrl":imgData.publicUrl
         }
     );
 

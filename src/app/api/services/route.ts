@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
 import { TableNames } from "@/constants/db/tableName";
 import validate from "@/utils/api/validate/services";
+import prisma from "@/libs/prisma/prismaClient";
 
 /**
  * @swagger
@@ -92,6 +93,23 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
                 servicesQuery = servicesQuery.lte(field, Number(param));
             }
         }
+    }
+
+    let service;
+    try{
+        service = await prisma.services.findMany({
+            select: {
+                service_id:true,
+                service_name:true,
+                image_file_path:true,
+                image_bucketss:true
+            },
+            where:{
+                
+            }
+        });
+    } catch(error:any){
+        console.error();
     }
 
     //クエリ実行
