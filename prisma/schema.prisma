@@ -1,0 +1,67 @@
+// This is your Prisma schema file
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model services {
+  service_id          String                @id
+  management_id       String
+  service_name        String
+  price               Int
+  free_consultation   Boolean
+  guarantee_system    Boolean
+  free_gift           Boolean
+  image_file_path     String
+  hour_service        Boolean
+  image_bucketss      String
+  managements         managements           @relation(fields: [management_id], references: [management_id])
+  created_at          DateTime              @default(now())
+  updatedAt           DateTime              @default(now()) @updatedAt
+  service_managements service_managements[]
+  tags                tags[]
+}
+
+model service_managements {
+  service_id             String              @id
+  contact_information_id String              @unique
+  services               services            @relation(fields: [service_id], references: [service_id])
+  contact_information    contact_information @relation(fields: [contact_information_id], references: [contact_information_id])
+  created_at             DateTime            @default(now())
+  updatedAt              DateTime            @default(now()) @updatedAt
+}
+
+model managements {
+  management_id   String     @id
+  management_name String
+  created_at      DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
+  services        services[]
+}
+
+model contact_information {
+  contact_information_id   String               @id
+  contact_information_name String
+  created_at               DateTime             @default(now())
+  updatedAt                DateTime             @default(now()) @updatedAt
+  service_managements      service_managements?
+}
+
+model tags {
+  id         Int      @id @default(autoincrement())
+  tag_id     String   @unique
+  service_id String
+  tag_name   String
+  services   services @relation(fields: [service_id], references: [service_id])
+  created_at DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+}
