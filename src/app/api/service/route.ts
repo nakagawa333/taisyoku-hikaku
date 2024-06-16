@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from '@supabase/supabase-js'
+import { GoTrueAdminApi, createClient } from '@supabase/supabase-js'
 import { Service } from "@/types/service";
 import validate from "@/utils/api/validate/service";
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { TableNames } from "@/constants/db/tableName";
+import prisma from "@/libs/prisma/prismaClient";
 
 /**
  * @swagger
@@ -36,79 +37,98 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         return NextResponse.json({"msg":"環境変数が正しく設定されていません。"},{status:500});
     }
 
-    const supabase = createClient(SUPABASE_URL, API_KEY);
-    let servicesQuery = supabase
-    .from(TableNames.SERVICES)
-    .select(`
-        service_id,
-        service_name,
-        price,
-        free_consultation,
-        guarantee_system,
-        free_gift,
-        image_file_path,
-        image_bucketss,
-        hour_service,
-        managements(
-            management_name
-        ),
-        service_managements(
-            contact_information(
-                contact_information_name
-            )
-        )
-    `)
-    .eq("service_id",serviceId);
+    let service;
 
-    //クエリ実行
-    const servicesQueryRes:any = await servicesQuery;
-    const servicesQueryData:any = servicesQueryRes.data;
-    const servicesQueryError:any = servicesQueryRes.error;
-
-    if(servicesQueryError){
-        console.error(servicesQueryError);
-        return NextResponse.json({"msg":"退職サービスの取得に失敗しました"},{status:500});
+    try{
+        service = await prisma.services.findUnique({
+            select: {
+                service_id:true,
+                service_name:true,
+                price:true,
+                free_consultation:true,
+                guarantee_system:true,
+                free_gift:true,
+                hour_service:true,
+                image_file_path:true,
+                image_bucketss:true,
+                managements:{
+                    select: {
+                        management_id:true,
+                        management_name:true
+                    }
+                },
+                service_managements:{
+                    select: {
+                        contact_information_id:true
+                    }
+                }
+            },
+            where:{
+                service_id:serviceId
+            }
+        });
+    } catch(error:any){
+        console.error("取得失敗時のサービスID",serviceId);
+        console.error("退職サービス詳細情報の取得に失敗しました");
+        console.error(error);
+        return NextResponse.json({"msg":"退職サービス詳細情報の取得に失敗しました"},{status:400});
     }
 
-    if(0 === servicesQueryData.length){
-        console.error("対象の退職代行サービスが存在しません");
-        return NextResponse.json({"msg":"対象の退職代行サービスが存在しません"},{status:500});
+    if(!service){
+        console.error("取得失敗時のサービスID",serviceId);
+        console.error("サービスIDに紐づく退職サービス詳細情報が存在しません。");
+        return NextResponse.json({"msg":"サービスIDに紐づく退職サービス詳細情報が存在しません。"},{status:400});     
     }
 
-    if(1 < servicesQueryData.length){
-        console.error("テーブル定義が不正です");
-        return NextResponse.json({"msg":"テーブル定義が不正です"},{status:500});
+    let contactInformations;
+    let contactInformationMap:Map<string, string> = new Map();
+    try{
+        contactInformations = await prisma.contact_information.findMany({
+            select: {
+                contact_information_id:true,
+                contact_information_name:true
+            },
+            where:{
+                management_id:service.management_id
+            }
+        });
+
+        for(let contactInformation of contactInformations){
+            contactInformationMap.set(contactInformation.contact_information_id,contactInformation.contact_information_name);
+        }
+
+    } catch(error:any){
+        console.error(error);
     }
 
-    let serviceQueryData = servicesQueryData[0];
     let contactInformationNames:string = "";
+    const serviceManagements = service.service_managements;
+    const serviceManagementsLength:number = serviceManagements.length;
 
-    const serviceManagements = serviceQueryData.service_managements;
-    const serviceManagementLength:number = serviceManagements.length;
-
-    for(let i = 0; i < serviceManagementLength; i++){
+    for(let i = 0; i < serviceManagementsLength; i++){
         let serviceManagement = serviceManagements[i];
-        let contactInformationName = serviceManagement.contact_information.contact_information_name;
+        let contactInformationName = contactInformationMap.get(serviceManagement.contact_information_id);
         contactInformationNames += contactInformationName;
-        if(i !== serviceManagementLength - 1){
+        if(i !== serviceManagementsLength - 1){
             contactInformationNames += ",";
         }
     }
 
     if(!contactInformationNames) contactInformationNames = "なし";
 
+    const supabase = createClient(SUPABASE_URL,API_KEY);
     //ストレージから画像取得
-    const { data } = supabase.storage.from('images').getPublicUrl(serviceQueryData.image_file_path);
+    const { data } = supabase.storage.from('images').getPublicUrl(service.image_file_path);
 
-    let freeConsultation:string = serviceQueryData.free_consultation ? "あり" : "なし";
-    let guaranteeSystem:string = serviceQueryData.guarantee_system ? "あり" : "なし";
-    let freeGift:string = serviceQueryData.free_gift ? "あり" : "なし";
-    let hourService:string = serviceQueryData.hour_service ? "あり" : "なし";
+    let freeConsultation:string = service.free_consultation ? "あり" : "なし";
+    let guaranteeSystem:string = service.guarantee_system ? "あり" : "なし";
+    let freeGift:string = service.free_gift ? "あり" : "なし";
+    let hourService:string = service.hour_service ? "あり" : "なし";
 
-    let service:ServiceResponse = {
-        serviceName:serviceQueryData.service_name,
-        price:serviceQueryData.price,
-        managementName:serviceQueryData.managements.management_name,
+    let serviceResponse:ServiceResponse = {
+        serviceName:service.service_name,
+        price:service.price,
+        managementName:service.managements.management_name,
         contactInformationNames:contactInformationNames,
         freeConsultation:freeConsultation,
         guaranteeSystem:guaranteeSystem,
@@ -118,7 +138,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     return NextResponse.json(
         {
-            "service":service,
+            "service":serviceResponse,
             "serviceId":serviceId,
             "imgUrl":data.publicUrl
         }
