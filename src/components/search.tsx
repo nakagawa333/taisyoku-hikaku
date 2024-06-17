@@ -10,7 +10,7 @@ export default function Search(){
     const [maxPrice,setMaxPrice] = useState("上限なし");
 
     const minPrices:any[] = ["下限なし","15000","25000","30000","50000","100000"];
-    const maxPrices:any[] = ["上限なし","15000","15000","25000","30000","50000","100000","500000","1000000"];
+    const maxPrices:any[] = ["上限なし","15000","17000","25000","30000","50000","100000","500000","1000000"];
 
     const minPricesChange = (e:any) => {
         let value = e.target.value;

@@ -65,7 +65,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
                 }
             },
             where:{
-                service_id:serviceId
+                service_id:serviceId ? serviceId : ""
             }
         });
     } catch(error:any){
@@ -83,14 +83,12 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     let contactInformations;
     let contactInformationMap:Map<string, string> = new Map();
+    const managementId = service.managements.management_id;
     try{
         contactInformations = await prisma.contact_information.findMany({
             select: {
                 contact_information_id:true,
                 contact_information_name:true
-            },
-            where:{
-                management_id:service.management_id
             }
         });
 
