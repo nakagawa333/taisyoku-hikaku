@@ -17,7 +17,7 @@ export default function Page(){
     }
 
     const [{fetchService}] = useService();
-    const {data,isLoading,isError} = fetchService(id);
+    const {data,isLoading,isError,isFetchedAfterMount} = fetchService(id);
 
     const fields:any = {
         "serviceName":"サービス名",
@@ -29,22 +29,23 @@ export default function Page(){
         "freeGift":"無料相談",
         "hourService":"24時間対応"
     }
+
+    if(isLoading){
+        return <Loading 
+        isOpen={isLoading}
+    />
+    }
+
+    if(isError){
+        return <div>エラー</div>
+    }
     
     return(
         <>
-            <Header />
             <div className="container">
-                {
-                    isLoading && !isError && (
-                        <Loading 
-                            isOpen={isLoading}
-                        />
-                    )
-                }
-
                 <div className="flex flex-wrap">
                     {
-                        data?.service && (
+                        isFetchedAfterMount && data?.service && (
                             <div className="m-auto">
                                 <div className="m-auto">
                                     <img src={data.imgUrl}></img>
@@ -73,7 +74,6 @@ export default function Page(){
                     }
                 </div>
             </div>
-            <Footer />
         </>
     )
 }

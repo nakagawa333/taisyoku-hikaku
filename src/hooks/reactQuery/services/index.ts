@@ -17,7 +17,8 @@ export const useServices = () => {
                     res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICES}`);
                 }
                 return res.data;
-            }
+            },
+            staleTime:0
         })
     }
 

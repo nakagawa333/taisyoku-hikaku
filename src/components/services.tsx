@@ -14,7 +14,7 @@ export default function Services(){
     const router = useRouter();
 
     const [{fetchServices}] = useServices();
-    const {data,isLoading,isError} = fetchServices(searchParams);
+    const {data,isLoading,isError,isFetchedAfterMount } = fetchServices(searchParams);
 
     /**
      * 詳細ボタンクリック
@@ -26,21 +26,24 @@ export default function Services(){
         }
     }
 
+
+    if(isLoading || !isFetchedAfterMount){
+        return <Loading 
+        isOpen={isLoading}
+    />
+    }
+
+    if(isError){
+        return <div>エラー</div>
+    }
+
     return(
         <>
-            <Header />
             <div className="container m-auto">
-                {
-                    isLoading && !isError && (
-                        <Loading 
-                            isOpen={isLoading}
-                        />
-                    )
-                }
 
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 flex justify-around">
                     {
-                        Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
+                        isFetchedAfterMount && Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
                             return (
                                     <div 
                                     className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
@@ -96,7 +99,6 @@ export default function Services(){
                     }
                 </div>
             </div>
-            <Footer />
         </>
     )
 }

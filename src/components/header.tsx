@@ -1,5 +1,6 @@
 "use client"
 import { useMatchMedia } from "@/hooks/common/useMatchMedia";
+import Link from "next/link";
 
 export default function Header(){
 
@@ -10,8 +11,13 @@ export default function Header(){
         <>
         <header className={headerClass}>
             <div className={divClass}>
-                <img src="/test.png"></img>
-                <p className="text-white text-2xl ml-5">退職代行比較.com</p>
+                {/* <img src="/test.png"></img> */}
+                <Link 
+                  href={"/"}
+                  className="text-white text-2xl ml-5"  
+                > 
+                  退職代行比較.com
+                </Link>
 
                 {
                     isMobileSize ? (
