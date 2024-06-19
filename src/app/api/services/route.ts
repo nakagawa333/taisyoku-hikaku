@@ -40,7 +40,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         ["freeGift", {field: "free_gift", type: "boolean"}],
         ["hourService", {field: "hour_service", type: "boolean"}],
         ["managements", {field: "management_id", type: "array"}],
-        ["contactInformations", {field: "contact_information.contact_information_id", type: "array"}]
+        ["contactInformations", {field: "contact_information_id", type: "array"}]
     ]);
 
     const andConditions = [];
@@ -64,9 +64,25 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             } else if (type === "array") {
                 let values = param.split(",");
                 for(let value of values){
-                    const condition:any = {};
-                    condition[field] = value;
-                    orConditions.push(condition);
+                    if(field === "contact_information_id"){
+                        const condition:any = {
+                            "service_managements":{
+                                "some":{
+                                    "contact_information":{
+
+                                    }
+                                }
+                            }
+                        };
+
+                        condition["service_managements"]["some"]["contact_information"]["contact_information_id"] = value;
+                        orConditions.push(condition);
+                    } else {
+                        const condition:any = {};
+                        condition[field] = value;
+                        orConditions.push(condition);
+                    }
+
                 }
             }
 
@@ -103,6 +119,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             },
             where:where
         });
+
     } catch(error:any){
         console.error(`検索条件: ${where}`)
         console.error("退職サービス一覧情報の取得に失敗しました");
