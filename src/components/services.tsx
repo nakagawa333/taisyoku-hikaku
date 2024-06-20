@@ -8,6 +8,7 @@ import { useRouter,useSearchParams } from "next/navigation";
 import { Paths } from "@/constants/common/paths";
 import Header from "./header";
 import Footer from "./footer";
+import Pagination from "./pagination";
 
 export default function Services(){
     const searchParams = useSearchParams();
@@ -40,8 +41,22 @@ export default function Services(){
     return(
         <>
             <div className="container m-auto">
+                <div className="mt-5">
+                    {
+                        isFetchedAfterMount && Array.isArray(data?.services) ? (
+                            <Pagination 
+                                currentPage={1}
+                                limit={1}
+                                count={10}
+                                path={"/test"}
+                            />
+                        ) : (
+                            <></>
+                        )
+                    }
 
-                <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 flex justify-around">
+                </div>
+                <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {
                         isFetchedAfterMount && Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
                             return (
@@ -98,6 +113,22 @@ export default function Services(){
                         })
                     }
                 </div>
+
+                <div className="mb-5">
+                    {
+                        isFetchedAfterMount && Array.isArray(data?.services) ? (
+                            <Pagination 
+                                currentPage={1}
+                                limit={1}
+                                count={10}
+                                path={"/test"}
+                            />
+                        ) : (
+                            <></>
+                        )
+                    }
+                </div>
+
             </div>
         </>
     )
