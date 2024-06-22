@@ -4,16 +4,28 @@ import { useServices } from "@/hooks/reactQuery/services";
 import Loading from "./loading";
 import Image from "next/image";
 import { Service } from "@/types/service";
-import { useRouter,useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, usePathname, useRouter,useSearchParams } from "next/navigation";
 import { Paths } from "@/constants/common/paths";
-import Header from "./header";
-import Footer from "./footer";
 import Pagination from "./pagination";
 
 export default function Services(){
-    const searchParams = useSearchParams();
+    const searchParams:ReadonlyURLSearchParams | null = useSearchParams();
+    const pathname:string | null = usePathname();
     const router = useRouter();
 
+    //パス
+    const path:string = pathname !== null ? pathname : "";
+
+    let params:string = "?";
+
+    if(searchParams !== null){
+        for(const [key, value] of searchParams){
+            if(key !== "p"){
+                params += `${key}=${value}&`;
+            }
+        }
+    }
+ 
     const [{fetchServices}] = useServices();
     const {data,isLoading,isError,isFetchedAfterMount } = fetchServices(searchParams);
 
@@ -31,7 +43,7 @@ export default function Services(){
     if(isLoading || !isFetchedAfterMount){
         return <Loading 
         isOpen={isLoading}
-    />
+        />
     }
 
     if(isError){
@@ -48,7 +60,8 @@ export default function Services(){
                                 currentPage={1}
                                 limit={1}
                                 count={10}
-                                path={"/test"}
+                                path={path}
+                                params={params}
                             />
                         ) : (
                             <></>
@@ -121,7 +134,8 @@ export default function Services(){
                                 currentPage={1}
                                 limit={1}
                                 count={10}
-                                path={"/test"}
+                                path={path}
+                                params={params}
                             />
                         ) : (
                             <></>

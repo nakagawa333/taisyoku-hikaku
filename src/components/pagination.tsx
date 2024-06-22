@@ -5,9 +5,10 @@ type Props = {
   limit: number;
   count: number;
   path: string;
+  params:string;
 };
 
-export default function Pagination({currentPage, limit, count, path}: Props) {
+export default function Pagination({currentPage, limit, count, path,params}: Props) {
   const totalPages = Math.ceil(count / limit);
   let startPage = Math.max(1, currentPage - 2);
   let endPage = Math.min(totalPages, currentPage + 2);
@@ -27,7 +28,7 @@ export default function Pagination({currentPage, limit, count, path}: Props) {
     <div className="flex justify-center">
         <div className="flex items-center gap-4">
             <Link 
-              href={`${path}?p=${currentPage - 1}`} 
+              href={`${path}${params}p=${currentPage - 1}`}
               aria-label="Previous Page"
               className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"
             >
@@ -41,7 +42,7 @@ export default function Pagination({currentPage, limit, count, path}: Props) {
                 {pageNumbers.map((number) => (
                     <Link 
                         key={number} 
-                        href={`${path}?p=${number}`}
+                        href={`${path}${params}p=${number}`}
                         className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"
                     >
                         <button
@@ -56,7 +57,7 @@ export default function Pagination({currentPage, limit, count, path}: Props) {
             </div>
 
             <Link 
-               href={`${path}?p=${currentPage + 1}`} 
+               href={`${path}${params}p=${currentPage + 1}`} 
                aria-label="Next Page"
                className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"   
             >
