@@ -7,6 +7,9 @@ import { Service } from "@/types/service";
 import { ReadonlyURLSearchParams, usePathname, useRouter,useSearchParams } from "next/navigation";
 import { Paths } from "@/constants/common/paths";
 import Pagination from "./pagination";
+import { useQueryClient } from "@tanstack/react-query";
+import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { useEffect, useState } from "react";
 
 export default function Services(){
     const searchParams:ReadonlyURLSearchParams | null = useSearchParams();
@@ -16,18 +19,38 @@ export default function Services(){
     //パス
     const path:string = pathname !== null ? pathname : "";
 
-    let params:string = "?";
 
-    if(searchParams !== null){
-        for(const [key, value] of searchParams){
-            if(key !== "p"){
-                params += `${key}=${value}&`;
+    const queryClient = useQueryClient();
+    
+    const [page,setPage] = useState("");
+    const [params,setParams] = useState("?");
+    const [currentPage,setCurrentPage] = useState(1);
+
+    useEffect(() => {
+        let params:string = "?";
+        if(searchParams !== null){
+            for(const [key, value] of searchParams){
+                if(key === "p" && value !== page){
+                    if(value !== page) {
+                        setPage(value);
+                        setCurrentPage(Number(value));
+                    }
+                } else {
+                    params += `${key}=${value}&`;
+                    setParams(params);
+                }
             }
         }
-    }
- 
+
+    },[searchParams])
+
+    useEffect(() => {
+        queryClient.invalidateQueries({queryKey:[ReactQueryKeys.SERVICES]});
+    },[page])
+
     const [{fetchServices}] = useServices();
-    const {data,isLoading,isError,isFetchedAfterMount } = fetchServices(searchParams);
+    const {data,isLoading,isError,isFetchedAfterMount} = fetchServices(searchParams);
+
 
     /**
      * 詳細ボタンクリック
@@ -57,9 +80,8 @@ export default function Services(){
                     {
                         isFetchedAfterMount && Array.isArray(data?.services) ? (
                             <Pagination 
-                                currentPage={1}
-                                limit={1}
-                                count={10}
+                                currentPage={currentPage}
+                                totalPage={5}
                                 path={path}
                                 params={params}
                             />
@@ -131,9 +153,8 @@ export default function Services(){
                     {
                         isFetchedAfterMount && Array.isArray(data?.services) ? (
                             <Pagination 
-                                currentPage={1}
-                                limit={1}
-                                count={10}
+                                currentPage={currentPage}
+                                totalPage={5}
                                 path={path}
                                 params={params}
                             />

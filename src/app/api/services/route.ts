@@ -98,27 +98,51 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         andConditions.push(priceConditions);
     }
 
+    let orderBy:any = {
+        id:"asc"
+    }
+
+    const take:number = 1;
+    let skip:number = 0;
+
+    if(params.has("p")){
+        let page = Number(params.get("p"));
+        skip = (page - 1) * take;
+    }
+    
+    let query:any = {
+        select: {
+            service_id:true,
+            service_name:true,
+            image_file_path:true,
+            image_bucketss:true
+        },
+        orderBy:orderBy,
+        take:take,
+        skip:skip
+    }
+
+
     const where:any = {}
+    let hasWhereQuery:boolean = false;
 
     if(Array.isArray(orConditions) && 0 < orConditions.length){
         where["OR"] = orConditions;
+        hasWhereQuery = true;
     }
 
     if(Array.isArray(andConditions) && 0 < andConditions.length){
         where["AND"] = andConditions;
+        hasWhereQuery = true;
+    }
+
+    if(hasWhereQuery){
+        query["where"] = where;
     }
 
     let services;
     try{
-        services = await prisma.services.findMany({
-            select: {
-                service_id:true,
-                service_name:true,
-                image_file_path:true,
-                image_bucketss:true
-            },
-            where:where
-        });
+        services = await prisma.services.findMany(query);
 
     } catch(error:any){
         console.error(`検索条件: ${where}`)

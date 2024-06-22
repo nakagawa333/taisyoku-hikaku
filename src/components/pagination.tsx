@@ -2,21 +2,19 @@ import Link from "next/link";
 
 type Props = {
   currentPage: number;
-  limit: number;
-  count: number;
+  totalPage: number;
   path: string;
   params:string;
 };
 
-export default function Pagination({currentPage, limit, count, path,params}: Props) {
-  const totalPages = Math.ceil(count / limit);
-  let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(totalPages, currentPage + 2);
+export default function Pagination({currentPage, totalPage, path,params}: Props) {
+  let startPage = Math.max(1, currentPage - 1);
+  let endPage = Math.min(totalPage, currentPage + 1);
 
-  if (currentPage <= 3) {
-    endPage = Math.min(5, totalPages);
-  } else if (currentPage >= totalPages - 2) {
-    startPage = totalPages - 4;
+  if(startPage === 1 && 3 <= totalPage) {
+    endPage = 3;
+  } else if(currentPage === endPage){
+    startPage = endPage - 2;
   }
 
   const pageNumbers = [];

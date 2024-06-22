@@ -14,7 +14,8 @@ datasource db {
 }
 
 model services {
-  service_id          String                @id
+  id                  Int                   @id @default(autoincrement())
+  service_id          String                @unique
   management_id       String
   service_name        String
   price               Int
@@ -49,10 +50,10 @@ model managements {
 }
 
 model contact_information {
-  contact_information_id   String               @id
+  contact_information_id   String                @id
   contact_information_name String
-  created_at               DateTime             @default(now())
-  updated_at               DateTime             @default(now()) @updatedAt
+  created_at               DateTime              @default(now())
+  updated_at               DateTime              @default(now()) @updatedAt
   service_managements      service_managements[]
 }
 
