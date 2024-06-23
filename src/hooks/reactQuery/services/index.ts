@@ -17,5 +17,16 @@ export const useServices = () => {
         })
     }
 
-    return [{fetchServices}]
+    const fetchServicesLastPage = () => {
+        return useQuery({
+            queryKey:[ReactQueryKeys.SERVICESLASTPAGE],
+            queryFn: async() => {
+                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICESLASTPAGE}`);
+                return res.data;
+            },
+            staleTime:0
+        })
+    }
+
+    return [{fetchServices,fetchServicesLastPage}]
 }
