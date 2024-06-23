@@ -48,9 +48,19 @@ export default function Services(){
         queryClient.invalidateQueries({queryKey:[ReactQueryKeys.SERVICES]});
     },[page])
 
-    const [{fetchServices}] = useServices();
-    const {data,isLoading,isError,isFetchedAfterMount} = fetchServices(searchParams);
+    const [{fetchServices,fetchServicesLastPage}] = useServices();
 
+    const resServices = fetchServices(searchParams);
+    const servicesData:any = resServices.data;
+    const servicesIsLoading:boolean = resServices.isLoading;
+    const servicesIsError:boolean = resServices.isError;
+    const servicesIsFetchedAfterMount:boolean = resServices.isFetchedAfterMount;
+
+    const resServicesLastPage = fetchServicesLastPage(searchParams);
+    const servicesLastPageData:any = resServicesLastPage.data;
+    const servicesLastPageIsLoading:boolean = resServicesLastPage.isLoading;
+    const servicesLastPageIsError:boolean = resServicesLastPage.isError;
+    const servicesLastPageIsFetchedAfterMount:boolean = resServicesLastPage.isFetchedAfterMount;
 
     /**
      * 詳細ボタンクリック
@@ -63,37 +73,25 @@ export default function Services(){
     }
 
 
-    if(isLoading || !isFetchedAfterMount){
+    if(servicesIsLoading || !servicesIsFetchedAfterMount || servicesLastPageIsLoading){
         return <Loading 
-        isOpen={isLoading}
+        isOpen={servicesIsLoading}
         />
     }
 
-    if(isError){
+    if(servicesIsError || servicesLastPageIsError){
         return <div>エラー</div>
     }
 
     return(
         <>
             <div className="container m-auto">
-                <div className="mt-5">
-                    {
-                        isFetchedAfterMount && Array.isArray(data?.services) ? (
-                            <Pagination 
-                                currentPage={currentPage}
-                                totalPage={5}
-                                path={path}
-                                params={params}
-                            />
-                        ) : (
-                            <></>
-                        )
-                    }
-
+                <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
+                    {servicesLastPageData.lastPage}件の検索結果
                 </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {
-                        isFetchedAfterMount && Array.isArray(data?.services) && data.services.map((service:Service,index:number) => {
+                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && servicesData.services.map((service:Service,index:number) => {
                             return (
                                     <div 
                                     className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
@@ -151,10 +149,10 @@ export default function Services(){
 
                 <div className="mb-5">
                     {
-                        isFetchedAfterMount && Array.isArray(data?.services) ? (
+                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) ? (
                             <Pagination 
                                 currentPage={currentPage}
-                                totalPage={5}
+                                lastPage={servicesLastPageData.lastPage}
                                 path={path}
                                 params={params}
                             />

@@ -17,11 +17,11 @@ export const useServices = () => {
         })
     }
 
-    const fetchServicesLastPage = () => {
+    const fetchServicesLastPage = (searchParams:ReadonlyURLSearchParams | null) => {
         return useQuery({
             queryKey:[ReactQueryKeys.SERVICESLASTPAGE],
             queryFn: async() => {
-                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICESLASTPAGE}`);
+                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICESLASTPAGE}?${searchParams}`);
                 return res.data;
             },
             staleTime:0
