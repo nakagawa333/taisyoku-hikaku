@@ -87,7 +87,7 @@ export default function Services(){
         <>
             <div className="container m-auto">
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
-                    {servicesLastPageData.lastPage}件の検索結果
+                    {servicesLastPageData.length}件の検索結果
                 </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {

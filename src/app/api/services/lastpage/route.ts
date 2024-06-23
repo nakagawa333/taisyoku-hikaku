@@ -7,6 +7,7 @@ import prisma from "@/libs/prisma/prismaClient";
 import { ServicesResponse } from "@/constants/api/response/ServicesResponse";
 import supabase from "@/libs/supabase/supabaseClient";
 import { createNestedArrays } from "@/utils/common/createNestedArrays";
+import { Take } from "@/constants/db/take";
 
 /**
  * @swagger
@@ -135,11 +136,11 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         return NextResponse.json({"msg":"退職サービス一覧情報の取得に失敗しました"},{status:500});
     }
 
-    let nestServices = createNestedArrays(services,1);
+    let nestServices = createNestedArrays(services,Take.SERVICES);
     let lastPage:number = 0;
     for(let services of nestServices){
         lastPage += 1;
     }
 
-    return NextResponse.json({"lastPage":lastPage});
+    return NextResponse.json({"lastPage":lastPage,"length":services.length});
 }

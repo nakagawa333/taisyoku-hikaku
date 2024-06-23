@@ -6,6 +6,7 @@ import validate from "@/utils/api/validate/services";
 import prisma from "@/libs/prisma/prismaClient";
 import { ServicesResponse } from "@/constants/api/response/ServicesResponse";
 import supabase from "@/libs/supabase/supabaseClient";
+import { Take } from "@/constants/db/take";
 
 /**
  * @swagger
@@ -102,7 +103,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         id:"asc"
     }
 
-    const take:number = 1;
+    const take:number = Take.SERVICES;
     let skip:number = 0;
 
     if(params.has("p")){
