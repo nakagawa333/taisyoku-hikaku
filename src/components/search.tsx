@@ -26,17 +26,23 @@ export default function Search(){
         {
             id:"33157715-b9fc-fdba-e0b2-d47080d0a9d9",
             value:"労働組合",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[0px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]",
         },
         {
             id:"9B678BED-A786-BFE2-328C-ECC2335EE296",
             value:"民間企業",
-            checked:false
+            checked:false,
+            class:"!m-[0] absolute top-[0px] left-[180px] bg-white-fff flex flex-row items-start justify-start py-3 pr-[31px] pl-10 gap-[10px]",
+            childClass:"relative font-medium inline-block min-w-[84px]",
         },
         {
             id:"87da64dc-0ae8-bad4-45f5-fca1ea6c488d",
             value:"弁護士",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[48px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]",
         },
     ];
 
@@ -44,17 +50,23 @@ export default function Search(){
         {
             id:"351D45D5-668F-AF33-B891-8B3BEB93D876",
             value:"電話",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[0px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]"
         },
         {
             id:"11eaf0e5-10ac-7d1b-f4f3-a2870cfdc010",
             value:"LINE",
-            checked:false
+            checked:false,
+            class:"!m-[0] absolute top-[0px] left-[180px] bg-white-fff flex flex-row items-start justify-start py-3 pr-[31px] pl-10 gap-[10px]",
+            childClass:"relative font-medium inline-block min-w-[84px]"
         },
         {
             id:"1da14fc4-becd-88c3-68e4-a63015d3bc54",
             value:"メール",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[48px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]"
         }
     ]
 
@@ -62,17 +74,23 @@ export default function Search(){
         {
             id:"freeConsultation", //無料相談
             value:"無料相談",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[0px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]"
         },
         {
             id:"hourService", //24時間受付
             value:"24時間受付",
-            checked:false
+            checked:false,
+            class:"!m-[0] absolute top-[0px] left-[180px] bg-white-fff flex flex-row items-start justify-start py-3 pr-[31px] pl-10 gap-[10px]",
+            childClass:"relative font-medium inline-block min-w-[84px]"
         },
         {
             id:"guaranteeSystem", //送金保証
             value:"送金保証",
-            checked:false
+            checked:false,
+            class:"w-[180px] !m-[0] absolute top-[48px] left-[0px] bg-white-fff flex flex-row items-start justify-start py-3 px-10 box-border gap-[12px]",
+            childClass:"relative font-medium inline-block min-w-[64px]"
         },
     ];
 
@@ -162,170 +180,174 @@ export default function Search(){
     }
 
     return(
-        <div className="container mx-auto">
-          <div className="px-6 py-4 ">
-            <p>退職代行会社を検索する</p>
-          </div>
-          <div className="">
-            <div className="flex content-around mx-auto flex-wrap px-6 py-4">
+        <div
+        className={`self-stretch flex flex-col items-start justify-start max-w-full text-left text-sm text-black333333 font-yugothic`}
+      >
+        <div className="self-stretch flex flex-col items-start justify-start">
+            <p
+                className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+                style={{
+                    background:"#EDEDED"
+                }}
+            >
+                運営元
+            </p>
+            <div className="self-stretch h-[143px] flex flex-row flex-wrap items-center justify-center relative max-w-full text-base">
                 {
-                    managements.map((management:any,index:number) => {
+                    managements.map((management:any) => {
                         return(
-                            <div className="flex items-center mb-4 w-1/3 p-2" key={index}>
+                            <div className={management.class}>
                                 <input 
-                                    type="checkbox"
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
-                                    onChange={(e) => managementsChange(e,management.id)}
-                                />
-                                <label 
-                                htmlFor="disabled-checkbox" 
-                                className="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
+                                  className="m-0 h-[19.5px] w-[15px]" 
+                                  type="checkbox" 
+                                  onChange={(e) => managementsChange(e,management.id)}
+                                  />
+                                <div className={management.childClass}>
                                     {management.value}
-                                </label>
-                          </div>
+                                </div>
+                            </div>
                         )
-                    })
+                    }) 
                 }
             </div>
+            <section className="flex-1 flex flex-col items-start justify-start px-0 pb-0 box-border max-w-full">
+                <img
+                    className="self-stretch relative max-w-full overflow-hidden max-h-full object-cover"
+                    loading="lazy"
+                    alt=""
+                    src="/frame.png"
+                />
+            </section>
+          <p
+            className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+            style={{
+                background:"#EDEDED"
+            }}
+          >
+            料金
+          </p>
 
-            <div className="">
-              <div className="rounded-t-lg overflow-hidden flex items-center justify-around text-sm p-4">
-                <div className="bg-gray-400 mr-3 py-2 px-4 rounded-full text-white">
-                  基本料金目安
-                </div>
-              </div>
-              <div className="px-6 py-4">
-                <table className="table-auto">
-                  <thead>
-                  <tr className="border">
-                    <th className="px-4 py-2 text-center">辞めると伝えるだけ</th>
-                    <th className="px-4 py-2 text-center">会社と交渉したい</th>
-                    <th className="px-4 py-2 text-center">訴訟に対応したい</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border">
-                      <td className="px-4 py-2 text-center">民間企業</td>
-                      <td className="px-4 py-2 text-center">労働組合</td>
-                      <td className="px-4 py-2 text-center">弁護士</td>
-                    </tr>
-                    <tr className="border">
-                      <td className="px-4 py-2 text-center">1.5万-5万円</td>
-                      <td className="px-4 py-2 text-center">2.5万-3万円</td>
-                      <td className="px-4 py-2 text-center">5万-10万円</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          <div className="self-stretch bg-white-fff flex flex-col items-center justify-center py-5 px-[35px] z-[1] mt-[-3px]">
+               <div className="self-stretch overflow-x-auto flex flex-row items-center justify-start gap-[18px]">
+                 <div className="w-full">
+                     <select 
+                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         onChange={(e) => minPricesChange(e)}   
+                     >
+                             {
+                                 minPrices.map((minPrice:any,index:number) => {
+                                     return (
+                                         <option key={index}>{minPrice}</option>
+                                     )
+                                 })
+                             }
+                     </select>
+                 </div>
+
+                 <div className="relative font-medium text-black inline-block min-w-[14px] whitespace-nowrap">
+                     ～
+                 </div>
+
+                 <div className="w-full">
+                     <select 
+                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         onChange={(e) => maxPricesChange(e)}   
+
+                         >
+                             {
+                                 maxPrices.map((minPrice:any,index:number) => {
+                                     return (
+                                         <option key={index}>{minPrice}</option>
+                                     )
+                                 })
+                             }
+                     </select>
+                 </div>
+               </div>
             </div>
+        </div>
 
-            <div className="">
-              <div className="px-6 py-4">
-                <p>料金</p>
-              </div>
-              <div className="flex content-around mx-auto px-6 py-4">
-                <div className="w-full">
-                    <select 
-                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        onChange={(e) => minPricesChange(e)}   
-                    >
-                            {
-                                minPrices.map((minPrice:any,index:number) => {
-                                    return (
-                                        <option key={index}>{minPrice}</option>
-                                    )
-                                })
-                            }
-                    </select>
-                </div>
-
-                <div className="my-2 mx-5">
-                    <p className="">～</p>
-
-                </div>
-
-                <div className="w-full">
-                    <select 
-                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        onChange={(e) => maxPricesChange(e)}   
-
-                        >
-                            {
-                                maxPrices.map((minPrice:any,index:number) => {
-                                    return (
-                                        <option key={index}>{minPrice}</option>
-                                    )
-                                })
-                            }
-                    </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="">
-              <div className="px-6 py-4">
-                <p>連絡方法</p>
-              </div>
-              <div className="flex content-around mx-auto flex-wrap px-6 py-4">
-                {
-                    contactInformations.map((contactInformation:any,index:number) => {
-                       return (
-                            <div className="flex items-center mb-4 w-1/3 p-2" key={index}>
-                                <input 
-                                    type="checkbox"
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
-                                    onChange={(e) => contactInformationChange(e,contactInformation.id)}
-                                />
-                                <label 
-                                    htmlFor="disabled-checkbox" 
-                                    className="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
-                                    {contactInformation.value}
-                                </label>
-                            </div>                       
-                       ) 
-                    })
-                }
-              </div>
-            </div>
-
-            <div className="">
-              <div className="px-6 py-4">
-                <p>その他</p>
-              </div>
-              <div className="flex content-around mx-auto flex-wrap px-6 py-4">
-
-                {
-                    others.map((other:any,index:number) => {
-                        return (
-                            <div className="flex items-center mb-4 w-1/3 p-2" key={index}>
-                                <input 
-                                    type="checkbox"
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
-                                    onChange={(e) => othersChange(e,other.id)}
-                                />
-                                <label 
-                                htmlFor="disabled-checkbox" 
-                                className="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
-                                    {other.value}
-                                </label>
-                          </div>                            
-                        )
-                    })
-                }
-              </div>
-            </div>
-
-            <div className="text-center">
-              <button 
-                type="button" 
-                className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
-                onClick={() => searchClick()}
-               >
-                  検索する
-              </button>
-
-            </div>
+        <div className="self-stretch h-[143px] flex flex-row flex-wrap items-center justify-center relative max-w-full text-base">
+          <img
+            className="w-[360px] relative max-h-full hidden max-w-full z-[0]"
+            alt=""
+            src="/vector-11.svg"
+          />
+            <p
+                className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+                style={{
+                    background:"#EDEDED"
+                }}
+            >
+                連絡方法
+            </p>
+          <div className="h-24 w-full !m-[0] absolute top-[47px] left-[0px] bg-white-fff flex flex-row flex-wrap items-center justify-start">
+            {
+                contactInformations.map((contactInformation:any) => {
+                    return (
+                        <div className={contactInformation.class}>
+                        <input 
+                          className="m-0 h-[19.5px] w-[15px]" 
+                          type="checkbox" 
+                          onChange={(e) => contactInformationChange(e,contactInformation.id)}
+                          />
+                        <div className={contactInformation.childClass}>
+                            {contactInformation.value}
+                        </div>
+                    </div>
+                    )
+                })
+            }
           </div>
         </div>
+
+        <div className="self-stretch h-[143px] flex flex-row flex-wrap items-center justify-center relative max-w-full text-base">
+          <img
+            className="w-[360px] relative max-h-full hidden max-w-full z-[0]"
+            alt=""
+            src="/vector-11.svg"
+          />
+            <p
+                className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+                style={{
+                    background:"#EDEDED"
+                }}
+            >
+                その他
+            </p>
+          <div className="h-24 w-full !m-[0] absolute top-[47px] left-[0px] bg-white-fff flex flex-row flex-wrap items-center justify-start">
+            {
+                others.map((other:any) => {
+                    return (
+                        <div className={other.class}>
+                        <input 
+                          className="m-0 h-[19.5px] w-[15px]" 
+                          type="checkbox" 
+                          onChange={(e) => othersChange(e,other.id)}
+                          />
+                        <div className={other.childClass}>
+                            {other.value}
+                        </div>
+                    </div>
+                    )
+                })   
+            }
+          </div>
+        </div>
+        <div className="self-stretch bg-white-fff overflow-hidden flex flex-row items-start justify-start py-[30px] px-5">
+          <button 
+            className="text-white cursor-pointer [border:none] py-4 px-5 bg-blue-289cac flex-1 flex flex-row items-start justify-center"
+            style={{
+                background:"#289CAC",
+                color: "white"
+            }}
+            onClick={() => searchClick()}
+           >
+            <b className="relative text-lg inline-block font-yugothic text-left min-w-[72px]">
+              検索する
+            </b>
+          </button>
+        </div>
+      </div>
     )
 }
