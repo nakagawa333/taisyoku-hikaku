@@ -1,44 +1,21 @@
-"use client"
-import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 import Link from "next/link";
 
 export default function Header(){
-
-    const isMobileSize:boolean = useMatchMedia("(max-width: 599px)");
-    const headerClass:string = isMobileSize ? "pb-16" : "";
-    const divClass:string = isMobileSize ? "flex bg-gray-400 h-16 fixed w-full items-center" : "flex bg-gray-400 h-10 items-center"
     return(
         <>
-        <header className={headerClass}>
-            <div className={divClass}>
-                {/* <img src="/test.png"></img> */}
-                <Link 
-                  href={"/"}
-                  className="text-white text-2xl ml-5"  
-                > 
-                  退職代行比較.com
-                </Link>
-
-                {
-                    isMobileSize ? (
-                        <div className="ml-auto mr-5 mt-1">
-                            <button id="hamburger-menu bg-black">
-                                <span className={`bg-steel-800 block transition-all duration-300 ease-out 
-                                                h-1 w-6 rounded-sm bg-black`} >
-                                </span>
-                                <span className={`bg-steel-800 block transition-all duration-300 ease-out 
-                                                h-1 w-6 rounded-sm my-0.5 bg-black`} >
-                                </span>
-                                <span className={`bg-steel-800 block transition-all duration-300 ease-out 
-                                                h-1 w-6 rounded-sm bg-black`} >
-                                </span> 
-                            </button>
-                        </div>
-                    ) : (
-                        <></>
-                    )
-                }
-            </div>
+        <header className="self-stretch bg-white-fff flex flex-row items-start justify-start pt-5 px-[68px] pb-[21px] sticky top-[0] z-[99] text-left text-lg text-black333333 font-yugothic md:self-stretch md:bg-white-fff md:flex md:flex-row md:items-start md:justify-start md:pt-5 md:px-[68px] md:pb-[21px] md:sticky md:top-[0] md:z-[99] md:text-left md:text-lg md:text-black333333 md:font-yugothic">
+            <img 
+                src="./icon.png"
+                className="h-6 w-[34px] absolute !m-[0] top-[20px] left-[20px] object-contain"
+                alt=""
+            >
+            </img>
+            <Link 
+                href={"/"}
+                className="[text-decoration:none] h-[27px] relative font-bold text-[inherit] inline-block"  
+            > 
+                退職代行比較.com
+            </Link>
         </header>
         </>
     )
