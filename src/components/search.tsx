@@ -194,9 +194,9 @@ export default function Search(){
             </p>
             <div className="self-stretch h-[143px] flex flex-row flex-wrap items-center justify-center relative max-w-full text-base">
                 {
-                    managements.map((management:any) => {
+                    managements.map((management:any,index:number) => {
                         return(
-                            <div className={management.class}>
+                            <div className={management.class} key={index}>
                                 <input 
                                   className="m-0 h-[19.5px] w-[15px]" 
                                   type="checkbox" 
@@ -283,9 +283,9 @@ export default function Search(){
             </p>
           <div className="h-24 w-full !m-[0] absolute top-[47px] left-[0px] bg-white-fff flex flex-row flex-wrap items-center justify-start">
             {
-                contactInformations.map((contactInformation:any) => {
+                contactInformations.map((contactInformation:any,index:number) => {
                     return (
-                        <div className={contactInformation.class}>
+                        <div className={contactInformation.class} key={index}>
                         <input 
                           className="m-0 h-[19.5px] w-[15px]" 
                           type="checkbox" 
@@ -317,9 +317,9 @@ export default function Search(){
             </p>
           <div className="h-24 w-full !m-[0] absolute top-[47px] left-[0px] bg-white-fff flex flex-row flex-wrap items-center justify-start">
             {
-                others.map((other:any) => {
+                others.map((other:any,index:number) => {
                     return (
-                        <div className={other.class}>
+                        <div className={other.class} key={index}>
                         <input 
                           className="m-0 h-[19.5px] w-[15px]" 
                           type="checkbox" 

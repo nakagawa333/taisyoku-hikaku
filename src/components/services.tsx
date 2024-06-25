@@ -10,6 +10,7 @@ import Pagination from "./pagination";
 import { useQueryClient } from "@tanstack/react-query";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useEffect, useState } from "react";
+import PartialLoading from "./partialLoading";
 
 export default function Services(){
     const searchParams:ReadonlyURLSearchParams | null = useSearchParams();
@@ -72,11 +73,8 @@ export default function Services(){
         }
     }
 
-
     if(servicesIsLoading || !servicesIsFetchedAfterMount || servicesLastPageIsLoading){
-        return <Loading 
-        isOpen={servicesIsLoading}
-        />
+        return <PartialLoading isOpen={true} />
     }
 
     if(servicesIsError || servicesLastPageIsError){

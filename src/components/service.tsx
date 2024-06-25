@@ -5,6 +5,7 @@ import Loading from "./loading";
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import Header from "./header";
 import Footer from "./footer";
+import PartialLoading from "./partialLoading";
 
 
 export default function Page(){
@@ -26,12 +27,12 @@ export default function Page(){
         "contactInformationNames":"連絡先",
         "freeConsultation":"無料相談",
         "guaranteeSystem":"保障制度",
-        "freeGift":"無料相談",
+        "freeGift":"無料プレゼント",
         "hourService":"24時間対応"
     }
 
     if(isLoading){
-        return <Loading 
+        return <PartialLoading 
         isOpen={isLoading}
     />
     }
