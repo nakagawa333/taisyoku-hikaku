@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from '@supabase/supabase-js'
-import { Service } from "@/types/service";
-import { TableNames } from "@/constants/db/tableName";
 import validate from "@/utils/api/validate/services";
-import prisma from "@/libs/prisma/prismaClient";
 import { ServicesResponse } from "@/constants/api/response/ServicesResponse";
-import supabase from "@/libs/supabase/supabaseClient";
 import { Take } from "@/constants/db/take";
+import { Tags } from "@/constants/common/tags";
+import { fetchServices } from "@/hooks/prisma/services/fetchServices";
+import { fetchTags } from "@/hooks/prisma/tags/fetchTags";
+import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
 
 /**
  * @swagger
@@ -116,13 +115,17 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
             service_id:true,
             service_name:true,
             image_file_path:true,
-            image_bucketss:true
+            image_bucketss:true,
+            service_tags:{
+                select: {
+                    tag_id:true
+                }
+            }
         },
         orderBy:orderBy,
         take:take,
         skip:skip
     }
-
 
     const where:any = {}
     let hasWhereQuery:boolean = false;
@@ -141,9 +144,9 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         query["where"] = where;
     }
 
-    let services;
+    let services:any;
     try{
-        services = await prisma.services.findMany(query);
+        services = await fetchServices(query);
 
     } catch(error:any){
         console.error(`検索条件: ${where}`)
@@ -152,21 +155,55 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
         return NextResponse.json({"msg":"退職サービス一覧情報の取得に失敗しました"},{status:500});
     }
 
+    let tags:any;
+    let tagsQuery:any = {
+        select:{
+            tag_id:true,
+            tag_name:true
+        }
+    }
+
+    try{
+        tags = await fetchTags(tagsQuery);
+    } catch(error:any){
+        console.error("タグ覧情報の取得に失敗しました");
+        console.error(error);
+        return NextResponse.json({"msg":"退職サービス一覧情報の取得に失敗しました"},{status:500});
+    }
+
+    const tagsMap = new Map();
+    for(let tag of tags){
+        tagsMap.set(tag.tag_id,tag.tag_name)
+    }
+
     const servicesResponses:ServicesResponse[] = [];
     for(let service of services){
         let publicUrl:string = "";
         try{
-            const { data } = supabase.storage.from('images').getPublicUrl(service.image_file_path);
+            const { data } = getStoragePublicUrl('images',service.image_file_path);
             publicUrl = data.publicUrl;
         } catch(error:any){
             console.error(error);
             console.error(`サービスID名${service.service_id}の画像取得に失敗しました`);
         }
 
+        let tags:Tags[] = [];
+
+        for(let tag of service.service_tags){
+
+            const tagId = tag.tag_id;
+            const tagName = tagsMap.get(tagId);
+            tags.push({
+                tagId:tagId,
+                tagName:tagName
+            });
+        }
+
         const servicesResponse:ServicesResponse = {
             serviceId: service.service_id,
             serviceName: service.service_name,
-            imgUrl: publicUrl
+            imgUrl: publicUrl,
+            tags:tags
         }
         servicesResponses.push(servicesResponse);
     }

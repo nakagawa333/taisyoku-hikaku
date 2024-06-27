@@ -89,7 +89,7 @@ export default function Services(){
                 </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {
-                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && servicesData.services.map((service:Service,index:number) => {
+                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && 0 < servicesData.services.length && servicesData.services.map((service:Service,index:number) => {
                             return (
                                     <div 
                                     className="rounded overflow-hidden shadow-lg max-w-xs mb-20" 
@@ -113,20 +113,16 @@ export default function Services(){
                                                 </p>
                                         </div>
 
-
                                         <div className="px-6">
-                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                #photography
-                                            </span>
-                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                #travel
-                                            </span>
-                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                #winter
-                                            </span>
-                                            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                #winter
-                                            </span>                     
+                                            {
+                                                Array.from(service.tags) && service.tags.map((tag:any) => {
+                                                    return (
+                                                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                            #{tag.tagName}
+                                                        </span>                                                    
+                                                    )
+                                                })
+                                            }
                                         </div>
 
                                         <div className="flex">
@@ -143,11 +139,17 @@ export default function Services(){
                             )
                         })
                     }
+
+                    {
+                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && 0 === servicesData.services.length && (
+                            <h1>条件を変更してもう一度検索してください</h1>
+                        )                    
+                    }
                 </div>
 
                 <div className="mb-5">
                     {
-                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) ? (
+                        servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && 0 < servicesData.services.length ? (
                             <Pagination 
                                 currentPage={currentPage}
                                 lastPage={servicesLastPageData.lastPage}

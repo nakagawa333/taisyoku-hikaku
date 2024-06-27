@@ -8,6 +8,7 @@ import { ServicesResponse } from "@/constants/api/response/ServicesResponse";
 import supabase from "@/libs/supabase/supabaseClient";
 import { createNestedArrays } from "@/utils/common/createNestedArrays";
 import { Take } from "@/constants/db/take";
+import { fetchServices } from "@/hooks/prisma/services/fetchServices";
 
 /**
  * @swagger
@@ -128,7 +129,7 @@ export async function GET(request: NextRequest):Promise<NextResponse> {
 
     let services;
     try{
-        services = await prisma.services.findMany(query);
+        services = await fetchServices(query);
 
     } catch(error:any){
         console.error("退職サービス一覧最終ページの取得に失敗しました");

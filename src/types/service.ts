@@ -9,4 +9,5 @@ export type Service = {
     freeGift?:boolean,
     hourService?:boolean,
     imgUrl?:string
+    tags:any
 }

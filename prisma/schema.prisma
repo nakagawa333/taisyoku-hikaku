@@ -29,7 +29,7 @@ model services {
   created_at          DateTime              @default(now())
   updated_at          DateTime              @default(now()) @updatedAt
   service_managements service_managements[]
-  tags                tags[]
+  service_tags        service_tags[]
 }
 
 model service_managements {
@@ -58,11 +58,20 @@ model contact_information {
 }
 
 model tags {
+  id           Int            @id @default(autoincrement())
+  tag_id       String         @unique
+  tag_name     String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @default(now()) @updatedAt
+  service_tags service_tags[]
+}
+
+model service_tags {
   id         Int      @id @default(autoincrement())
   tag_id     String   @unique
-  service_id String
-  tag_name   String
-  services   services @relation(fields: [service_id], references: [service_id])
+  service_id String   @unique
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+  tags       tags     @relation(fields: [tag_id], references: [tag_id])
+  services   services @relation(fields: [service_id], references: [service_id])
 }
