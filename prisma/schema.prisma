@@ -30,6 +30,7 @@ model services {
   updated_at          DateTime              @default(now()) @updatedAt
   service_managements service_managements[]
   service_tags        service_tags[]
+  similar_services    similar_services?
 }
 
 model service_managements {
@@ -74,4 +75,13 @@ model service_tags {
   updated_at DateTime @default(now()) @updatedAt
   tags       tags     @relation(fields: [tag_id], references: [tag_id])
   services   services @relation(fields: [service_id], references: [service_id])
+}
+
+model similar_services {
+  id                 Int      @id @default(autoincrement())
+  service_id         String   @unique
+  similar_service_id String   @unique
+  created_at         DateTime @default(now())
+  updated_at         DateTime @default(now()) @updatedAt
+  services           services @relation(fields: [service_id], references: [service_id])
 }
