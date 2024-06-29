@@ -15,5 +15,17 @@ export const useService = () => {
             }
         })
     }
-    return [{fetchService}]
+
+    const fetchSimilarServices = (id:string) => {
+        return useQuery({
+            queryKey:[ReactQueryKeys.SIMILARSERVICES],
+            queryFn: async() => {
+                let reqUrl:string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SIMILARSERVICES}?serviceId=${id}`
+                let res = await axios.get(reqUrl);
+                return res.data;
+            }
+        })
+    }
+
+    return [{fetchService,fetchSimilarServices}]
 }
