@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import DetailButton from './DetailButton';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import DetailButton from './detailButton';
 
 type Props = {
   similarServices:any
@@ -39,8 +39,8 @@ export default function SimilarServicesSwiper(props:Props){
 
                 <SwiperSlide>
                   <div 
-                  className="m-auto	mt-7 rounded overflow-hidden shadow-lg max-w-xs mb-20" 
-                  key={index}
+                    className="m-auto	mt-7 rounded overflow-hidden shadow-lg max-w-xs mb-20" 
+                    key={index}
                   >
                           {
                               similarService.imgUrl && (
