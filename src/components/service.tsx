@@ -6,6 +6,9 @@ import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import Header from "./header";
 import Footer from "./footer";
 import PartialLoading from "./partialLoading";
+import ReactSwiper from "./swiper";
+import SimilarServicesSwiper from "./swiper";
+import OfficialWebsiteButton from "./OfficialWebsiteButton";
 
 
 export default function Page(){
@@ -17,8 +20,19 @@ export default function Page(){
         id = pathnameSplit[pathnameSplit?.length - 1]; 
     }
 
-    const [{fetchService}] = useService();
-    const {data,isLoading,isError,isFetchedAfterMount} = fetchService(id);
+    const [{fetchService,fetchSimilarServices}] = useService();
+
+    const resService = fetchService(id);
+    const serviceData:any = resService.data;
+    const serviceIsLoading:boolean = resService.isLoading;
+    const servicesIsError:boolean = resService.isError;
+    const servicesIsFetchedAfterMount:boolean = resService.isFetchedAfterMount;
+
+    const resSimilarServices = fetchSimilarServices(id);
+    const similarServicesData:any = resSimilarServices.data;
+    const similarServicesIsLoading:boolean = resSimilarServices.isLoading;
+    const similarServicesIsError:boolean = resSimilarServices.isError;
+    const similarServicesIsFetchedAfterMount:boolean = resSimilarServices.isFetchedAfterMount;
 
     const fields:any = {
         "serviceName":"サービス名",
@@ -31,13 +45,13 @@ export default function Page(){
         "hourService":"24時間対応"
     }
 
-    if(isLoading){
+    if(serviceIsLoading || similarServicesIsLoading){
         return <PartialLoading 
-        isOpen={isLoading}
+        isOpen={true}
     />
     }
 
-    if(isError){
+    if(servicesIsError || similarServicesIsError){
         return <div>エラー</div>
     }
     
@@ -46,15 +60,15 @@ export default function Page(){
             <div className="container">
                 <div className="flex flex-wrap">
                     {
-                        isFetchedAfterMount && data?.service && (
+                        servicesIsFetchedAfterMount && serviceData?.service && (
                             <div className="m-auto">
                                 <div className="m-auto">
-                                    <img src={data.imgUrl}></img>
+                                    <img src={serviceData.imgUrl}></img>
                                 </div>
-                                <table className="table-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <table className="table-auto w-full text-gray-500 dark:text-gray-400">
                                     <tbody>
                                             {
-                                                Object.keys(data.service).map((key:string) => {
+                                                Object.keys(serviceData.service).map((key:string) => {
                                                     return(
                                                         <tr>
                                                             <td className="border px-6 py-3 text-gray-800">
@@ -62,7 +76,7 @@ export default function Page(){
                                                             </td>
 
                                                             <td className="border px-6 py-3 text-gray-800">
-                                                                {data.service[key]}
+                                                                {serviceData.service[key]}
                                                             </td>
                                                         </tr>
                                                     )
@@ -70,9 +84,37 @@ export default function Page(){
                                             }
                                     </tbody>
                                 </table>
+
+                                <div className="">
+                                    <OfficialWebsiteButton 
+                                      url="https://google.com"
+                                    />
+                                </div>
                             </div>
                         )
                     }
+                </div>
+
+
+                <div className="">
+                    <p
+                    className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+                    style={{
+                        background:"#EDEDED"
+                    }}
+                >
+                      似た条件のサービス
+                    </p>
+                </div>
+
+                <div className="container">
+                        {
+                            similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
+                                <SimilarServicesSwiper 
+                                    similarServices={similarServicesData.similarServices}
+                                    />
+                            )
+                        }
                 </div>
             </div>
         </>
