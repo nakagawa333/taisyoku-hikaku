@@ -9,6 +9,7 @@ import PartialLoading from "./partialLoading";
 import ReactSwiper from "./swiper";
 import SimilarServicesSwiper from "./swiper";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 
 export default function Page(){
@@ -47,12 +48,15 @@ export default function Page(){
 
     if(serviceIsLoading || similarServicesIsLoading){
         return <PartialLoading 
-        isOpen={true}
-    />
+                    isOpen={true}
+                />
     }
 
     if(servicesIsError || similarServicesIsError){
-        return <div>エラー</div>
+        return <ErrorSnackbar
+                    message="データの取得に失敗しました"
+                    time={5000}
+               />
     }
     
     return(
@@ -68,9 +72,9 @@ export default function Page(){
                                 <table className="table-auto w-full text-gray-500 dark:text-gray-400">
                                     <tbody>
                                             {
-                                                Object.keys(serviceData.service).map((key:string) => {
+                                                Object.keys(serviceData.service).map((key:string,index:number) => {
                                                     return(
-                                                        <tr>
+                                                        <tr key={index}>
                                                             <td className="border px-6 py-3 text-gray-800">
                                                                 {fields[key]}
                                                             </td>

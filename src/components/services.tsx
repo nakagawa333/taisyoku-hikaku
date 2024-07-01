@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useEffect, useState } from "react";
 import PartialLoading from "./partialLoading";
+import ErrorSnackbar from "./ErrorSnackbar";
 
 export default function Services(){
     const searchParams:ReadonlyURLSearchParams | null = useSearchParams();
@@ -78,11 +79,14 @@ export default function Services(){
     }
 
     if(servicesIsError || servicesLastPageIsError){
-        return <div>エラー</div>
+        return <ErrorSnackbar
+                    message="エラーが発生しました"
+                    time={5000}
+               />
     }
 
     return(
-        <>
+        <>  
             <div className="container m-auto">
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {servicesLastPageData.length}件の検索結果
