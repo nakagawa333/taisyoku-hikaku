@@ -12,6 +12,7 @@ import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useEffect, useState } from "react";
 import PartialLoading from "./partialLoading";
 import ErrorSnackbar from "./ErrorSnackbar";
+import DetailButton from "./DetailButton";
 
 export default function Services(){
     const searchParams:ReadonlyURLSearchParams | null = useSearchParams();
@@ -129,16 +130,10 @@ export default function Services(){
                                             }
                                         </div>
 
-                                        <div className="flex">
-                                            <div className="ml-auto">
-                                                <a 
-                                                className="mb-3 mr-3 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                onClick={() => detailButtonClick(service.serviceId)}  
-                                                >
-                                                    詳細
-                                                </a>
-                                            </div>
-                                        </div>
+
+                                        <DetailButton
+                                            serviceId={service.serviceId}
+                                        />    
                                     </div>
                             )
                         })
