@@ -1,7 +1,8 @@
 "use client"
 import { Paths } from "@/constants/common/paths";
+import validate from "@/utils/ui/validate/search";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Search(){
     const router = useRouter();
@@ -9,8 +10,11 @@ export default function Search(){
     const [minPrice,setMinPrice] = useState("下限なし");
     const [maxPrice,setMaxPrice] = useState("上限なし");
 
-    const minPrices:any[] = ["下限なし","15000","25000","30000","50000","100000"];
-    const maxPrices:any[] = ["上限なし","15000","17000","25000","30000","50000","100000","500000","1000000"];
+    const minPrices:string[] = ["下限なし","15000","25000","30000","50000","100000"];
+    const maxPrices:string[] = ["上限なし","15000","17000","25000","30000","50000","100000","500000","1000000"];
+
+    const [errorPriceFlag,setErrorPriceFlag] = useState<boolean>(false);
+    const [errorPriceMessage,setErrorPriceMessage] = useState<string>("");
 
     const minPricesChange = (e:any) => {
         let value = e.target.value;
@@ -21,6 +25,21 @@ export default function Search(){
         let value = e.target.value;
         setMaxPrice(value);
     }
+
+    useEffect(() => {
+        //バリデーションチェック
+        if(minPrice !== "下限なし" && maxPrice !== "上限なし"){
+            const errorFlag = validate(Number(minPrice),Number(maxPrice))
+            if(errorFlag){
+                setErrorPriceFlag(true);
+                setErrorPriceMessage("料金の上限値は、下限値以上の値である必要があります");
+                return;
+            }
+        }
+
+        setErrorPriceFlag(false);
+        setErrorPriceMessage("");
+    },[minPrice,maxPrice])
 
     let managements = [
         {
@@ -142,6 +161,16 @@ export default function Search(){
      * @param id id
      */
     const searchClick = () => {
+        //バリデーションチェック
+        if(minPrice !== "下限なし" && maxPrice !== "上限なし"){
+            const errorFlag = validate(Number(minPrice),Number(maxPrice))
+            if(errorFlag){
+                setErrorPriceFlag(true);
+                setErrorPriceMessage("料金の上限値は、下限値以上の値である必要があります");
+                return;
+            }
+        }
+
         const searchParams = new URLSearchParams();
 
         for(let management of managements){
@@ -228,12 +257,19 @@ export default function Search(){
           </p>
 
           <div className="self-stretch bg-white-fff flex flex-col items-center justify-center py-5 px-[35px] z-[1] mt-[-3px]">
+               {
+                 errorPriceFlag ? (
+                    <p className="font-medium p-4 mb-4 text-sm text-red-500" role="alert">
+                        {errorPriceMessage}
+                    </p>
+                 ) : (null)
+               }
                <div className="self-stretch overflow-x-auto flex flex-row items-center justify-start gap-[18px]">
                  <div className="w-full">
                      <select 
-                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                         onChange={(e) => minPricesChange(e)}   
-                     >
+                         className={`border ${errorPriceFlag ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                         onChange={(e) => minPricesChange(e)}
+                    >
                              {
                                  minPrices.map((minPrice:any,index:number) => {
                                      return (
@@ -250,7 +286,7 @@ export default function Search(){
 
                  <div className="w-full">
                      <select 
-                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         className={`border ${errorPriceFlag ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                          onChange={(e) => maxPricesChange(e)}   
 
                          >
