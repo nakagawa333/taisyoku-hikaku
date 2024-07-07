@@ -1,15 +1,14 @@
-import { useRef } from 'react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { EffectCoverflow, EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import DetailButton from './DetailButton';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import DetailButton from './DetailButton';
 
 type Props = {
-  similarServices:any
+  similarServices: any
 }
 
 /**
@@ -17,70 +16,83 @@ type Props = {
  * @param components 
  * @returns 
  */
-export default function SimilarServicesSwiper(props:Props){
+export default function SimilarServicesSwiper({
+  similarServices
+}: Props) {
+
+  //TODO データが3件の場合、画面初期表示時左側のみカードが表示されない
+  const loop: boolean = Array.isArray(similarServices) && 2 < similarServices.length;
 
   return (
-            <Swiper
-              navigation={true}
-              slidesPerView={"auto"}
-              spaceBetween={20}
-              pagination={{
-                clickable: true,
-              }}
-              freeMode={true}
-              centeredSlides={true}
-              modules={[Pagination,Navigation]}
-              className="mySwiper"
-          >
-          {
-            props.similarServices.map((similarService:any,index:number) => {
+    <Swiper
+      effect={'coverflow'}
+      grabCursor={true}
+      centeredSlides={true}
+      loop={loop}
+      slidesPerView={2}
+      initialSlide={1}
+      coverflowEffect={{
+        rotate: 0,
+        stretch: 80,
+        depth: 200,
+        modifier: 1,
+        slideShadows: false,
+      }}
+      scrollbar={{ draggable: true }}
+      pagination={{ el: '.swiper-pagination', clickable: true }}
+      navigation={true}
+      modules={[EffectFade, EffectCoverflow, Pagination, Navigation]}
 
-              return(
+      className="mySwiper"
+    >
+      {
+        similarServices.map((similarService: any, index: number) => {
 
-                <SwiperSlide>
-                  <div 
-                    className="m-auto	mt-7 rounded overflow-hidden shadow-lg max-w-xs mb-20" 
-                    key={index}
-                  >
-                          {
-                              similarService.imgUrl && (
-                                  <img
-                                      className="w-full"
-                                      src={similarService.imgUrl}
-                                      alt="image"
-                                  />
-                              )
-                          }
-                      <div className="px-6 py-4">
-                              <div className="font-bold text-xl mb-2">
-                                  {similarService.similarServiceName}
-                              </div>
-                              <p className="text-gray-700 text-base">
-
-                              </p>
-                      </div>
-
-                      <div className="px-6">
-                          {
-                              Array.isArray(similarService.tags) && similarService.tags.map((tag:any) => {
-                                  return (
-                                      <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                          #{tag.tagName}
-                                      </span>                                    
-                                  )
-                              })
-                          }
-                      </div>
-
-                      <DetailButton
-                        serviceId={similarService.similarServiceId}
-                      />
-
+          return (
+            <SwiperSlide
+              key={index}
+            >
+              <div
+                className="bg-white m-auto mt-7 rounded overflow-hidden shadow-lg mb-20"
+              >
+                {
+                  similarService.imgUrl && (
+                    <img
+                      className="w-full"
+                      src={similarService.imgUrl}
+                      alt="image"
+                    />
+                  )
+                }
+                <div className="px-6 py-4">
+                  <div className="font-bold text-xl mb-2">
+                    {similarService.similarServiceName}
                   </div>
-                </SwiperSlide>
-              )
-            })
-          }
-        </Swiper>
-    );
+                </div>
+
+                <div className="px-6">
+                  {
+                    Array.isArray(similarService.tags) && similarService.tags.map((tag: any) => {
+                      return (
+                        <span
+                          className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                        >
+                          #{tag.tagName}
+                        </span>
+                      )
+                    })
+                  }
+                </div>
+
+                <DetailButton
+                  serviceId={similarService.similarServiceId}
+                />
+
+              </div>
+            </SwiperSlide>
+          )
+        })
+      }
+    </Swiper>
+  );
 }

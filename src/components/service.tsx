@@ -113,7 +113,9 @@ export default function Page() {
                     </p>
                 </div>
 
-                <div style={{ width: "90%", margin: "auto" }}>
+                <div
+                    className="container"
+                >
                     {
                         similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
                             <SimilarServicesSwiper
