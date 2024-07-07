@@ -93,7 +93,7 @@ export default function Page() {
 
                                 <div className="">
                                     <OfficialWebsiteButton
-                                        url="https://google.com"
+                                        url={serviceData.officialWebsite}
                                     />
                                 </div>
                             </div>
@@ -102,7 +102,7 @@ export default function Page() {
                 </div>
 
 
-                <div className="">
+                <div className="container">
                     <p
                         className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
                         style={{
@@ -113,7 +113,7 @@ export default function Page() {
                     </p>
                 </div>
 
-                <div className="container">
+                <div style={{ width: "90%", margin: "auto" }}>
                     {
                         similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
                             <SimilarServicesSwiper

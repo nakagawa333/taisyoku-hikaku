@@ -25,6 +25,7 @@ model services {
   image_file_path     String
   hour_service        Boolean
   image_bucketss      String
+  official_website    String
   managements         managements           @relation(fields: [management_id], references: [management_id])
   created_at          DateTime              @default(now())
   updated_at          DateTime              @default(now()) @updatedAt
