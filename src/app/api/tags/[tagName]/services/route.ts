@@ -1,5 +1,5 @@
 import { fetchServiceTags } from "@/hooks/prisma/serviceTags/fetchServiceTags";
-import supabase from "@/libs/supabase/supabaseClient";
+import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         let imgData: any;
         try {
             //ストレージから画像取得
-            const res: any = supabase.storage.from('images').getPublicUrl(tagsOfService.services.image_file_path);
+            const res: any = getStoragePublicUrl('images', tagsOfService.services.image_file_path);
             imgData = res.data;
         } catch (error: any) {
             console.error(serviceId, "画像取得に失敗しました");
