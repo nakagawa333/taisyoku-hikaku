@@ -1,4 +1,5 @@
 import { fetchServiceTags } from "@/hooks/prisma/serviceTags/fetchServiceTags";
+import supabase from "@/libs/supabase/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -30,7 +31,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     let tagsOfServices: any;
 
-    //TODO エラー発生時、エラーレスポンス返却
     try {
         const query = {
             select: {
@@ -38,6 +38,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     select: {
                         service_id: true,
                         service_name: true,
+                        image_file_path: true
                     }
                 }
             },
@@ -52,12 +53,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     } catch (error: any) {
         console.error(error);
         console.error("タグ関連退職サービス情報の取得に失敗しました");
+        return NextResponse.json(
+            { "msg": 'タグ関連退職サービス情報の取得に失敗しました' }, { status: 500 }
+        );
     }
 
     if (!Array.isArray(tagsOfServices) && 0 < tagsOfServices.length) {
         return NextResponse.json(
             {
-                tagsOfServices: tagsOfServices
+                tagsOfServicesResponse: [],
             }
         );
     }
@@ -90,6 +94,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     } catch (error: any) {
         console.error(error);
         console.error("タグ一覧の取得に失敗しました");
+        return NextResponse.json(
+            { "msg": 'タグ一覧の取得に失敗しました' }, { status: 500 }
+        );
     }
 
     const serviceTagsMap = new Map();
@@ -117,10 +124,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const serviceId = tagsOfService.services.service_id;
         const serviceName = tagsOfService.services.service_name;
         const tags: any[] = serviceTagsMap.get(serviceId);
+
+        let imgData: any;
+        try {
+            //ストレージから画像取得
+            const res: any = supabase.storage.from('images').getPublicUrl(tagsOfService.services.image_file_path);
+            imgData = res.data;
+        } catch (error: any) {
+            console.error(serviceId, "画像取得に失敗しました");
+            console.error(error);
+            return NextResponse.json({ "msg": "画像取得に失敗しました" }, { status: 400 });
+        }
+
         tagsOfServicesResponse.push({
             serviceId: serviceId,
             serviceName: serviceName,
-            tags: tags
+            tags: tags,
+            imgUrl: imgData.publicUrl
         })
     }
 
