@@ -3,4 +3,5 @@ export default class ReactQueryKeys {
     static readonly SERVICE = "/api/service";
     static readonly SERVICESLASTPAGE = "/api/services/lastpage";
     static readonly SIMILARSERVICES = "/api/similar/services/";
+    static readonly TAGSOFSERVICES = "/api/tags/[tagName]/services/";
 }

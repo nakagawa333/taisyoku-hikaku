@@ -7,7 +7,7 @@ import { Service } from "@/types/service";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import DetailButton from "./DetailButton";
+import Card from "./Card";
 import ErrorSnackbar from "./ErrorSnackbar";
 import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
@@ -102,45 +102,13 @@ export default function Services() {
                     {
                         servicesIsFetchedAfterMount && Array.isArray(servicesData?.services) && 0 < servicesData.services.length && servicesData.services.map((service: Service, index: number) => {
                             return (
-                                <div
-                                    className="rounded overflow-hidden shadow-lg max-w-xs mb-20"
-                                    key={index}
-                                >
-                                    {
-                                        service.imgUrl && (
-                                            <img
-                                                className="w-full"
-                                                src={service.imgUrl}
-                                                alt="image"
-                                            />
-                                        )
-                                    }
-                                    <div className="px-6 py-4">
-                                        <div className="font-bold text-xl mb-2">
-                                            {service.serviceName}
-                                        </div>
-                                        <p className="text-gray-700 text-base">
 
-                                        </p>
-                                    </div>
-
-                                    <div className="px-6">
-                                        {
-                                            Array.from(service.tags) && service.tags.map((tag: any) => {
-                                                return (
-                                                    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                        #{tag.tagName}
-                                                    </span>
-                                                )
-                                            })
-                                        }
-                                    </div>
-
-
-                                    <DetailButton
-                                        serviceId={service.serviceId}
-                                    />
-                                </div>
+                                <Card
+                                    imgUrl={service?.imgUrl}
+                                    serviceId={service.serviceId}
+                                    serviceName={service.serviceName}
+                                    tags={service.tags}
+                                />
                             )
                         })
                     }
