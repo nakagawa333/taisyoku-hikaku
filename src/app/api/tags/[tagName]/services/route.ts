@@ -1,3 +1,4 @@
+import { Take } from "@/constants/db/take";
 import { fetchServiceTags } from "@/hooks/prisma/serviceTags/fetchServiceTags";
 import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
 import { NextRequest, NextResponse } from "next/server";
@@ -29,6 +30,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     //タグ名
     const tagName: string = decodeURIComponent(splitPathName[splitPathName.length - 2]);
 
+    const params: URLSearchParams = request.nextUrl.searchParams;
+
+    const take: number = Take.SERVICES;
+    let skip: number = 0;
+    if (params.has("p")) {
+        let page = Number(params.get("p"));
+        skip = (page - 1) * take;
+    }
+
     let tagsOfServices: any;
 
     try {
@@ -46,6 +56,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 tags: {
                     tag_name: tagName
                 }
+            },
+            take: take,
+            skip: skip,
+            orderBy: {
+                id: "asc"
             }
         }
         tagsOfServices = await fetchServiceTags(query);
