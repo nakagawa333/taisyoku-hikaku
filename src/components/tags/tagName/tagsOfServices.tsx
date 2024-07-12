@@ -6,10 +6,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import Card from "../Card";
-import ErrorSnackbar from "../ErrorSnackbar";
-import Pagination from "../pagination";
-import PartialLoading from "../partialLoading";
+import Card from "../../Card";
+import ErrorSnackbar from "../../ErrorSnackbar";
+import Pagination from "../../pagination";
+import PartialLoading from "../../partialLoading";
 
 export const TagsOfServices = () => {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
