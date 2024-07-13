@@ -2,6 +2,7 @@ import { Paths } from "@/constants/common/paths";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import DetailButton from "./DetailButton";
+import { Tag } from "./tag";
 
 type Props = {
     imgUrl: string,
@@ -55,12 +56,10 @@ export default function Card({
                 {
                     Array.isArray(tags) && tags.map((tag: any) => {
                         return (
-                            <span
-                                className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                                onClick={() => tagNameClick(tag.tagName)}
-                            >
-                                #{tag.tagName}
-                            </span>
+                            <Tag
+                                tagName={tag.tagName}
+                                tagNameClick={tagNameClick}
+                            />
                         )
                     })
                 }
