@@ -63,7 +63,7 @@ export const TagsOfServices = () => {
         }
 
     }, [searchParams])
-    if (tagsOfServicesIsLoading) {
+    if (tagsOfServicesIsLoading || tagsTagsOfServicesLastPageLoading) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
