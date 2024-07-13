@@ -1,0 +1,65 @@
+"use client";
+
+import { Paths } from "@/constants/common/paths";
+import { uesTags } from "@/hooks/reactQuery/tags";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
+import ErrorSnackbar from "../ErrorSnackbar";
+import PartialLoading from "../partialLoading";
+import { Tag } from "../tag";
+
+//タグ一覧画面
+export const Tags = () => {
+    const router: AppRouterInstance = useRouter();
+
+    const [{ fetchTags }] = uesTags();
+    const resTags = fetchTags();
+    const tagsData: any = resTags.data;
+    const tagsIsLoading: boolean = resTags.isLoading;
+    const tagsIsError: boolean = resTags.isError;
+    const tagsIsFetchedAfterMount: boolean = resTags.isFetchedAfterMount;
+
+    const tagNameClick = (tagName: string) => {
+        //ページ遷移
+        router.push(`${Paths.TAGS}/${tagName}`);
+    }
+
+    if (tagsIsLoading) {
+        return (
+            <div className="min-h-screen">
+                <PartialLoading isOpen={true} />
+            </div>
+        )
+    }
+
+    if (tagsIsError) {
+        return (
+            <div className="container m-auto min-h-screen">
+                <ErrorSnackbar
+                    message="エラーが発生しました"
+                    time={5000}
+                />
+            </div>
+        )
+    }
+
+    return (
+        <>
+            <div className="container m-auto min-h-screen">
+                <div className="flex flex-wrap">
+                    {Array.isArray(tagsData.tags) && tagsData.tags.map((tag: any, index: number) =>
+                        <div className="" key={index}>
+                            <Tag
+                                tagName={tag.tagName}
+                                count={tag.count}
+                                tagNameClick={tagNameClick}
+                            >
+
+                            </Tag>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
+    )
+}
