@@ -46,18 +46,7 @@ export default function Page() {
         "hourService": "24時間対応"
     }
 
-    // const breadcrumbs: Breadcrumb[] = [
-    //     {
-    //         path: "/",
-    //         breadcrumb: "ホーム"
-    //     },
-    //     {
-    //         path: "/services",
-    //         breadcrumb: "サービス"
-    //     },
-    // ]
-
-    if (serviceIsLoading || similarServicesIsLoading) {
+    if (serviceIsLoading || similarServicesIsLoading || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
