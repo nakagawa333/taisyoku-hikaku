@@ -36,7 +36,7 @@ export const Tags = () => {
         router.push(`${Paths.TAGS}/${tagName}`);
     }
 
-    if (tagsIsLoading) {
+    if (tagsIsLoading || !tagsIsFetchedAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
