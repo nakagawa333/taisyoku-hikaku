@@ -1,17 +1,12 @@
 
-
 type Props = {
     tagName: string
     count?: number
     tagNameClick: (tagName: string) => void
 }
 
-export const Tag = ({
-    tagName,
-    count,
-    tagNameClick
-}:
-    Props) => {
+export const Tag = (props: Props) => {
+    const { tagName, count, tagNameClick } = props;
 
     return (
         <div className="flex">
