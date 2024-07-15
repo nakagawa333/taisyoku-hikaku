@@ -4,11 +4,13 @@ import { useServices } from "@/hooks/reactQuery/services";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { Service } from "@/types/service";
+import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import ErrorSnackbar from "./ErrorSnackbar";
+import Breadcrumbs from "./breadcrumbs";
 import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 
@@ -26,6 +28,17 @@ export default function Services() {
     const [page, setPage] = useState("");
     const [params, setParams] = useState("?");
     const [currentPage, setCurrentPage] = useState(1);
+
+    const breadcrumbs: Breadcrumb[] = [
+        {
+            path: "/",
+            breadcrumb: "ホーム"
+        },
+        {
+            path: "/services",
+            breadcrumb: "サービス"
+        },
+    ]
 
     useEffect(() => {
         let params: string = "?";
@@ -95,6 +108,11 @@ export default function Services() {
     return (
         <>
             <div className="container m-auto min-h-screen">
+                <div className="p-4">
+                    <Breadcrumbs
+                        breadcrumbs={breadcrumbs}
+                    />
+                </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {servicesLastPageData.length}件の検索結果
                 </div>

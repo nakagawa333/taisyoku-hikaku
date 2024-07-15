@@ -11,13 +11,9 @@ type Props = {
     tags: any[]
 }
 
-export default function Card({
-    imgUrl,
-    serviceId,
-    serviceName,
-    tags,
-}: Props) {
+export default function Card(props: Props) {
 
+    const { imgUrl, serviceId, serviceName, tags } = props;
     const router: AppRouterInstance = useRouter();
 
     /**

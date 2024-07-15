@@ -1,9 +1,12 @@
 "use client";
 
 import { useService } from "@/hooks/reactQuery/service";
+import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { usePathname } from 'next/navigation';
+import { useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
+import Breadcrumbs from "./breadcrumbs";
 import PartialLoading from "./partialLoading";
 import SimilarServicesSwiper from "./swiper";
 
@@ -18,6 +21,7 @@ export default function Page() {
     }
 
     const [{ fetchService, fetchSimilarServices }] = useService();
+    const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
     const resService = fetchService(id);
     const serviceData: any = resService.data;
@@ -42,6 +46,17 @@ export default function Page() {
         "hourService": "24時間対応"
     }
 
+    // const breadcrumbs: Breadcrumb[] = [
+    //     {
+    //         path: "/",
+    //         breadcrumb: "ホーム"
+    //     },
+    //     {
+    //         path: "/services",
+    //         breadcrumb: "サービス"
+    //     },
+    // ]
+
     if (serviceIsLoading || similarServicesIsLoading) {
         return (
             <div className="min-h-screen">
@@ -61,9 +76,30 @@ export default function Page() {
         )
     }
 
+    if (servicesIsFetchedAfterMount && serviceData?.service) {
+        const isExistBreadcrumbsId = breadcrumbs.some((breadcrumb: Breadcrumb) => breadcrumb.path === `/${id}`);
+        if (!isExistBreadcrumbsId) {
+            const breadcrumbs: Breadcrumb[] = [
+                { path: "/", breadcrumb: "ホーム" },
+                { path: "/services", breadcrumb: "サービス" }
+            ]
+
+            breadcrumbs.push({
+                path: `/${id}`,
+                breadcrumb: serviceData.service.serviceName
+            })
+            setBreadcrumbs(breadcrumbs);
+        }
+    }
+
     return (
         <>
             <div className="container">
+                <div className="p-4">
+                    <Breadcrumbs
+                        breadcrumbs={breadcrumbs}
+                    />
+                </div>
                 <div className="flex flex-wrap">
                     {
                         servicesIsFetchedAfterMount && serviceData?.service && (

@@ -6,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import Breadcrumbs from "@/components/breadcrumbs";
+import { Breadcrumb } from "@/types/ui/breadcrumb";
 import Card from "../../Card";
 import ErrorSnackbar from "../../ErrorSnackbar";
 import Pagination from "../../pagination";
@@ -27,6 +29,21 @@ export const TagsOfServices = () => {
     const [page, setPage] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [params, setParams] = useState("?");
+
+    const breadcrumbs: Breadcrumb[] = [
+        {
+            path: "/",
+            breadcrumb: "ホーム"
+        },
+        {
+            path: "/tags",
+            breadcrumb: "タグ"
+        },
+        {
+            path: `/tags/${tagName}`,
+            breadcrumb: tagName
+        }
+    ]
 
     const queryClient = useQueryClient();
     useEffect(() => {
@@ -85,6 +102,14 @@ export const TagsOfServices = () => {
     return (
         <>
             <div className="container m-auto min-h-screen">
+                <div className="p-4">
+                    <Breadcrumbs
+                        breadcrumbs={breadcrumbs}
+                    />
+                </div>
+                <div className="p-4">
+                    <h1 className="text-2xl font-bold mt-0 mb-4">{tagName}</h1>
+                </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {tagsTagsOfServicesLastPageData.tagsCount}件の検索結果
                 </div>

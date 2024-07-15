@@ -2,9 +2,11 @@
 
 import { Paths } from "@/constants/common/paths";
 import { uesTags } from "@/hooks/reactQuery/tags";
+import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import ErrorSnackbar from "../ErrorSnackbar";
+import Breadcrumbs from "../breadcrumbs";
 import PartialLoading from "../partialLoading";
 import { Tag } from "../tag";
 
@@ -19,6 +21,16 @@ export const Tags = () => {
     const tagsIsError: boolean = resTags.isError;
     const tagsIsFetchedAfterMount: boolean = resTags.isFetchedAfterMount;
 
+    const breadcrumbs: Breadcrumb[] = [
+        {
+            path: "/",
+            breadcrumb: "ホーム"
+        },
+        {
+            path: "/tags",
+            breadcrumb: "タグ"
+        }
+    ]
     const tagNameClick = (tagName: string) => {
         //ページ遷移
         router.push(`${Paths.TAGS}/${tagName}`);
@@ -46,6 +58,11 @@ export const Tags = () => {
     return (
         <>
             <div className="container m-auto min-h-screen">
+                <div className="p-4">
+                    <Breadcrumbs
+                        breadcrumbs={breadcrumbs}
+                    />
+                </div>
                 <div className="flex flex-wrap">
                     {Array.isArray(tagsData.tags) && tagsData.tags.map((tag: any, index: number) =>
                         <div className="" key={index}>
