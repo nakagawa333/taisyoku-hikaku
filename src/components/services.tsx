@@ -113,8 +113,13 @@ export default function Services() {
                         breadcrumbs={breadcrumbs}
                     />
                 </div>
-                <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
-                    {servicesLastPageData.length}件の検索結果
+                <div className="flex flex-wrap rounded-t-lg overflow-hidden pl-10 text-2xl">
+                    <div className="flex-1">
+                        <b style={{ color: "#289CAC" }}>
+                            {servicesLastPageData.length}
+                        </b>
+                        <span>件の検索結果</span>
+                    </div>
                 </div>
                 <div className="flex flex-wrap rounded-t-lg overflow-hidden p-10 justify-around">
                     {
