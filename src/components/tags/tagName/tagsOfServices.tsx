@@ -7,8 +7,8 @@ import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from
 import { useEffect, useState } from "react";
 
 import Breadcrumbs from "@/components/breadcrumbs";
+import Card from "@/components/card";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
-import Card from "../../Card";
 import ErrorSnackbar from "../../ErrorSnackbar";
 import Pagination from "../../pagination";
 import PartialLoading from "../../partialLoading";

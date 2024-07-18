@@ -1,7 +1,7 @@
 import { Paths } from "@/constants/common/paths";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
-import DetailButton from "./DetailButton";
+import DetailButton from "./detailButton";
 import { Tag } from "./tag";
 
 type Props = {

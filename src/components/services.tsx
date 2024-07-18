@@ -1,16 +1,15 @@
 "use client";
-import { useServices } from "@/hooks/reactQuery/services";
-
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { useServices } from "@/hooks/reactQuery/services";
 import { Service } from "@/types/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Card from "./Card";
 import ErrorSnackbar from "./ErrorSnackbar";
 import Breadcrumbs from "./breadcrumbs";
+import Card from "./card";
 import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 
