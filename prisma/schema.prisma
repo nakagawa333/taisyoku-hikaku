@@ -14,33 +14,24 @@ datasource db {
 }
 
 model services {
-  id                  Int                   @id @default(autoincrement())
-  service_id          String                @unique
-  management_id       String
-  service_name        String
-  price               Int
-  free_consultation   Boolean
-  guarantee_system    Boolean
-  free_gift           Boolean
-  image_file_path     String
-  hour_service        Boolean
-  image_bucketss      String
-  official_website    String
-  managements         managements           @relation(fields: [management_id], references: [management_id])
-  created_at          DateTime              @default(now())
-  updated_at          DateTime              @default(now()) @updatedAt
-  service_managements service_managements[]
-  service_tags        service_tags[]
-  similar_services    similar_services?
-}
-
-model service_managements {
-  service_id             String              @id
-  contact_information_id String              @unique
-  services               services            @relation(fields: [service_id], references: [service_id])
-  contact_information    contact_information @relation(fields: [contact_information_id], references: [contact_information_id])
-  created_at             DateTime            @default(now())
-  updated_at             DateTime            @default(now()) @updatedAt
+  id                          Int                           @id @default(autoincrement())
+  service_id                  String                        @unique
+  management_id               String
+  service_name                String
+  price                       Int
+  free_consultation           Boolean
+  guarantee_system            Boolean
+  free_gift                   Boolean
+  image_file_path             String
+  hour_service                Boolean
+  image_bucketss              String
+  official_website            String
+  managements                 managements                   @relation(fields: [management_id], references: [management_id])
+  created_at                  DateTime                      @default(now())
+  updated_at                  DateTime                      @default(now()) @updatedAt
+  service_contact_information service_contact_information[]
+  service_tags                service_tags[]
+  similar_services            similar_services?
 }
 
 model managements {
@@ -52,11 +43,21 @@ model managements {
 }
 
 model contact_information {
-  contact_information_id   String                @id
-  contact_information_name String
-  created_at               DateTime              @default(now())
-  updated_at               DateTime              @default(now()) @updatedAt
-  service_managements      service_managements[]
+  contact_information_id      String                        @id
+  contact_information_name    String
+  created_at                  DateTime                      @default(now())
+  updated_at                  DateTime                      @default(now()) @updatedAt
+  service_contact_information service_contact_information[]
+}
+
+model service_contact_information {
+  id                     Int                 @id @default(autoincrement())
+  service_id             String              @unique
+  contact_information_id String              @unique
+  services               services            @relation(fields: [service_id], references: [service_id])
+  contact_information    contact_information @relation(fields: [contact_information_id], references: [contact_information_id])
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @default(now()) @updatedAt
 }
 
 model tags {

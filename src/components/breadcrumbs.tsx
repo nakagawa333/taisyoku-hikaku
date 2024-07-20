@@ -16,7 +16,7 @@ export default function Breadcrumbs(props: Props) {
                 {
                     Array.isArray(breadcrumbs) &&
                     breadcrumbs.map((breadcrumb: Breadcrumb, index: number) =>
-                        <li>
+                        <li key={index}>
                             {
                                 index === 0 ? (
                                     <div className="flex items-center">

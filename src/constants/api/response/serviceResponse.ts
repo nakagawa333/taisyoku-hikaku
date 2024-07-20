@@ -7,4 +7,7 @@ export type ServiceResponse = {
     guaranteeSystem: string,
     freeGift: string,
     hourService: string,
+    serviceId: string,
+    imgUrl: string,
+    officialWebsite: string
 }

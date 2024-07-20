@@ -1,7 +1,10 @@
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
-import prisma from "@/libs/prisma/prismaClient";
-import supabase from "@/libs/supabase/supabaseClient";
+import { fetchUniqueService } from "@/hooks/prisma/services/fetchUniqueService";
+import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
+import { DataPublicUrl } from "@/types/common/supabase/dataPublicUrl";
 import validate from "@/utils/api/validate/service";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -20,25 +23,16 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const params: URLSearchParams = request.nextUrl.searchParams;
-    const serviceId: string | null = params.get("serviceId");
+    const serviceId: string = params.get("serviceId") ?? "";
 
     //バリデーションチェック
     let validateError = validate(serviceId);
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
-    const SUPABASE_URL: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const API_KEY: string | undefined = process.env.NEXT_PUBLIC_API_KEY;
-
-    if (!SUPABASE_URL || !API_KEY) {
-        console.error("url", SUPABASE_URL);
-        console.error("APIキー", API_KEY);
-        return NextResponse.json({ "msg": "環境変数が正しく設定されていません。" }, { status: 500 });
-    }
-
-    let service;
+    let service: any;
 
     try {
-        service = await prisma.services.findUnique({
+        const query: Prisma.servicesFindUniqueArgs<DefaultArgs> = {
             select: {
                 service_id: true,
                 service_name: true,
@@ -56,16 +50,24 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                         management_name: true
                     }
                 },
-                service_managements: {
+                service_contact_information: {
                     select: {
-                        contact_information_id: true
+                        contact_information_id: true,
+                        contact_information: {
+                            select: {
+                                contact_information_name: true
+                            }
+                        }
                     }
                 }
             },
             where: {
                 service_id: serviceId ? serviceId : ""
-            }
-        });
+            },
+        }
+
+        service = await fetchUniqueService(query);
+
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
         console.error("退職サービス詳細情報の取得に失敗しました");
@@ -79,46 +81,30 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ "msg": "サービスIDに紐づく退職サービス詳細情報が存在しません。" }, { status: 400 });
     }
 
-    let contactInformations;
-    let contactInformationMap: Map<string, string> = new Map();
-    const managementId = service.managements.management_id;
-    try {
-        contactInformations = await prisma.contact_information.findMany({
-            select: {
-                contact_information_id: true,
-                contact_information_name: true
-            }
-        });
-
-        for (let contactInformation of contactInformations) {
-            contactInformationMap.set(contactInformation.contact_information_id, contactInformation.contact_information_name);
-        }
-
-    } catch (error: any) {
-        console.error(error);
-        return NextResponse.json({ "msg": "連絡先取得に失敗しました" }, { status: 400 });
-    }
+    //連絡先
 
     let contactInformationNames: string = "";
-    const serviceManagements = service.service_managements;
-    const serviceManagementsLength: number = serviceManagements.length;
 
-    for (let i = 0; i < serviceManagementsLength; i++) {
-        let serviceManagement = serviceManagements[i];
-        let contactInformationName = contactInformationMap.get(serviceManagement.contact_information_id);
-        contactInformationNames += contactInformationName;
-        if (i !== serviceManagementsLength - 1) {
-            contactInformationNames += ",";
+    const serviceContactInformation = service.service_contact_information;
+    if (Array.isArray(serviceContactInformation)) {
+        const serviceContactInformationLength: number = serviceContactInformation.length;
+
+        for (let i = 0; i < serviceContactInformationLength; i++) {
+            const contactInformationName = serviceContactInformation[i].contact_information.contact_information_name;
+            contactInformationNames += contactInformationName;
+            if (i !== serviceContactInformationLength - 1) {
+                contactInformationNames += ",";
+            }
         }
     }
 
     if (!contactInformationNames) contactInformationNames = "なし";
 
-    let imgData: any;
+    let publicUrl: string;
     try {
         //ストレージから画像取得
-        const res: any = supabase.storage.from('images').getPublicUrl(service.image_file_path);
-        imgData = res.data;
+        const res: DataPublicUrl = getStoragePublicUrl("images", service.image_file_path);
+        publicUrl = res.data.publicUrl;
     } catch (error: any) {
         console.error(serviceId, "画像取得に失敗しました");
         console.error(error);
@@ -140,14 +126,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         guaranteeSystem: guaranteeSystem,
         freeGift: freeGift,
         hourService: hourService,
+        serviceId: serviceId,
+        imgUrl: publicUrl,
+        officialWebsite: service.official_website
     }
 
     return NextResponse.json(
         {
             "service": serviceResponse,
-            "serviceId": serviceId,
-            "imgUrl": imgData.publicUrl,
-            "officialWebsite": service.official_website
         }
     );
 

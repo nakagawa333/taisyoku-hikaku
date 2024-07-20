@@ -47,9 +47,10 @@ export default function Card(props: Props) {
                 <div className="flex flex-wrap self-stretch text-xs tracking-[0.04em] leading-[170%] font-medium text-gyar-6a6a6a">
 
                     {
-                        Array.isArray(tags) && tags.map((tag: any) => {
+                        Array.isArray(tags) && tags.map((tag: any, index: number) => {
                             return (
                                 <Tag
+                                    key={index}
                                     tagName={tag.tagName}
                                     tagNameClick={tagNameClick}
                                 />

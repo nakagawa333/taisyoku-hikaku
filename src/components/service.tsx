@@ -1,5 +1,6 @@
 "use client";
 
+import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { usePathname } from 'next/navigation';
@@ -8,6 +9,7 @@ import ErrorSnackbar from "./ErrorSnackbar";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
 import Breadcrumbs from "./breadcrumbs";
 import PartialLoading from "./partialLoading";
+import PromotionMessage from "./promotionMessage";
 import SimilarServicesSwiper from "./swiper";
 
 
@@ -25,6 +27,7 @@ export default function Page() {
 
     const resService = fetchService(id);
     const serviceData: any = resService.data;
+    const service: ServiceResponse | null = serviceData?.service;
     const serviceIsLoading: boolean = resService.isLoading;
     const servicesIsError: boolean = resService.isError;
     const servicesIsFetchedAfterMount: boolean = resService.isFetchedAfterMount;
@@ -41,9 +44,9 @@ export default function Page() {
         "managementName": "運営元",
         "contactInformationNames": "連絡先",
         "freeConsultation": "無料相談",
-        "guaranteeSystem": "保障制度",
+        "guaranteeSystem": "送金保証",
         "freeGift": "無料プレゼント",
-        "hourService": "24時間対応"
+        "hourService": "24時間受付"
     }
 
     if (serviceIsLoading || similarServicesIsLoading || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount) {
@@ -82,14 +85,48 @@ export default function Page() {
     }
 
     return (
-        <>
-            <div className="container">
-                <div className="p-4">
-                    <Breadcrumbs
-                        breadcrumbs={breadcrumbs}
-                    />
+        <div className="container">
+            <div className="p-4">
+                <Breadcrumbs
+                    breadcrumbs={breadcrumbs}
+                />
+            </div>
+
+            <PromotionMessage />
+
+            <div className="p-4">
+                <h1 className="text-2xl font-bold mt-0 mb-4">
+                    {
+                        service && (
+                            <h1 className="text-2xl font-bold mt-0 mb-4">{service.serviceName}</h1>
+                        )
+                    }
+                </h1>
+            </div>
+
+            <div className="flex flex-wrap">
+                <div className="mx-auto ">
+                    {
+                        service && (
+                            <div className="m-auto w-4/5">
+                                <img
+                                    src={service.imgUrl}
+                                    className="w-4/5"
+                                >
+                                </img>
+                            </div>
+                        )
+                    }
+
+                    <div>
+                        <OfficialWebsiteButton
+                            url={serviceData.officialWebsite}
+                        />
+                    </div>
                 </div>
-                <div className="flex flex-wrap">
+            </div>
+
+            {/* <div className="flex flex-wrap">
                     {
                         servicesIsFetchedAfterMount && serviceData?.service && (
                             <div className="m-auto">
@@ -124,32 +161,31 @@ export default function Page() {
                             </div>
                         )
                     }
-                </div>
+                </div> */}
 
 
-                <div className="container">
-                    <p
-                        className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
-                        style={{
-                            background: "#EDEDED"
-                        }}
-                    >
-                        似た条件のサービス
-                    </p>
-                </div>
-
-                <div
-                    className="container"
+            <div className="container">
+                <p
+                    className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
+                    style={{
+                        background: "#EDEDED"
+                    }}
                 >
-                    {
-                        similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
-                            <SimilarServicesSwiper
-                                similarServices={similarServicesData.similarServices}
-                            />
-                        )
-                    }
-                </div>
+                    似た条件のサービス
+                </p>
             </div>
-        </>
+
+            <div
+                className="container"
+            >
+                {
+                    similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
+                        <SimilarServicesSwiper
+                            similarServices={similarServicesData.similarServices}
+                        />
+                    )
+                }
+            </div>
+        </div>
     )
 }

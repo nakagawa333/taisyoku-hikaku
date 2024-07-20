@@ -126,6 +126,7 @@ export default function Services() {
                             return (
 
                                 <Card
+                                    key={index}
                                     imgUrl={service?.imgUrl}
                                     serviceId={service.serviceId}
                                     serviceName={service.serviceName}
