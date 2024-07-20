@@ -62,7 +62,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 }
             },
             where: {
-                service_id: serviceId ? serviceId : ""
+                service_id: serviceId
             },
         }
 
