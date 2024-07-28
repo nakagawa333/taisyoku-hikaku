@@ -168,53 +168,10 @@ export default function Page() {
 
             </div>
 
-            {/* <div className="flex flex-wrap">
-                    {
-                        servicesIsFetchedAfterMount && serviceData?.service && (
-                            <div className="m-auto">
-                                <div className="m-auto">
-                                    <img src={serviceData.imgUrl}></img>
-                                </div>
-                                <table className="table-auto w-full text-gray-500 dark:text-gray-400">
-                                    <tbody>
-                                        {
-                                            Object.keys(serviceData.service).map((key: string, index: number) => {
-                                                return (
-                                                    <tr key={index}>
-                                                        <td className="border px-6 py-3 text-gray-800">
-                                                            {fields[key]}
-                                                        </td>
-
-                                                        <td className="border px-6 py-3 text-gray-800">
-                                                            {serviceData.service[key]}
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                    </tbody>
-                                </table>
-
-                                <div className="">
-                                    <OfficialWebsiteButton
-                                        url={serviceData.officialWebsite}
-                                    />
-                                </div>
-                            </div>
-                        )
-                    }
-                </div> */}
-
-
-            <div className="container">
-                <p
-                    className="text-gray-600 w-full [border:none] [outline:none] bg-gray-ededed self-stretch h-[47px] overflow-hidden shrink-0 flex flex-row items-start justify-start py-2.5 px-6 box-border font-yugothic font-bold text-lg text-gyar-6a6a6a min-w-[216px]"
-                    style={{
-                        background: "#EDEDED"
-                    }}
-                >
-                    似た条件のサービス
-                </p>
+            <div className="p-4">
+                <h1 className="text-2xl font-bold mt-0 mb-4">
+                    <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">似た条件のサービス</h1>
+                </h1>
             </div>
 
             <div
