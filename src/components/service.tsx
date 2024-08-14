@@ -1,9 +1,11 @@
 "use client";
 
-import { ServiceResponse } from "@/constants/api/response/serviceResponse";
+import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
+import { Paths } from "@/constants/common/paths";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
-import { usePathname } from 'next/navigation';
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
@@ -11,6 +13,7 @@ import Breadcrumbs from "./breadcrumbs";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
 import SimilarServicesSwiper from "./swiper";
+import { Tag } from "./tag";
 
 
 export default function Page() {
@@ -25,9 +28,11 @@ export default function Page() {
     const [{ fetchService, fetchSimilarServices }] = useService();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
+    const router: AppRouterInstance = useRouter();
     const resService = fetchService(id);
     const serviceData: any = resService.data;
     const service: ServiceResponse | null = serviceData?.service;
+    const tags: TagsResponse[] | null = serviceData?.tags;
     const serviceIsLoading: boolean = resService.isLoading;
     const servicesIsError: boolean = resService.isError;
     const servicesIsFetchedAfterMount: boolean = resService.isFetchedAfterMount;
@@ -84,6 +89,15 @@ export default function Page() {
         }
     }
 
+    /**
+     * タグ名クリック時処理
+     * @param tagName タグ名
+     */
+    const tagNameClick = (tagName: string) => {
+        //ページ遷移
+        router.push(`${Paths.TAGS}/${tagName}`);
+    }
+
     return (
         <div className="container">
             <div className="p-4">
@@ -106,7 +120,7 @@ export default function Page() {
 
             <div className="">
                 {
-                    service && (
+                    service && Array.isArray(tags) && (
                         <div className="">
                             <div className="flex items-center justify-center">
                                 <img
@@ -155,11 +169,31 @@ export default function Page() {
                                 </table>
                             </div>
 
-
                             <div className="">
                                 <OfficialWebsiteButton
                                     url={service.officialWebsite}
                                 />
+                            </div>
+
+                            <div className="p-4">
+                                <h1 className="text-2xl font-bold mt-0 mb-4">
+                                    <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">タグ</h1>
+                                </h1>
+                                <div className="flex mt-2 p-4">
+                                    {
+                                        tags.map((tag: TagsResponse, index: number) => {
+                                            return (
+                                                <Tag
+                                                    key={index}
+                                                    tagName={tag.tagName}
+                                                    tagNameClick={tagNameClick}
+                                                >
+
+                                                </Tag>
+                                            )
+                                        })
+                                    }
+                                </div>
                             </div>
                         </div>
 

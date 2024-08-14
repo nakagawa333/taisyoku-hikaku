@@ -59,6 +59,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                             }
                         }
                     }
+                },
+                service_tags: {
+                    select: {
+                        tag_id: true,
+                        tags: {
+                            select: {
+                                tag_name: true
+                            }
+                        }
+                    }
                 }
             },
             where: {
@@ -100,6 +110,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (!contactInformationNames) contactInformationNames = "なし";
 
+    //タグ
+    let tags = [];
+    for (let serviceTag of service.service_tags) {
+        tags.push({
+            tagName: serviceTag.tags.tag_name
+        })
+    }
+
     let publicUrl: string;
     try {
         //ストレージから画像取得
@@ -134,6 +152,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
         {
             "service": serviceResponse,
+            "tags": tags
         }
     );
 

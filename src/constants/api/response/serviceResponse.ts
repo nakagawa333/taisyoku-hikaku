@@ -11,3 +11,7 @@ export type ServiceResponse = {
     imgUrl: string,
     officialWebsite: string
 }
+
+export type TagsResponse = {
+    tagName: string
+}
