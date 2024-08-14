@@ -119,6 +119,7 @@ export const TagsOfServices = () => {
                             return (
 
                                 <Card
+                                    key={service.serviceId}
                                     imgUrl={service?.imgUrl}
                                     serviceId={service.serviceId}
                                     serviceName={service.serviceName}
