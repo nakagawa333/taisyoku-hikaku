@@ -1,3 +1,5 @@
+import { Paths } from "@/constants/common/paths";
+import Link from "next/link";
 import { useState } from "react";
 
 type Props = {
@@ -31,10 +33,20 @@ export default function HamburgerMenu(props: Props) {
                                 <div className="absolute top-full left-0 right-0 bg-white z-50 flex flex-col items-center justify-center">
                                     {
                                         isLogin ? (
-                                            <a href="/logout" className="py-2">ログアウト</a>
+                                            <Link
+                                                href={Paths.LOGOUT}
+                                                className="py-2"
+                                            >
+                                                ログアウト
+                                            </Link>
 
                                         ) : (
-                                            <a href="/login" className="py-2">ログイン</a>
+                                            <Link
+                                                href={Paths.LOGIN}
+                                                className="py-2"
+                                            >
+                                                ログイン
+                                            </Link>
                                         )
                                     }
                                     <a href="#" className="py-2">プライバシーポリシー</a>
