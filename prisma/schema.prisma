@@ -32,6 +32,7 @@ model services {
   service_contact_information service_contact_information[]
   service_tags                service_tags[]
   similar_services            similar_services?
+  comments                    comments?
 }
 
 model managements {
@@ -86,4 +87,16 @@ model similar_services {
   created_at         DateTime @default(now())
   updated_at         DateTime @default(now()) @updatedAt
   services           services @relation(fields: [service_id], references: [service_id])
+}
+
+model comments {
+  id         Int      @id @default(autoincrement())
+  service_id String   @unique
+  comment_id String   @unique
+  name       String
+  comment    String
+  rating     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  services   services @relation(fields: [service_id], references: [service_id])
 }

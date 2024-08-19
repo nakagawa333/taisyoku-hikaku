@@ -2,6 +2,7 @@
 
 import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
+import { useComments } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -43,6 +44,13 @@ export default function Page() {
     const similarServicesIsError: boolean = resSimilarServices.isError;
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
+    const [{ fetchComments }] = useComments();
+    const resComments = fetchComments(id);
+    const commentsData = resComments.data;
+    const commentsIsLoading: boolean = resComments.isLoading;
+    const commentsIsError: boolean = resComments.isError;
+    const commentsIsAfterMount: boolean = resComments.isFetchedAfterMount;
+
     const fields: any = {
         "serviceName": "サービス名",
         "price": "料金",
@@ -54,7 +62,8 @@ export default function Page() {
         "hourService": "24時間受付"
     }
 
-    if (serviceIsLoading || similarServicesIsLoading || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount) {
+    if (serviceIsLoading || similarServicesIsLoading || commentsIsLoading ||
+        !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount || !commentsIsAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
@@ -62,7 +71,7 @@ export default function Page() {
         )
     }
 
-    if (servicesIsError || similarServicesIsError) {
+    if (servicesIsError || similarServicesIsError || commentsIsError) {
         return (
             <div className="container m-auto min-h-screen">
                 <ErrorSnackbar
@@ -218,6 +227,10 @@ export default function Page() {
                         />
                     )
                 }
+            </div>
+
+            <div className="container">
+
             </div>
         </div>
     )
