@@ -1,6 +1,6 @@
 "use client";
 
-import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
+import { ServiceComment, ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import { useComments } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
@@ -8,14 +8,14 @@ import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from "react";
+import StarRatings from "react-star-ratings";
+import Breadcrumbs from "./breadcrumbs";
 import ErrorSnackbar from "./ErrorSnackbar";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
-import Breadcrumbs from "./breadcrumbs";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
 import SimilarServicesSwiper from "./swiper";
 import { Tag } from "./tag";
-
 
 export default function Page() {
     const pathname = usePathname();
@@ -46,10 +46,12 @@ export default function Page() {
 
     const [{ fetchComments }] = useComments();
     const resComments = fetchComments(id);
-    const commentsData = resComments.data;
+    const commentsData: any = resComments.data;
     const commentsIsLoading: boolean = resComments.isLoading;
     const commentsIsError: boolean = resComments.isError;
     const commentsIsAfterMount: boolean = resComments.isFetchedAfterMount;
+
+    const ratings: number[] = [1, 2, 3, 4, 5];
 
     const fields: any = {
         "serviceName": "サービス名",
@@ -229,8 +231,60 @@ export default function Page() {
                 }
             </div>
 
-            <div className="container">
+            <div className="p-4">
+                <h1 className="text-2xl font-bold mt-0 mb-4">
+                    <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント</h1>
+                </h1>
+            </div>
 
+            <div className="container">
+                {
+                    commentsIsAfterMount && Array.isArray(commentsData?.comments) && (
+                        <div className="px-5">
+                            {
+                                commentsData.comments.map((comment: ServiceComment) =>
+                                    <article key={comment.commentId}>
+                                        <div className="flex items-center mb-4">
+                                            {
+                                                comment.gender === 0 ? (
+                                                    <img className="w-10 h-10 me-4 rounded-full" src="/men.jpg" alt="" />
+                                                ) : (
+                                                    <img className="w-10 h-10 me-4 rounded-full" src="/women.jpg" alt="" />
+                                                )
+                                            }
+                                            <div className="font-medium">
+                                                <p> {comment.name} <p className="block text-sm">{comment.createDay}</p></p>
+                                            </div>
+                                        </div>
+
+                                        <div className="pointer-events-none flex items-center mb-1 space-x-1 rtl:space-x-reverse">
+                                            <StarRatings
+                                                rating={comment.rating}
+                                                numberOfStars={5}
+                                                name='rating'
+                                                starRatedColor="yellow"
+                                                starHoverColor="yellow"
+                                                ignoreInlineStyles={false}
+                                                starDimension="14px"
+                                                starSpacing="0px"
+                                            />
+
+                                            <h3 className="ms-2 text-sm pt-1">
+                                                {comment.title}
+                                            </h3>
+                                        </div>
+
+                                        <article className="text-wrap">
+                                            <p className="mb-2 whitespace-pre-line">
+                                                {comment.comment}
+                                            </p>
+                                        </article>
+                                    </article>
+                                )
+                            }
+                        </div>
+                    )
+                }
             </div>
         </div>
     )

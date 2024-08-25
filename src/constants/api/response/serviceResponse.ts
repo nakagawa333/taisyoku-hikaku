@@ -15,3 +15,13 @@ export type ServiceResponse = {
 export type TagsResponse = {
     tagName: string
 }
+
+export type ServiceComment = {
+    commentId: string,
+    name: string,
+    title: string,
+    comment: string,
+    rating: number,
+    createDay: string,
+    gender: number
+}

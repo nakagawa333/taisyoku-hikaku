@@ -94,8 +94,10 @@ model comments {
   service_id String   @unique
   comment_id String   @unique
   name       String
+  title      String
   comment    String
   rating     Int
+  gender     Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   services   services @relation(fields: [service_id], references: [service_id])

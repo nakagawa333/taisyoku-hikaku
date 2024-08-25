@@ -1,5 +1,7 @@
+import { ServiceComment } from "@/constants/api/response/serviceResponse";
 import { fetchComments } from "@/hooks/prisma/services/comments/fetchComments";
 import validate from "@/utils/api/validate/comments";
+import { formatDateToYMD } from "@/utils/common/date";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,9 +34,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             select: {
                 comment_id: true,
                 name: true,
+                title: true,
                 comment: true,
                 rating: true,
-                created_at: true
+                created_at: true,
+                gender: true
             },
             where: {
                 service_id: serviceId
@@ -49,15 +53,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ "msg": "コメント一覧の取得に失敗しました" }, { status: 400 });
     }
 
-    //TODO 投稿日時をyyyy/mm/ddに変換
-    let modifiedComments: any[] = [];
+    let modifiedComments: ServiceComment[] = [];
     if (Array.isArray(comments)) {
         modifiedComments = comments.map(comment => ({
             commentId: comment.comment_id,
             name: comment.name,
+            title: comment.title,
             comment: comment.comment,
             rating: comment.rating,
-            createAt: comment.created_at
+            createDay: formatDateToYMD(comment.created_at),
+            gender: comment.gender
         }));
     }
 
