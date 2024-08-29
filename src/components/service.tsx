@@ -2,29 +2,40 @@
 
 import { ServiceComment, ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
-import { useComments } from "@/hooks/reactQuery/comments";
+import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { useQueryComments } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from "react";
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from "react";
 import StarRatings from "react-star-ratings";
 import Breadcrumbs from "./breadcrumbs";
 import ErrorSnackbar from "./ErrorSnackbar";
 import OfficialWebsiteButton from "./OfficialWebsiteButton";
+import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
 import SimilarServicesSwiper from "./swiper";
 import { Tag } from "./tag";
 
 export default function Page() {
+    const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
     const pathname = usePathname();
     let pathnameSplit = pathname?.split("/");
+    //パス
+    const path: string = pathname !== null ? pathname : "";
 
+    const queryClient = useQueryClient();
     let id: string = "";
     if (pathnameSplit) {
         id = pathnameSplit[pathnameSplit?.length - 1];
     }
+
+    const [page, setPage] = useState("1");
+    const [params, setParams] = useState("?");
+    const [currentPage, setCurrentPage] = useState(1);
 
     const [{ fetchService, fetchSimilarServices }] = useService();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
@@ -44,12 +55,40 @@ export default function Page() {
     const similarServicesIsError: boolean = resSimilarServices.isError;
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
-    const [{ fetchComments }] = useComments();
-    const resComments = fetchComments(id);
+    const [{ fetchComments, fetchCommentsMetaData }] = useQueryComments();
+    const resComments = fetchComments(id, page);
     const commentsData: any = resComments.data;
     const commentsIsLoading: boolean = resComments.isLoading;
     const commentsIsError: boolean = resComments.isError;
     const commentsIsAfterMount: boolean = resComments.isFetchedAfterMount;
+
+    const resCommentsMetaData = fetchCommentsMetaData(id);
+    const commentsMetaDataData: any = resCommentsMetaData.data;
+    const commentsMetaDataIsLoading: boolean = resComments.isLoading;
+    const commentsMetaDataIsError: boolean = resComments.isError;
+    const commentsMetaDataIsAfterMount: boolean = resComments.isFetchedAfterMount;
+
+    useEffect(() => {
+        let params: string = "?";
+        if (searchParams !== null) {
+            for (const [key, value] of searchParams) {
+                if (key === "p" && value !== page) {
+                    if (value !== page) {
+                        setPage(value);
+                        setCurrentPage(Number(value));
+                    }
+                } else {
+                    params += `${key}=${value}&`;
+                    setParams(params);
+                }
+            }
+        }
+
+    }, [searchParams])
+
+    useEffect(() => {
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
+    }, [page])
 
     const ratings: number[] = [1, 2, 3, 4, 5];
 
@@ -64,8 +103,9 @@ export default function Page() {
         "hourService": "24時間受付"
     }
 
-    if (serviceIsLoading || similarServicesIsLoading || commentsIsLoading ||
-        !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount || !commentsIsAfterMount) {
+    if (serviceIsLoading || similarServicesIsLoading || commentsIsLoading || commentsMetaDataIsLoading
+        || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount ||
+        !commentsIsAfterMount || !commentsMetaDataIsAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
@@ -73,7 +113,7 @@ export default function Page() {
         )
     }
 
-    if (servicesIsError || similarServicesIsError || commentsIsError) {
+    if (servicesIsError || similarServicesIsError || commentsIsError || commentsMetaDataIsError) {
         return (
             <div className="container m-auto min-h-screen">
                 <ErrorSnackbar
@@ -233,7 +273,14 @@ export default function Page() {
 
             <div className="p-4">
                 <h1 className="text-2xl font-bold mt-0 mb-4">
-                    <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント</h1>
+                    {
+                        commentsMetaDataIsAfterMount
+                            && commentsMetaDataData?.totalCount ? (
+                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント {commentsMetaDataData.totalCount}件</h1>
+                        ) : (
+                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント 0件</h1>
+                        )
+                    }
                 </h1>
             </div>
 
@@ -285,6 +332,33 @@ export default function Page() {
                         </div>
                     )
                 }
+
+                {
+                    !Array.isArray(commentsData?.comments) || commentsData.comments.length === 0 && (
+                        <div className="px-5">
+                            <p className="text-lg mb-4 border-b-2">
+                                まだコメントは投稿されていません
+                            </p>
+                        </div>
+                    )
+                }
+
+                <div className="mb-5">
+                    {
+                        commentsMetaDataIsAfterMount
+                            && commentsMetaDataData?.lastPage
+                            && commentsMetaDataData?.totalCount ? (
+                            <Pagination
+                                currentPage={currentPage}
+                                lastPage={commentsMetaDataData.lastPage}
+                                path={path}
+                                params={params}
+                            />
+                        ) : (
+                            <></>
+                        )
+                    }
+                </div>
             </div>
         </div>
     )
