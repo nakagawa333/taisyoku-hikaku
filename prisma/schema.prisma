@@ -89,6 +89,11 @@ model similar_services {
   services           services @relation(fields: [service_id], references: [service_id])
 }
 
+enum Gender {
+  MEN
+  WOMEN
+}
+
 model comments {
   id         Int      @id @default(autoincrement())
   service_id String   @unique
@@ -97,7 +102,7 @@ model comments {
   title      String
   comment    String
   rating     Int
-  gender     Int
+  gender     Gender
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   services   services @relation(fields: [service_id], references: [service_id])

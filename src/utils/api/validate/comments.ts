@@ -4,7 +4,7 @@ import Joi, { ObjectSchema } from "joi";
  * 退職代行サービス コメント一覧取得 バリデーションチェック
  */
 
-export default function validate(
+export default function commentsValidate(
     serviceId: string | null
 ) {
     const schema: ObjectSchema<any> = Joi.object({

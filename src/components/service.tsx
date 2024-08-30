@@ -293,7 +293,7 @@ export default function Page() {
                                     <article key={comment.commentId}>
                                         <div className="flex items-center mb-4">
                                             {
-                                                comment.gender === 0 ? (
+                                                comment.gender === "MEN" ? (
                                                     <img className="w-10 h-10 me-4 rounded-full" src="/men.jpg" alt="" />
                                                 ) : (
                                                     <img className="w-10 h-10 me-4 rounded-full" src="/women.jpg" alt="" />

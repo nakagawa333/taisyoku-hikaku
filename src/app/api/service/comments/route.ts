@@ -1,10 +1,14 @@
 import { ServiceComment } from "@/constants/api/response/serviceResponse";
 import { Take } from "@/constants/db/take";
+import { createComments } from "@/hooks/prisma/services/comments/createComment";
 import { fetchComments } from "@/hooks/prisma/services/comments/fetchComments";
-import validate from "@/utils/api/validate/comments";
+import { transaction } from "@/hooks/prisma/transaction";
+import commentsValidate from "@/utils/api/validate/comments";
+import createCommentValidate from "@/utils/api/validate/createComments";
 import { formatDateToYMD } from "@/utils/common/date";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
+import crypto from 'crypto';
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -13,11 +17,24 @@ import { NextRequest, NextResponse } from "next/server";
  *   get:
  *     summary: 退職代行サービス コメント一覧取得API
  *     description: 退職代行サービス コメント一覧取得
+ *     parameters:
+ *      - in: query
+ *        name: serviceId
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: サービスID
+ *      - in: query
+ *        name: p
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: ページ番号
  *     responses:
  *       200:
  *         description: 成功時のレスポンス
  *　　　 400:
-           description: バリデーションチェックエラー時のレスポンス
+ *         description: バリデーションチェックエラー時のレスポンス
  * 　　　500:
  *         description: 退職代行サービス コメント一覧取得失敗時のレスポンス
  */
@@ -28,7 +45,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const page: string | null = params.get("page");
 
     //バリデーションチェック
-    let validateError = validate(serviceId);
+    let validateError = commentsValidate(serviceId);
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
     let orderBy: any = {
@@ -86,5 +103,73 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
         comments: modifiedComments
+    })
+}
+
+
+/**
+ * @swagger
+ * /api/service/comments:
+ *   post:
+ *     summary: 退職代行サービス コメント作成API
+ *     description: 退職代行サービス コメント作成API
+ *     parameters:
+ *      - in: query
+ *        name: serviceId
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: サービスID
+ *      - in: query
+ *        name: p
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: ページ番号
+ *     responses:
+ *       200:
+ *         description: 成功時のレスポンス
+ *　　　 400:
+ *         description: バリデーションチェックエラー時のレスポンス
+ * 　　　500:
+ *         description: 退職代行サービス コメント一覧取得失敗時のレスポンス
+ */
+export async function POST(request: NextRequest): Promise<NextResponse> {
+    const json = await request.json();
+
+    //バリデーションチェック
+    let validateError = createCommentValidate(json.serviceId, json.name, json.comment, json.rating, json.title, json.gender);
+    if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
+
+    //コメントID
+    const commentId: string = crypto.randomUUID();
+    //現在時刻
+    const now = new Date().toISOString();
+
+    try {
+        const query: Prisma.commentsCreateArgs = {
+            data: {
+                service_id: json.serviceId,
+                comment_id: commentId,
+                name: json.name,
+                comment: json.comment,
+                rating: json.rating,
+                title: json.title,
+                gender: json.gender,
+                created_at: now,
+                updated_at: now
+            }
+        };
+
+        const res = await transaction(createComments(query));
+
+    } catch (ex: any) {
+        console.error(ex);
+        console.error("DB処理に失敗しました");
+        return NextResponse.json({ "msg": "コメントの新規作成に失敗しました" }, { status: 500 });
+    }
+
+    return NextResponse.json({
+        msg: "成功しました"
     })
 }
