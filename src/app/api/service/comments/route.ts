@@ -47,9 +47,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let validateError = commentsValidate(serviceId);
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
-    let orderBy: any = {
-        id: "asc"
-    };
+    let orderBy: any = [
+        { id: "desc" },
+        { updated_at: "desc" }
+    ]
 
     const take: number = Take.COMMENTS;
     let skip: number = 0;
