@@ -1,8 +1,7 @@
 import { ServiceComment } from "@/constants/api/response/serviceResponse";
 import { Take } from "@/constants/db/take";
-import { createComments } from "@/hooks/prisma/services/comments/createComment";
+import { createCommentsHandleTransaction } from "@/hooks/prisma/services/comments/createCommentsHandleTransaction";
 import { fetchComments } from "@/hooks/prisma/services/comments/fetchComments";
-import { transaction } from "@/hooks/prisma/transaction";
 import commentsValidate from "@/utils/api/validate/comments";
 import createCommentValidate from "@/utils/api/validate/createComments";
 import { formatDateToYMD } from "@/utils/common/date";
@@ -148,32 +147,41 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     let validateError = createCommentValidate(json.serviceId, json.name, json.comment, json.rating, json.title, json.gender);
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
+    //サービスID
+    const serviceId: string = json.serviceId;
     //コメントID
     const commentId: string = crypto.randomUUID();
     //現在時刻
     const now = new Date().toISOString();
 
+    const selectUniqueQuery: Prisma.servicesFindUniqueArgs = {
+        select: {
+            service_id: true
+        },
+        where: {
+            service_id: serviceId
+        }
+    }
+
+    const createQuery: Prisma.commentsCreateArgs = {
+        data: {
+            service_id: serviceId,
+            comment_id: commentId,
+            name: json.name,
+            comment: json.comment,
+            rating: json.rating,
+            title: json.title,
+            gender: json.gender,
+            created_at: now,
+            updated_at: now
+        }
+    };
+
     try {
-        const query: Prisma.commentsCreateArgs = {
-            data: {
-                service_id: json.serviceId,
-                comment_id: commentId,
-                name: json.name,
-                comment: json.comment,
-                rating: json.rating,
-                title: json.title,
-                gender: json.gender,
-                created_at: now,
-                updated_at: now
-            }
-        };
-
-        const res = await transaction(createComments(query));
-
-    } catch (ex: any) {
-        console.error(ex);
-        console.error("DB処理に失敗しました");
-        return NextResponse.json({ "msg": "コメントの新規作成に失敗しました" }, { status: 500 });
+        await createCommentsHandleTransaction(selectUniqueQuery, createQuery);
+    } catch (error: any) {
+        console.error(error);
+        return NextResponse.json({ "msg": error.message }, { status: 500 });
     }
 
     return NextResponse.json({
