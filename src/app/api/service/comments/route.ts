@@ -106,34 +106,41 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     })
 }
 
-
 /**
  * @swagger
  * /api/service/comments:
  *   post:
  *     summary: 退職代行サービス コメント作成API
  *     description: 退職代行サービス コメント作成API
- *     parameters:
- *      - in: query
- *        name: serviceId
- *        schema:
- *           type: string
- *        required: true
- *        description: サービスID
- *      - in: query
- *        name: p
- *        schema:
- *           type: string
- *        required: true
- *        description: ページ番号
+ *     requestBody:
+ *       description: リクエストボディ
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               serviceId:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *               rating:
+ *                 type: integer
+ *               title:
+ *                 type: string
+ *               gender:
+ *                 type: string
  *     responses:
  *       200:
  *         description: 成功時のレスポンス
- *　　　 400:
+ *       400:
  *         description: バリデーションチェックエラー時のレスポンス
- * 　　　500:
+ *       500:
  *         description: 退職代行サービス コメント一覧取得失敗時のレスポンス
  */
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
     const json = await request.json();
 
