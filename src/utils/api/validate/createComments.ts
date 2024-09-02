@@ -1,14 +1,14 @@
 import Joi, { ObjectSchema } from "joi";
 
 /**
- * コメント新規作成用バリデーションチェック
+ * 口コミ新規作成用バリデーションチェック
  * @param serviceId 
  * @returns 
  */
 export default function createCommentValidate(
     serviceId: string | undefined,
     name: string | undefined,
-    comment: string | undefined,
+    review: string | undefined,
     rating: number | undefined,
     title: string | undefined,
     gender: string | undefined
@@ -20,8 +20,8 @@ export default function createCommentValidate(
         name: Joi.string().required().messages({
             "any.required": "名前は必須項目です。"
         }),
-        comment: Joi.string().required().messages({
-            "any.required": "コメントは必須項目です。"
+        review: Joi.string().required().messages({
+            "any.required": "レビューは必須項目です。"
         }),
         rating: Joi.number().min(1).max(5).required().messages({
             "number.base": "評価は数値のみ許可されています。",
@@ -38,6 +38,6 @@ export default function createCommentValidate(
         })
     });
 
-    const { error } = schema.validate({ serviceId: serviceId, name: name, comment: comment, rating: rating, title: title, gender: gender });
+    const { error } = schema.validate({ serviceId: serviceId, name: name, review: review, rating: rating, title: title, gender: gender });
     return error;
 }

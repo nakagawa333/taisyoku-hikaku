@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema } from "joi";
 
 /**
- * 退職代行サービス コメント一覧取得 バリデーションチェック
+ * 退職代行サービス 口コミ一覧取得 バリデーションチェック
  */
 
 export default function commentsValidate(

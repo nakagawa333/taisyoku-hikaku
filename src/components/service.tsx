@@ -17,6 +17,8 @@ import OfficialWebsiteButton from "./OfficialWebsiteButton";
 import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
+import PostReview from "./review/postReview";
+import SuccessSnackbar from "./successSnackbar";
 import SimilarServicesSwiper from "./swiper";
 import { Tag } from "./tag";
 
@@ -40,6 +42,21 @@ export default function Page() {
     const [{ fetchService, fetchSimilarServices }] = useService();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
+    const [postReviewData, setPostReviewData] = useState<any>({
+        reviewCharacterCount: 0,
+        name: "",
+        reviewRating: 5,
+        gender: "MEN",
+        title: "",
+        review: "",
+    });
+
+    const [successSnackbarData, setSuccessSnackbarData] = useState<any>({
+        message: "",
+        time: 0,
+        isOpen: false
+    })
+
     const router: AppRouterInstance = useRouter();
     const resService = fetchService(id);
     const serviceData: any = resService.data;
@@ -55,7 +72,7 @@ export default function Page() {
     const similarServicesIsError: boolean = resSimilarServices.isError;
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
-    const [{ fetchComments, fetchCommentsMetaData }] = useQueryComments();
+    const [{ fetchComments, fetchCommentsMetaData, createComment }] = useQueryComments();
     const resComments = fetchComments(id, page);
     const commentsData: any = resComments.data;
     const commentsIsLoading: boolean = resComments.isLoading;
@@ -67,6 +84,8 @@ export default function Page() {
     const commentsMetaDataIsLoading: boolean = resComments.isLoading;
     const commentsMetaDataIsError: boolean = resComments.isError;
     const commentsMetaDataIsAfterMount: boolean = resComments.isFetchedAfterMount;
+
+    const commentWithArgs = createComment();
 
     useEffect(() => {
         let params: string = "?";
@@ -149,6 +168,93 @@ export default function Page() {
         router.push(`${Paths.TAGS}/${tagName}`);
     }
 
+    /**
+     * 口コミ投稿時 
+     */
+    const postReviewSubmit = async (e: any) => {
+        e.preventDefault();
+
+        const commentData = {
+            serviceId: id,
+            name: postReviewData.name,
+            rating: postReviewData.reviewRating,
+            gender: postReviewData.gender,
+            title: postReviewData.title,
+            review: postReviewData.review
+        }
+        try {
+            const res = await commentWithArgs.mutate(commentData);
+        } catch (error: any) {
+            console.error(error);
+            return;
+        }
+
+        setSuccessSnackbarData({
+            message: "口コミ投稿に成功しました",
+            time: 5000,
+            isOpen: true
+        })
+    }
+
+    /**
+     * 口コミ入力値変更イベント
+     * @param e 変更イベント
+     * @param element 要素
+     */
+    const postReviewInputOnChange = (e: React.ChangeEvent<HTMLInputElement>, element: string) => {
+        const value: string = e.target.value;
+        if (postReviewData.hasOwnProperty(element)) {
+            const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
+            copyPostReviewData[element] = value;
+            setPostReviewData(copyPostReviewData);
+        }
+    }
+
+    /**
+     * 口コミセレクトボックス変更時イベント
+     * @param e 変更イベント
+     * @param element 要素
+     */
+    const postReviewSelectOnChange = (e: React.ChangeEvent<HTMLSelectElement>, element: string) => {
+        const value: string = e.target.value;
+        if (postReviewData.hasOwnProperty(element)) {
+            const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
+            copyPostReviewData[element] = value;
+            setPostReviewData(copyPostReviewData);
+        }
+    }
+
+    /**
+     * レビュー入力欄変更時
+     * @param value 入力値
+     */
+    const reviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value: string = e.target.value;
+        const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
+        copyPostReviewData["review"] = value;
+        copyPostReviewData["reviewCharacterCount"] = value.length
+        setPostReviewData(copyPostReviewData);
+    }
+
+    /**
+     * 口コミ評価変更イベント
+     * @param rating 評価
+     */
+    const changeReviewRating = (rating: number) => {
+        const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
+        copyPostReviewData["reviewRating"] = rating;
+
+        setPostReviewData(copyPostReviewData)
+    }
+
+    const closeSuccessSnackbar = () => {
+        setSuccessSnackbarData({
+            message: "",
+            time: 0,
+            isOpen: false
+        })
+    }
+
     return (
         <div className="container">
             <div className="p-4">
@@ -215,6 +321,26 @@ export default function Page() {
                                             <td className="border px-4 py-2 bg-gray-200 w-1/4">24時間受付</td>
                                             <td className="border px-4 py-2 w-3/4">{service.hourService}</td>
                                         </tr>
+                                        <tr>
+                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">タグ</td>
+                                            <td className="border px-4 py-2 w-3/4">
+                                                <div className="flex">
+                                                    {
+                                                        tags.map((tag: TagsResponse, index: number) => {
+                                                            return (
+                                                                <Tag
+                                                                    key={index}
+                                                                    tagName={tag.tagName}
+                                                                    tagNameClick={tagNameClick}
+                                                                >
+
+                                                                </Tag>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </tbody>
 
                                 </table>
@@ -224,27 +350,6 @@ export default function Page() {
                                 <OfficialWebsiteButton
                                     url={service.officialWebsite}
                                 />
-                            </div>
-
-                            <div className="p-4">
-                                <h1 className="text-2xl font-bold mt-0 mb-4">
-                                    <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">タグ</h1>
-                                </h1>
-                                <div className="flex mt-2 p-4">
-                                    {
-                                        tags.map((tag: TagsResponse, index: number) => {
-                                            return (
-                                                <Tag
-                                                    key={index}
-                                                    tagName={tag.tagName}
-                                                    tagNameClick={tagNameClick}
-                                                >
-
-                                                </Tag>
-                                            )
-                                        })
-                                    }
-                                </div>
                             </div>
                         </div>
 
@@ -276,9 +381,9 @@ export default function Page() {
                     {
                         commentsMetaDataIsAfterMount
                             && commentsMetaDataData?.totalCount ? (
-                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント {commentsMetaDataData.totalCount}件</h1>
+                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">口コミ {commentsMetaDataData.totalCount}件</h1>
                         ) : (
-                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">コメント 0件</h1>
+                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">口コミ 0件</h1>
                         )
                     }
                 </h1>
@@ -359,7 +464,26 @@ export default function Page() {
                         )
                     }
                 </div>
+
+                <div className="px-5">
+                    <PostReview
+                        postData={postReviewData}
+                        onSubmit={postReviewSubmit}
+                        onInputChange={postReviewInputOnChange}
+                        onSelectChange={postReviewSelectOnChange}
+                        onChangeRating={changeReviewRating}
+                        reviewChange={reviewChange}
+                    />
+
+                </div>
             </div>
+
+            <SuccessSnackbar
+                message={successSnackbarData.message}
+                time={successSnackbarData.time}
+                isOpen={successSnackbarData.isOpen}
+                onClose={closeSuccessSnackbar}
+            />
         </div>
     )
 }

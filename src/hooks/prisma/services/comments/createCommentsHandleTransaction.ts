@@ -23,7 +23,7 @@ export const createCommentsHandleTransaction = async (
             await createComments(createQuery);
         } catch (error: any) {
             console.error(error);
-            throw new Error("コメントの新規作成に失敗しました");
+            throw new Error("口コミの新規作成に失敗しました");
         }
     });
 }

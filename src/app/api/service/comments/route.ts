@@ -145,7 +145,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const json = await request.json();
 
     //バリデーションチェック
-    let validateError = createCommentValidate(json.serviceId, json.name, json.comment, json.rating, json.title, json.gender);
+    let validateError = createCommentValidate(json.serviceId, json.name, json.review, json.rating, json.title, json.gender);
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
     //サービスID
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             service_id: serviceId,
             comment_id: commentId,
             name: json.name,
-            comment: json.comment,
+            comment: json.review,
             rating: json.rating,
             title: json.title,
             gender: json.gender,
