@@ -2,7 +2,7 @@ import StarRatings from "react-star-ratings";
 
 type Props = {
     postData: any
-    onSubmit: (e: any) => void
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
     onChangeRating: (rating: number) => void
     onInputChange: (e: React.ChangeEvent<HTMLInputElement>, element: string) => void
     onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>, element: string) => void

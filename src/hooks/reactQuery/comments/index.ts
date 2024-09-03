@@ -1,10 +1,11 @@
 "use client";
 import { Endpoints } from "@/constants/common/endpoints";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
-import { MutationFunction, useMutation, useQuery } from "@tanstack/react-query";
+import { MutationFunction, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useQueryComments = () => {
+    const queryClient = useQueryClient();
 
     /**
      * 口コミ一覧を取得する
@@ -68,7 +69,12 @@ export const useQueryComments = () => {
             return res.data;
         };
         return useMutation({
-            mutationFn: mutationFn
+            mutationFn: mutationFn,
+            onSuccess: () => {
+                //口コミ追加成功時、口コミ一覧を再取得
+                queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
+                queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTSMETADATA] });
+            }
         });
     };
 

@@ -109,19 +109,6 @@ export default function Page() {
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
     }, [page])
 
-    const ratings: number[] = [1, 2, 3, 4, 5];
-
-    const fields: any = {
-        "serviceName": "サービス名",
-        "price": "料金",
-        "managementName": "運営元",
-        "contactInformationNames": "連絡先",
-        "freeConsultation": "無料相談",
-        "guaranteeSystem": "送金保証",
-        "freeGift": "無料プレゼント",
-        "hourService": "24時間受付"
-    }
-
     if (serviceIsLoading || similarServicesIsLoading || commentsIsLoading || commentsMetaDataIsLoading
         || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount ||
         !commentsIsAfterMount || !commentsMetaDataIsAfterMount) {
@@ -171,7 +158,7 @@ export default function Page() {
     /**
      * 口コミ投稿時 
      */
-    const postReviewSubmit = async (e: any) => {
+    const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const commentData = {
@@ -183,7 +170,8 @@ export default function Page() {
             review: postReviewData.review
         }
         try {
-            const res = await commentWithArgs.mutate(commentData);
+            const res = commentWithArgs.mutate(commentData);
+            console.info(res);
         } catch (error: any) {
             console.error(error);
             return;
@@ -194,6 +182,18 @@ export default function Page() {
             time: 5000,
             isOpen: true
         })
+
+        //値の初期化
+        setPostReviewData({
+            reviewCharacterCount: 0,
+            name: "",
+            reviewRating: 5,
+            gender: "MEN",
+            title: "",
+            review: "",
+        });
+
+        // queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
     }
 
     /**
