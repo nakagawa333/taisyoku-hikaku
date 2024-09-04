@@ -168,10 +168,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         data: {
             service_id: serviceId,
             comment_id: commentId,
-            name: json.name,
-            comment: json.review,
+            name: json.name.trim(),
+            comment: json.review.trim(),
             rating: json.rating,
-            title: json.title,
+            title: json.title.trim(),
             gender: json.gender,
             created_at: now,
             updated_at: now
