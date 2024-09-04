@@ -18,7 +18,7 @@ import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
 import PostReview from "./review/postReview";
-import SuccessSnackbar from "./successSnackbar";
+import Snackbar from "./snackbar";
 import SimilarServicesSwiper from "./swiper";
 import { Tag } from "./tag";
 
@@ -51,7 +51,8 @@ export default function Page() {
         review: "",
     });
 
-    const [successSnackbarData, setSuccessSnackbarData] = useState<any>({
+    const [snackbarData, setSnackbarData] = useState<any>({
+        state: "",
         message: "",
         time: 0,
         isOpen: false
@@ -163,21 +164,28 @@ export default function Page() {
 
         const commentData = {
             serviceId: id,
-            name: postReviewData.name,
+            name: postReviewData.name.trim(),
             rating: postReviewData.reviewRating,
             gender: postReviewData.gender,
-            title: postReviewData.title,
-            review: postReviewData.review
+            title: postReviewData.title.trim(),
+            review: postReviewData.review.trim()
         }
+
         try {
-            const res = commentWithArgs.mutate(commentData);
-            console.info(res);
+            const res = await commentWithArgs.mutateAsync(commentData);
         } catch (error: any) {
             console.error(error);
+            setSnackbarData({
+                state: "error",
+                message: "口コミ投稿に失敗しました",
+                time: 5000,
+                isOpen: true
+            })
             return;
         }
 
-        setSuccessSnackbarData({
+        setSnackbarData({
+            state: "success",
             message: "口コミ投稿に成功しました",
             time: 5000,
             isOpen: true
@@ -193,7 +201,8 @@ export default function Page() {
             review: "",
         });
 
-        // queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTSMETADATA] });
     }
 
     /**
@@ -248,7 +257,8 @@ export default function Page() {
     }
 
     const closeSuccessSnackbar = () => {
-        setSuccessSnackbarData({
+        setSnackbarData({
+            state: "",
             message: "",
             time: 0,
             isOpen: false
@@ -426,7 +436,7 @@ export default function Page() {
                                             </h3>
                                         </div>
 
-                                        <article className="text-wrap">
+                                        <article className="break-words break-all whitespace-normal">
                                             <p className="mb-2 whitespace-pre-line">
                                                 {comment.comment}
                                             </p>
@@ -478,10 +488,11 @@ export default function Page() {
                 </div>
             </div>
 
-            <SuccessSnackbar
-                message={successSnackbarData.message}
-                time={successSnackbarData.time}
-                isOpen={successSnackbarData.isOpen}
+            <Snackbar
+                state={snackbarData.state}
+                message={snackbarData.message}
+                time={snackbarData.time}
+                isOpen={snackbarData.isOpen}
                 onClose={closeSuccessSnackbar}
             />
         </div>

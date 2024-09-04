@@ -69,12 +69,7 @@ export const useQueryComments = () => {
             return res.data;
         };
         return useMutation({
-            mutationFn: mutationFn,
-            onSuccess: () => {
-                //口コミ追加成功時、口コミ一覧を再取得
-                queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
-                queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTSMETADATA] });
-            }
+            mutationFn: mutationFn
         });
     };
 

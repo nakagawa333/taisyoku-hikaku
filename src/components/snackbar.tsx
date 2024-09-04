@@ -1,6 +1,7 @@
 import { memo, useEffect } from "react";
 
 type Props = {
+    state: string
     message: string
     time: number
     isOpen: boolean
@@ -8,18 +9,29 @@ type Props = {
 }
 
 //成功用Snackbar
-function SuccessSnackbar(props: Props) {
-    const { message, time, isOpen, onClose } = props;
+function Snackbar(props: Props) {
+    const { state, message, time, isOpen, onClose } = props;
+
+    let color: string = "bg-red-500";
+
+    if (state === "error") {
+        color = "bg-red-500"
+    } else if (state === "success") {
+        color = "bg-teal-500";
+    }
 
     useEffect(() => {
-        let timer: NodeJS.Timeout;
-        timer = setTimeout(() => {
-            onClose()
-        }, time);
+        if (isOpen) {
+            let timer: NodeJS.Timeout;
+            timer = setTimeout(() => {
+                onClose()
+            }, time);
 
-        return (() => {
-            clearTimeout(timer);
-        })
+            return (() => {
+                clearTimeout(timer);
+            })
+        }
+
     }, [isOpen, time, onClose]);
 
     return (
@@ -32,7 +44,7 @@ function SuccessSnackbar(props: Props) {
                             zIndex: 99999
                         }}
                     >
-                        <div className="w-9/12 h-12 flex bg-teal-500 text-white text-sm rounded py-2 px-3 shadow-lg items-center justify-between">
+                        <div className={`${color} w-9/12 h-12 flex text-white text-sm rounded py-2 px-3 shadow-lg items-center justify-between`}>
                             <div>
                                 <p>{message}</p>
                             </div>
@@ -61,4 +73,4 @@ function SuccessSnackbar(props: Props) {
     )
 }
 
-export default memo(SuccessSnackbar);
+export default memo(Snackbar);
