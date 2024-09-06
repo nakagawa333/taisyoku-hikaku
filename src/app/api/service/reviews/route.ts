@@ -41,7 +41,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const params: URLSearchParams = request.nextUrl.searchParams;
     //TODO offsetとcurrentを設定しページ毎に取得できるよう修正
     const serviceId: string = params.get("serviceId") ?? "";
-    const page: string | null = params.get("page");
 
     //バリデーションチェック
     let validateError = commentsValidate(serviceId);
@@ -50,36 +49,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let orderBy: any = [
         { id: "desc" },
         { updated_at: "desc" }
-    ]
+    ];
 
-    const take: number = Take.COMMENTS;
-    let skip: number = 0;
+    let take: number = Take.COMMENTS;
+    if (params.has("limit")) {
+        take = Number(params.get("limit"));
+    }
+
+    let query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
+        select: {
+            review_id: true,
+            name: true,
+            title: true,
+            review: true,
+            rating: true,
+            created_at: true,
+            gender: true
+        },
+        where: {
+            service_id: serviceId
+        },
+        orderBy: orderBy,
+        take: take
+    }
 
     if (params.has("p")) {
-        let page = Number(params.get("p"));
-        skip = (page - 1) * take;
+        let page: number = Number(params.get("p"));
+        let skip: number = (page - 1) * take;
+        query.skip = skip;
     }
 
     let reviews;
     try {
-        const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
-            select: {
-                review_id: true,
-                name: true,
-                title: true,
-                review: true,
-                rating: true,
-                created_at: true,
-                gender: true
-            },
-            where: {
-                service_id: serviceId
-            },
-            orderBy: orderBy,
-            take: take,
-            skip: skip
-        }
-
         reviews = await fetchReviews(query);
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
