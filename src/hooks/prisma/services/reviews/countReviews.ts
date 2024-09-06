@@ -7,6 +7,6 @@ import { DefaultArgs } from "@prisma/client/runtime/library";
  * @param query クエリ
  * @returns 口コミの合計
  */
-export async function countComments(query: Prisma.commentsCountArgs<DefaultArgs>) {
-    return await prisma.comments.count(query);
+export async function countReviews(query: Prisma.reviewsCountArgs<DefaultArgs>) {
+    return await prisma.reviews.count(query);
 }

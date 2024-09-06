@@ -32,7 +32,7 @@ model services {
   service_contact_information service_contact_information[]
   service_tags                service_tags[]
   similar_services            similar_services?
-  comments                    comments?
+  reviews                     reviews?
 }
 
 model managements {
@@ -94,13 +94,13 @@ enum Gender {
   WOMEN
 }
 
-model comments {
+model reviews {
   id         Int      @id @default(autoincrement())
   service_id String   @unique
   comment_id String   @unique
-  name       String
-  title      String
-  comment    String
+  name       String   @db.VarChar(30)
+  title      String   @db.VarChar(50)
+  review     String   @db.VarChar(400)
   rating     Int
   gender     Gender
   created_at DateTime @default(now())

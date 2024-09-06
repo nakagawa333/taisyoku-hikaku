@@ -6,6 +6,6 @@ import { Prisma } from "@prisma/client";
  * @param query クエリ
  * @returns 口コミの合計
  */
-export async function createComments(query: Prisma.commentsCreateArgs): Promise<any> {
-    return await prisma.comments.create(query);
+export async function createReviews(query: Prisma.reviewsCreateArgs): Promise<any> {
+    return await prisma.reviews.create(query);
 }

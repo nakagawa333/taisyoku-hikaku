@@ -18,11 +18,11 @@ export type TagsResponse = {
 
 export type Gender = "MEN" | "WOMEN";
 
-export type ServiceComment = {
-    commentId: string,
+export type ServiceReview = {
+    reviewId: string,
     name: string,
     title: string,
-    comment: string,
+    review: string,
     rating: number,
     createDay: string,
     gender: Gender

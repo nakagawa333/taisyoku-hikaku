@@ -1,11 +1,10 @@
 "use client";
 import { Endpoints } from "@/constants/common/endpoints";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
-import { MutationFunction, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { MutationFunction, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useQueryComments = () => {
-    const queryClient = useQueryClient();
+export const useQueryReviews = () => {
 
     /**
      * 口コミ一覧を取得する
@@ -14,11 +13,11 @@ export const useQueryComments = () => {
      */
 
     //TODO offsetとcurrentを設定しページ毎に取得できるよう修正
-    const fetchComments = (serviceId: string, page: string) => {
+    const fetchReviews = (serviceId: string, page: string) => {
         return useQuery({
-            queryKey: [ReactQueryKeys.SERVICECOMMENTS],
+            queryKey: [ReactQueryKeys.SERVICEREVIEWS],
             queryFn: async () => {
-                let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICECOMMENTS}?serviceId=${serviceId}&p=${page}`
+                let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}?serviceId=${serviceId}&p=${page}`
                 let res = await axios.get(reqUrl);
                 return res.data;
             }
@@ -30,11 +29,11 @@ export const useQueryComments = () => {
      * @param serviceId サービスID
      * @returns totalCount:全体の件数 lastPage:最終ページ
      */
-    const fetchCommentsMetaData = (serviceId: string) => {
+    const fetchReviewsMetaData = (serviceId: string) => {
         return useQuery({
-            queryKey: [ReactQueryKeys.SERVICECOMMENTSMETADATA],
+            queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA],
             queryFn: async () => {
-                let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICECOMMENTSMETADATA}?serviceId=${serviceId}`
+                let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWSMETADATA}?serviceId=${serviceId}`
                 let res = await axios.get(reqUrl);
                 return res.data;
             }
@@ -51,12 +50,12 @@ export const useQueryComments = () => {
      * @param review レビュー
      * @returns 
      */
-    const createComment = () => {
+    const createReview = () => {
 
         const mutationFn: MutationFunction<any, any> = async ({
             serviceId, name, rating, gender, title, review
         }) => {
-            const reqUrl = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICECOMMENTS}`;
+            const reqUrl = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}`;
             const data = {
                 serviceId,
                 name,
@@ -73,5 +72,5 @@ export const useQueryComments = () => {
         });
     };
 
-    return [{ fetchComments, fetchCommentsMetaData, createComment }]
+    return [{ fetchReviews, fetchReviewsMetaData, createReview }]
 }

@@ -4,6 +4,6 @@ export class Endpoints {
     static readonly SERVICESLASTPAGE = "/api/services/lastpage";
     static readonly SIMILARSERVICES = "/api/similar/services/";
     static readonly TAGS = "/api/tags/";
-    static readonly SERVICECOMMENTS = "/api/service/comments/";
-    static readonly SERVICECOMMENTSMETADATA = "/api/service/comments/metadata";
+    static readonly SERVICEREVIEWS = "/api/service/reviews/";
+    static readonly SERVICEREVIEWSMETADATA = "/api/service/reviews/metadata";
 }

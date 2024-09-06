@@ -1,9 +1,9 @@
 "use client";
 
-import { ServiceComment, ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
+import { ServiceResponse, ServiceReview, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
-import { useQueryComments } from "@/hooks/reactQuery/comments";
+import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
@@ -73,20 +73,20 @@ export default function Page() {
     const similarServicesIsError: boolean = resSimilarServices.isError;
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
-    const [{ fetchComments, fetchCommentsMetaData, createComment }] = useQueryComments();
-    const resComments = fetchComments(id, page);
-    const commentsData: any = resComments.data;
-    const commentsIsLoading: boolean = resComments.isLoading;
-    const commentsIsError: boolean = resComments.isError;
-    const commentsIsAfterMount: boolean = resComments.isFetchedAfterMount;
+    const [{ fetchReviews, fetchReviewsMetaData, createReview }] = useQueryReviews();
+    const resReviews = fetchReviews(id, page);
+    const reviewsData: any = resReviews.data;
+    const reviewsIsLoading: boolean = resReviews.isLoading;
+    const reviewsIsError: boolean = resReviews.isError;
+    const reviewsIsAfterMount: boolean = resReviews.isFetchedAfterMount;
 
-    const resCommentsMetaData = fetchCommentsMetaData(id);
-    const commentsMetaDataData: any = resCommentsMetaData.data;
-    const commentsMetaDataIsLoading: boolean = resComments.isLoading;
-    const commentsMetaDataIsError: boolean = resComments.isError;
-    const commentsMetaDataIsAfterMount: boolean = resComments.isFetchedAfterMount;
+    const resReviewsMetaData = fetchReviewsMetaData(id);
+    const reviewsMetaDataData: any = resReviewsMetaData.data;
+    const reviewsMetaDataIsLoading: boolean = resReviews.isLoading;
+    const reviewsMetaDataIsError: boolean = resReviews.isError;
+    const reviewsMetaDataIsAfterMount: boolean = resReviews.isFetchedAfterMount;
 
-    const commentWithArgs = createComment();
+    const reviewWithArgs = createReview();
 
     useEffect(() => {
         let params: string = "?";
@@ -107,12 +107,12 @@ export default function Page() {
     }, [searchParams])
 
     useEffect(() => {
-        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
     }, [page])
 
-    if (serviceIsLoading || similarServicesIsLoading || commentsIsLoading || commentsMetaDataIsLoading
+    if (serviceIsLoading || similarServicesIsLoading || reviewsIsLoading || reviewsMetaDataIsLoading
         || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount ||
-        !commentsIsAfterMount || !commentsMetaDataIsAfterMount) {
+        !reviewsIsAfterMount || !reviewsMetaDataIsAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
@@ -120,7 +120,7 @@ export default function Page() {
         )
     }
 
-    if (servicesIsError || similarServicesIsError || commentsIsError || commentsMetaDataIsError) {
+    if (servicesIsError || similarServicesIsError || reviewsIsError || reviewsMetaDataIsError) {
         return (
             <div className="container m-auto min-h-screen">
                 <ErrorSnackbar
@@ -162,7 +162,7 @@ export default function Page() {
     const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const commentData = {
+        const reviewData = {
             serviceId: id,
             name: postReviewData.name.trim(),
             rating: postReviewData.reviewRating,
@@ -172,7 +172,7 @@ export default function Page() {
         }
 
         try {
-            const res = await commentWithArgs.mutateAsync(commentData);
+            const res = await reviewWithArgs.mutateAsync(reviewData);
         } catch (error: any) {
             console.error(error);
             setSnackbarData({
@@ -201,8 +201,8 @@ export default function Page() {
             review: "",
         });
 
-        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTS] });
-        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICECOMMENTSMETADATA] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
     }
 
     /**
@@ -389,9 +389,9 @@ export default function Page() {
             <div className="p-4">
                 <h1 className="text-2xl font-bold mt-0 mb-4">
                     {
-                        commentsMetaDataIsAfterMount
-                            && commentsMetaDataData?.totalCount ? (
-                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">口コミ {commentsMetaDataData.totalCount}件</h1>
+                        reviewsMetaDataIsAfterMount
+                            && reviewsMetaDataData?.totalCount ? (
+                            <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">口コミ {reviewsMetaDataData.totalCount}件</h1>
                         ) : (
                             <h1 className="text-2xl font-bold mt-0 mb-4 border-b-2 mt-6">口コミ 0件</h1>
                         )
@@ -401,27 +401,27 @@ export default function Page() {
 
             <div className="container">
                 {
-                    commentsIsAfterMount && Array.isArray(commentsData?.comments) && (
+                    reviewsIsAfterMount && Array.isArray(reviewsData?.reviews) && (
                         <div className="px-5">
                             {
-                                commentsData.comments.map((comment: ServiceComment) =>
-                                    <article key={comment.commentId}>
+                                reviewsData.reviews.map((review: ServiceReview) =>
+                                    <article key={review.reviewId}>
                                         <div className="flex items-center mb-4">
                                             {
-                                                comment.gender === "MEN" ? (
+                                                review.gender === "MEN" ? (
                                                     <img className="w-10 h-10 me-4 rounded-full" src="/men.jpg" alt="" />
                                                 ) : (
                                                     <img className="w-10 h-10 me-4 rounded-full" src="/women.jpg" alt="" />
                                                 )
                                             }
                                             <div className="font-medium">
-                                                <p> {comment.name} <p className="block text-sm">{comment.createDay}</p></p>
+                                                <p> {review.name} <p className="block text-sm">{review.createDay}</p></p>
                                             </div>
                                         </div>
 
                                         <div className="pointer-events-none flex items-center mb-1 space-x-1 rtl:space-x-reverse">
                                             <StarRatings
-                                                rating={comment.rating}
+                                                rating={review.rating}
                                                 numberOfStars={5}
                                                 name='rating'
                                                 starRatedColor="yellow"
@@ -432,13 +432,13 @@ export default function Page() {
                                             />
 
                                             <h3 className="ms-2 text-sm pt-1">
-                                                {comment.title}
+                                                {review.title}
                                             </h3>
                                         </div>
 
                                         <article className="break-words break-all whitespace-normal">
                                             <p className="mb-2 whitespace-pre-line">
-                                                {comment.comment}
+                                                {review.review}
                                             </p>
                                         </article>
                                     </article>
@@ -449,7 +449,7 @@ export default function Page() {
                 }
 
                 {
-                    !Array.isArray(commentsData?.comments) || commentsData.comments.length === 0 && (
+                    !Array.isArray(reviewsData?.reviews) || reviewsData.reviews.length === 0 && (
                         <div className="px-5">
                             <p className="text-lg mb-4 border-b-2">
                                 まだコメントは投稿されていません
@@ -460,12 +460,12 @@ export default function Page() {
 
                 <div className="mb-5">
                     {
-                        commentsMetaDataIsAfterMount
-                            && commentsMetaDataData?.lastPage
-                            && commentsMetaDataData?.totalCount ? (
+                        reviewsMetaDataIsAfterMount
+                            && reviewsMetaDataData?.lastPage
+                            && reviewsMetaDataData?.totalCount ? (
                             <Pagination
                                 currentPage={currentPage}
-                                lastPage={commentsMetaDataData.lastPage}
+                                lastPage={reviewsMetaDataData.lastPage}
                                 path={path}
                                 params={params}
                             />

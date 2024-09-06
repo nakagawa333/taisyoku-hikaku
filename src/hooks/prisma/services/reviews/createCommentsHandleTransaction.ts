@@ -1,11 +1,16 @@
 import prisma from "@/libs/prisma/prismaClient";
 import { Prisma, services } from "@prisma/client";
 import { fetchUniqueService } from "../fetchUniqueService";
-import { createComments } from "./createComment";
+import { createReviews } from "./createReviews";
 
-export const createCommentsHandleTransaction = async (
+/**
+ * 
+ * @param selectUniqueQuery 
+ * @param createQuery 
+ */
+export const createReviewsHandleTransaction = async (
     selectUniqueQuery: Prisma.servicesFindUniqueArgs,
-    createQuery: Prisma.commentsCreateArgs) => {
+    createQuery: Prisma.reviewsCreateArgs) => {
     await prisma.$transaction(async (prisma: any) => {
         let service: services | null = null;
         try {
@@ -20,7 +25,7 @@ export const createCommentsHandleTransaction = async (
         }
 
         try {
-            await createComments(createQuery);
+            await createReviews(createQuery);
         } catch (error: any) {
             console.error(error);
             throw new Error("口コミの新規作成に失敗しました");

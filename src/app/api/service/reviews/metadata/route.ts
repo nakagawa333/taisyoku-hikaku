@@ -1,4 +1,4 @@
-import { countComments } from "@/hooks/prisma/services/comments/countComments";
+import { countReviews } from "@/hooks/prisma/services/reviews/countReviews";
 import validate from "@/utils/api/validate/commentsMetadata";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * @swagger
- * /api/service/comments/metadata:
+ * /api/service/reviews/metadata:
  *   get:
  *     summary: 退職代行サービス 口コミ全件取得API
  *     description: 退職代行サービス 口コミ全件取得
@@ -36,13 +36,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     let totalCount: number = 0;
     try {
-        const query: Prisma.commentsCountArgs<DefaultArgs> = {
+        const query: Prisma.reviewsCountArgs<DefaultArgs> = {
             where: {
                 service_id: serviceId
             }
         }
 
-        totalCount = await countComments(query);
+        totalCount = await countReviews(query);
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
         console.error("口コミ一覧の取得に失敗しました");

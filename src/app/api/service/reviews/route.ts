@@ -1,7 +1,7 @@
-import { ServiceComment } from "@/constants/api/response/serviceResponse";
+import { ServiceReview } from "@/constants/api/response/serviceResponse";
 import { Take } from "@/constants/db/take";
-import { createCommentsHandleTransaction } from "@/hooks/prisma/services/comments/createCommentsHandleTransaction";
-import { fetchComments } from "@/hooks/prisma/services/comments/fetchComments";
+import { createReviewsHandleTransaction } from "@/hooks/prisma/services/reviews/createCommentsHandleTransaction";
+import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
 import commentsValidate from "@/utils/api/validate/comments";
 import createCommentValidate from "@/utils/api/validate/createComments";
 import { formatDateToYMD } from "@/utils/common/date";
@@ -12,10 +12,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * @swagger
- * /api/service/comments:
+ * /api/service/reviews:
  *   get:
- *     summary: 退職代行サービス コメント一覧取得API
- *     description: 退職代行サービス コメント一覧取得
+ *     summary: 退職代行サービス 口コミ一覧取得API
+ *     description: 退職代行サービス 口コミ一覧取得
  *     parameters:
  *      - in: query
  *        name: serviceId
@@ -35,7 +35,7 @@ import { NextRequest, NextResponse } from "next/server";
  *　　　 400:
  *         description: バリデーションチェックエラー時のレスポンス
  * 　　　500:
- *         description: 退職代行サービス コメント一覧取得失敗時のレスポンス
+ *         description: 退職代行サービス 口コミ一覧取得失敗時のレスポンス
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const params: URLSearchParams = request.nextUrl.searchParams;
@@ -60,14 +60,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         skip = (page - 1) * take;
     }
 
-    let comments;
+    let reviews;
     try {
-        const query: Prisma.commentsFindManyArgs<DefaultArgs> = {
+        const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
             select: {
                 comment_id: true,
                 name: true,
                 title: true,
-                comment: true,
+                review: true,
                 rating: true,
                 created_at: true,
                 gender: true
@@ -80,38 +80,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             skip: skip
         }
 
-        comments = await fetchComments(query);
+        reviews = await fetchReviews(query);
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
-        console.error("コメント一覧の取得に失敗しました");
+        console.error("口コミ一覧の取得に失敗しました");
         console.error(error);
-        return NextResponse.json({ "msg": "コメント一覧の取得に失敗しました" }, { status: 400 });
+        return NextResponse.json({ "msg": "口コミ一覧の取得に失敗しました" }, { status: 400 });
     }
 
-    let modifiedComments: ServiceComment[] = [];
-    if (Array.isArray(comments)) {
-        modifiedComments = comments.map(comment => ({
-            commentId: comment.comment_id,
-            name: comment.name,
-            title: comment.title,
-            comment: comment.comment,
-            rating: comment.rating,
-            createDay: formatDateToYMD(comment.created_at),
-            gender: comment.gender
+    let modifiedReviews: ServiceReview[] = [];
+    if (Array.isArray(reviews)) {
+        modifiedReviews = reviews.map(review => ({
+            reviewId: review.comment_id,
+            name: review.name,
+            title: review.title,
+            review: review.review,
+            rating: review.rating,
+            createDay: formatDateToYMD(review.created_at),
+            gender: review.gender
         }));
     }
 
     return NextResponse.json({
-        comments: modifiedComments
+        reviews: modifiedReviews
     })
 }
 
 /**
  * @swagger
- * /api/service/comments:
+ * /api/service/reviews:
  *   post:
- *     summary: 退職代行サービス コメント作成API
- *     description: 退職代行サービス コメント作成API
+ *     summary: 退職代行サービス 口コミ作成API
+ *     description: 退職代行サービス 口コミ作成API
  *     requestBody:
  *       description: リクエストボディ
  *       required: true
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *       400:
  *         description: バリデーションチェックエラー時のレスポンス
  *       500:
- *         description: 退職代行サービス コメント一覧取得失敗時のレスポンス
+ *         description: 退職代行サービス 口コミ一覧取得失敗時のレスポンス
  */
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     //サービスID
     const serviceId: string = json.serviceId;
-    //コメントID
+    //口コミID
     const commentId: string = crypto.randomUUID();
     //現在時刻
     const now = new Date().toISOString();
@@ -164,12 +164,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
     }
 
-    const createQuery: Prisma.commentsCreateArgs = {
+    const createQuery: Prisma.reviewsCreateArgs = {
         data: {
             service_id: serviceId,
             comment_id: commentId,
             name: json.name.trim(),
-            comment: json.review.trim(),
+            review: json.review.trim(),
             rating: json.rating,
             title: json.title.trim(),
             gender: json.gender,
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     };
 
     try {
-        await createCommentsHandleTransaction(selectUniqueQuery, createQuery);
+        await createReviewsHandleTransaction(selectUniqueQuery, createQuery);
     } catch (error: any) {
         console.error(error);
         return NextResponse.json({ "msg": error.message }, { status: 500 });
