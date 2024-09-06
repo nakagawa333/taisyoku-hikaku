@@ -64,7 +64,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
         const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
             select: {
-                comment_id: true,
+                review_id: true,
                 name: true,
                 title: true,
                 review: true,
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let modifiedReviews: ServiceReview[] = [];
     if (Array.isArray(reviews)) {
         modifiedReviews = reviews.map(review => ({
-            reviewId: review.comment_id,
+            reviewId: review.review_id,
             name: review.name,
             title: review.title,
             review: review.review,
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *                 type: string
  *               name:
  *                 type: string
- *               comment:
+ *               review:
  *                 type: string
  *               rating:
  *                 type: integer
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     //サービスID
     const serviceId: string = json.serviceId;
     //口コミID
-    const commentId: string = crypto.randomUUID();
+    const reviewId: string = crypto.randomUUID();
     //現在時刻
     const now = new Date().toISOString();
 
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const createQuery: Prisma.reviewsCreateArgs = {
         data: {
             service_id: serviceId,
-            comment_id: commentId,
+            review_id: reviewId,
             name: json.name.trim(),
             review: json.review.trim(),
             rating: json.rating,

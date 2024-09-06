@@ -97,7 +97,7 @@ enum Gender {
 model reviews {
   id         Int      @id @default(autoincrement())
   service_id String   @unique
-  comment_id String   @unique
+  review_id  String   @unique
   name       String   @db.VarChar(30)
   title      String   @db.VarChar(50)
   review     String   @db.VarChar(400)
