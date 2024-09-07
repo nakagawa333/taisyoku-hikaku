@@ -3,6 +3,7 @@
 import { ServiceResponse, ServiceReview, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { Take } from "@/constants/db/take";
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
@@ -74,7 +75,7 @@ export default function Page() {
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
     const [{ fetchReviews, fetchReviewsMetaData, createReview }] = useQueryReviews();
-    const resReviews = fetchReviews(id, page);
+    const resReviews = fetchReviews(id, Take.REVIEWS, page);
     const reviewsData: any = resReviews.data;
     const reviewsIsLoading: boolean = resReviews.isLoading;
     const reviewsIsError: boolean = resReviews.isError;

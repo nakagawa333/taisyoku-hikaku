@@ -1,6 +1,7 @@
 "use client";
 import { Endpoints } from "@/constants/common/endpoints";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { Take } from "@/constants/db/take";
 import { MutationFunction, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -12,8 +13,13 @@ export const useQueryReviews = () => {
      * @returns 
      */
 
-    //TODO offsetとcurrentを設定しページ毎に取得できるよう修正
-    const fetchReviews = (serviceId: string, page: string) => {
+    const fetchReviews = (serviceId: string, limit: number = Take.REVIEWS, page?: string) => {
+        let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}?serviceId=${serviceId}&limit=${limit}`;
+
+        if (page) {
+            reqUrl += `&p=${page}`;
+        }
+
         return useQuery({
             queryKey: [ReactQueryKeys.SERVICEREVIEWS],
             queryFn: async () => {

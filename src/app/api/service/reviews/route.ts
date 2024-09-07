@@ -51,7 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         { updated_at: "desc" }
     ];
 
-    let take: number = Take.COMMENTS;
+    let take: number = Take.REVIEWS;
     if (params.has("limit")) {
         take = Number(params.get("limit"));
     }
