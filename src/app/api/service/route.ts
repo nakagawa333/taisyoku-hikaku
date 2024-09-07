@@ -177,14 +177,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         hourService: hourService,
         serviceId: serviceId,
         imgUrl: publicUrl,
-        officialWebsite: service.official_website
+        officialWebsite: service.official_website,
+        avgRating: avgRating
     }
 
     return NextResponse.json(
         {
             "service": serviceResponse,
             "tags": tags,
-            "avgRating": avgRating
         }
     );
 }

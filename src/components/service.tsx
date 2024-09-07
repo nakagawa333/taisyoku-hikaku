@@ -284,6 +284,35 @@ export default function Page() {
                         )
                     }
                 </h1>
+                {
+                    service?.avgRating ? (
+                        <div className="flex">
+                            <StarRatings
+                                rating={service?.avgRating ? service.avgRating : 0}
+                                numberOfStars={5}
+                                name='rating'
+                                starRatedColor="yellow"
+                                starHoverColor="yellow"
+                                ignoreInlineStyles={false}
+                                starDimension="30px"
+                                starSpacing="0px"
+                            />
+                            <p className="pl-2.5 font-bold text-lg" style={{ paddingTop: "3px" }}>{service?.avgRating ? service.avgRating : 0}</p>
+                        </div>
+                    ) : (
+                        <StarRatings
+                            rating={0}
+                            numberOfStars={5}
+                            name='rating'
+                            starRatedColor="yellow"
+                            starHoverColor="yellow"
+                            ignoreInlineStyles={false}
+                            starDimension="14px"
+                            starSpacing="0px"
+                        />
+                    )
+                }
+
             </div>
 
             <div className="">

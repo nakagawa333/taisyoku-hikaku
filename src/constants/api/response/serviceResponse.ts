@@ -10,6 +10,7 @@ export type ServiceResponse = {
     serviceId: string,
     imgUrl: string,
     officialWebsite: string
+    avgRating: number | null
 }
 
 export type TagsResponse = {
