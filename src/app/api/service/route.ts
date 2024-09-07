@@ -1,5 +1,6 @@
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { fetchUniqueService } from "@/hooks/prisma/services/fetchUniqueService";
+import { avgReviews } from "@/hooks/prisma/services/reviews/avgReviews";
 import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
 import { DataPublicUrl } from "@/types/common/supabase/dataPublicUrl";
 import validate from "@/utils/api/validate/service";
@@ -13,6 +14,12 @@ import { NextRequest, NextResponse } from "next/server";
  *   get:
  *     summary: 退職代行サービス取得API
  *     description: 退職代行サービス取得
+ *     parameters:
+ *      - in: query
+ *        name: serviceId
+ *        schema:
+ *           type: string
+ *        required: true
  *     responses:
  *       200:
  *         description: 成功時のレスポンス
@@ -92,7 +99,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     //連絡先
-
     let contactInformationNames: string = "";
 
     const serviceContactInformation = service.service_contact_information;
@@ -116,6 +122,31 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         tags.push({
             tagName: serviceTag.tags.tag_name
         })
+    }
+
+    //平均点
+    let avgRating: number | null = null;
+    //サービスの平均点取得
+    try {
+        const query: Prisma.ReviewsAggregateArgs = {
+            _avg: {
+                rating: true
+            },
+            where: {
+                service_id: serviceId
+            }
+        }
+
+        const res = await avgReviews(query);
+        if (res._avg?.rating) {
+            avgRating = Math.floor(res._avg.rating * 100) / 100;
+        }
+
+    } catch (error: any) {
+        console.error("取得失敗時のサービスID", serviceId);
+        console.error("サービスの平均点取得に失敗しました");
+        console.error(error);
+        return NextResponse.json({ "msg": "サービスの平均点取得に失敗しました" }, { status: 400 });
     }
 
     let publicUrl: string;
@@ -152,8 +183,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
         {
             "service": serviceResponse,
-            "tags": tags
+            "tags": tags,
+            "avgRating": avgRating
         }
     );
-
 }
