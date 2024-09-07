@@ -1,6 +1,7 @@
 import { EffectCoverflow, EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { memo } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -11,12 +12,9 @@ type Props = {
   similarServices: any
 }
 
-/**
- * スライダーコンポーネント
- * @param components 
- * @returns 
- */
-export default function SimilarServicesSwiper({
+
+//スライダーコンポーネント
+function SimilarServicesSwiper({
   similarServices
 }: Props) {
 
@@ -97,3 +95,5 @@ export default function SimilarServicesSwiper({
     </Swiper>
   );
 }
+
+export default memo(SimilarServicesSwiper);

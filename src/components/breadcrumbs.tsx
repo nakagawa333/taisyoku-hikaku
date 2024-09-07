@@ -1,11 +1,12 @@
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import Link from 'next/link';
+import { memo } from "react";
 
 type Props = {
     breadcrumbs: Breadcrumb[]
 }
 //パンくずリスト
-export default function Breadcrumbs(props: Props) {
+function Breadcrumbs(props: Props) {
     const { breadcrumbs } = props;
 
     const breadcrumbsLength: number = breadcrumbs.length;
@@ -64,3 +65,5 @@ export default function Breadcrumbs(props: Props) {
         </nav>
     )
 }
+
+export default memo(Breadcrumbs);
