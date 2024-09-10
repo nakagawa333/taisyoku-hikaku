@@ -2,7 +2,8 @@
 import { Endpoints } from "@/constants/common/endpoints";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { Take } from "@/constants/db/take";
-import { MutationFunction, useMutation, useQuery } from "@tanstack/react-query";
+import { PercentageByRating } from "@/types/api/response/reviewsResponse";
+import { MutationFunction, useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useQueryReviews = () => {
@@ -47,6 +48,22 @@ export const useQueryReviews = () => {
     }
 
     /**
+     * 各評価毎の全体件数に対する割合を取得する
+     * @param serviceId サービスID
+     * @returns 
+     */
+    const fetchPercentageByRatings = (serviceId: string): UseQueryResult<PercentageByRating> => {
+        return useQuery({
+            queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS],
+            queryFn: async () => {
+                let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.PERCENTAGEBYRATINGS}?serviceId=${serviceId}`
+                let res = await axios.get(reqUrl);
+                return res.data;
+            }
+        })
+    }
+
+    /**
      * 口コミを新規作成する
      * @param serviceId サービスID
      * @param name 名前
@@ -78,5 +95,5 @@ export const useQueryReviews = () => {
         });
     };
 
-    return [{ fetchReviews, fetchReviewsMetaData, createReview }]
+    return [{ fetchReviews, fetchReviewsMetaData, fetchPercentageByRatings, createReview }]
 }

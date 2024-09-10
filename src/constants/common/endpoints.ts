@@ -6,4 +6,5 @@ export class Endpoints {
     static readonly TAGS = "/api/tags/";
     static readonly SERVICEREVIEWS = "/api/service/reviews/";
     static readonly SERVICEREVIEWSMETADATA = "/api/service/reviews/metadata";
+    static readonly PERCENTAGEBYRATINGS = "/api/service/reviews/percentageByRating";
 }

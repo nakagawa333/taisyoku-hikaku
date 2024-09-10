@@ -19,6 +19,7 @@ import Pagination from "./pagination";
 import PartialLoading from "./partialLoading";
 import PromotionMessage from "./promotionMessage";
 import PostReview from "./review/postReview";
+import ProgressReview from "./review/progressReview";
 import Snackbar from "./snackbar";
 import SimilarServicesSwiper from "./swiper";
 import { Tag } from "./tag";
@@ -307,7 +308,7 @@ export default function Page() {
                             starRatedColor="yellow"
                             starHoverColor="yellow"
                             ignoreInlineStyles={false}
-                            starDimension="14px"
+                            starDimension="30px"
                             starSpacing="0px"
                         />
                     )
@@ -428,6 +429,10 @@ export default function Page() {
                     }
                 </h1>
             </div>
+
+            <ProgressReview
+                serviceId={id}
+            />
 
             <div className="container">
                 {
