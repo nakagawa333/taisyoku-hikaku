@@ -1,13 +1,13 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import Service from "@/components/service";
+import Service from "@/features/service/components/service";
 
-export default async function Page(){
-    return(
-        <>
-          <Header />
-          <Service />
-          <Footer />
-        </>
-    )
+export default async function Page() {
+  return (
+    <>
+      <Header />
+      <Service />
+      <Footer />
+    </>
+  )
 }

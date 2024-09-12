@@ -1,5 +1,13 @@
 "use client";
-
+import Breadcrumbs from "@/components/breadcrumbs";
+import ErrorSnackbar from "@/components/ErrorSnackbar";
+import OfficialWebsiteButton from "@/components/OfficialWebsiteButton";
+import Pagination from "@/components/pagination";
+import PartialLoading from "@/components/partialLoading";
+import PromotionMessage from "@/components/promotionMessage";
+import Snackbar from "@/components/snackbar";
+import SimilarServicesSwiper from "@/components/swiper";
+import { Tag } from "@/components/tag";
 import { ServiceResponse, ServiceReview, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
@@ -9,22 +17,13 @@ import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import StarRatings from "react-star-ratings";
-import Breadcrumbs from "./breadcrumbs";
-import ErrorSnackbar from "./ErrorSnackbar";
-import OfficialWebsiteButton from "./OfficialWebsiteButton";
-import Pagination from "./pagination";
-import PartialLoading from "./partialLoading";
-import PromotionMessage from "./promotionMessage";
-import PostReview from "./review/postReview";
-import ProgressReview from "./review/progressReview";
-import Snackbar from "./snackbar";
-import SimilarServicesSwiper from "./swiper";
-import { Tag } from "./tag";
+import PostReview from "./postReview";
+import ProgressReview from "./progressReview";
 
-export default function Page() {
+export default function Service() {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
     const pathname = usePathname();
     let pathnameSplit = pathname?.split("/");
@@ -205,6 +204,7 @@ export default function Page() {
 
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS] });
     }
 
     /**

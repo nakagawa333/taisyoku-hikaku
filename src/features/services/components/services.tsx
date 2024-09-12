@@ -1,4 +1,9 @@
 "use client";
+import Breadcrumbs from "@/components/breadcrumbs";
+import Card from "@/components/card";
+import ErrorSnackbar from "@/components/ErrorSnackbar";
+import Pagination from "@/components/pagination";
+import PartialLoading from "@/components/partialLoading";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useServices } from "@/hooks/reactQuery/services";
@@ -7,11 +12,6 @@ import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ErrorSnackbar from "./ErrorSnackbar";
-import Breadcrumbs from "./breadcrumbs";
-import Card from "./card";
-import Pagination from "./pagination";
-import PartialLoading from "./partialLoading";
 
 export default function Services() {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();

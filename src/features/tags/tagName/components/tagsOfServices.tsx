@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Card from "@/components/card";
+import ErrorSnackbar from "@/components/ErrorSnackbar";
+import Pagination from "@/components/pagination";
+import PartialLoading from "@/components/partialLoading";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
-import ErrorSnackbar from "../../ErrorSnackbar";
-import Pagination from "../../pagination";
-import PartialLoading from "../../partialLoading";
 
 export const TagsOfServices = () => {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();

@@ -1,6 +1,6 @@
 import Footer from "@/components/footer"
 import Header from "@/components/header"
-import { Tags } from "@/components/tags/tags"
+import { Tags } from "@/features/tags/components/tags"
 
 export default async function Page() {
 

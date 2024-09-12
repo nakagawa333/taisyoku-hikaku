@@ -1,14 +1,14 @@
 "use client";
 
+import Breadcrumbs from "@/components/breadcrumbs";
+import ErrorSnackbar from "@/components/ErrorSnackbar";
+import PartialLoading from "@/components/partialLoading";
+import { Tag } from "@/components/tag";
 import { Paths } from "@/constants/common/paths";
 import { uesTags } from "@/hooks/reactQuery/tags";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
-import ErrorSnackbar from "../ErrorSnackbar";
-import Breadcrumbs from "../breadcrumbs";
-import PartialLoading from "../partialLoading";
-import { Tag } from "../tag";
 
 //タグ一覧画面
 export const Tags = () => {

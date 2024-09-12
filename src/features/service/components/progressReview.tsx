@@ -1,8 +1,8 @@
+import PartialLoading from "@/components/partialLoading";
+import Snackbar from "@/components/snackbar";
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { PercentageByRating } from "@/types/api/response/reviewsResponse";
 import { useState } from "react";
-import PartialLoading from "../partialLoading";
-import Snackbar from "../snackbar";
 import RatingProgress from "./ratingProgress";
 
 
