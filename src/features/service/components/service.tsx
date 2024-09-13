@@ -8,10 +8,9 @@ import PromotionMessage from "@/components/promotionMessage";
 import Snackbar from "@/components/snackbar";
 import SimilarServicesSwiper from "@/components/swiper";
 import { Tag } from "@/components/tag";
-import { ServiceResponse, ServiceReview, TagsResponse } from "@/constants/api/response/serviceResponse";
+import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
-import { Take } from "@/constants/db/take";
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
@@ -22,6 +21,7 @@ import { useEffect, useState } from "react";
 import StarRatings from "react-star-ratings";
 import PostReview from "./postReview";
 import ProgressReview from "./progressReview";
+import Reviews from "./reviews";
 
 export default function Service() {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
@@ -75,17 +75,12 @@ export default function Service() {
     const similarServicesIsFetchedAfterMount: boolean = resSimilarServices.isFetchedAfterMount;
 
     const [{ fetchReviews, fetchReviewsMetaData, createReview }] = useQueryReviews();
-    const resReviews = fetchReviews(id, Take.REVIEWS, page);
-    const reviewsData: any = resReviews.data;
-    const reviewsIsLoading: boolean = resReviews.isLoading;
-    const reviewsIsError: boolean = resReviews.isError;
-    const reviewsIsAfterMount: boolean = resReviews.isFetchedAfterMount;
 
     const resReviewsMetaData = fetchReviewsMetaData(id);
     const reviewsMetaDataData: any = resReviewsMetaData.data;
-    const reviewsMetaDataIsLoading: boolean = resReviews.isLoading;
-    const reviewsMetaDataIsError: boolean = resReviews.isError;
-    const reviewsMetaDataIsAfterMount: boolean = resReviews.isFetchedAfterMount;
+    const reviewsMetaDataIsLoading: boolean = resReviewsMetaData.isLoading;
+    const reviewsMetaDataIsError: boolean = resReviewsMetaData.isError;
+    const reviewsMetaDataIsAfterMount: boolean = resReviewsMetaData.isFetchedAfterMount;
 
     const reviewWithArgs = createReview();
 
@@ -111,9 +106,9 @@ export default function Service() {
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
     }, [page])
 
-    if (serviceIsLoading || similarServicesIsLoading || reviewsIsLoading || reviewsMetaDataIsLoading
+    if (serviceIsLoading || similarServicesIsLoading || reviewsMetaDataIsLoading
         || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount ||
-        !reviewsIsAfterMount || !reviewsMetaDataIsAfterMount) {
+        !reviewsMetaDataIsAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
@@ -121,7 +116,7 @@ export default function Service() {
         )
     }
 
-    if (servicesIsError || similarServicesIsError || reviewsIsError || reviewsMetaDataIsError) {
+    if (servicesIsError || similarServicesIsError || reviewsMetaDataIsError) {
         return (
             <div className="container m-auto min-h-screen">
                 <ErrorSnackbar
@@ -435,64 +430,11 @@ export default function Service() {
             />
 
             <div className="container">
-                {
-                    reviewsIsAfterMount && Array.isArray(reviewsData?.reviews) && (
-                        <div className="px-5">
-                            {
-                                reviewsData.reviews.map((review: ServiceReview) =>
-                                    <article key={review.reviewId}>
-                                        <div className="flex items-center mb-4">
-                                            {
-                                                review.gender === "MEN" ? (
-                                                    <img className="w-10 h-10 me-4 rounded-full" src="/men.jpg" alt="" />
-                                                ) : (
-                                                    <img className="w-10 h-10 me-4 rounded-full" src="/women.jpg" alt="" />
-                                                )
-                                            }
-                                            <div className="font-medium">
-                                                <p> {review.name} <p className="block text-sm">{review.createDay}</p></p>
-                                            </div>
-                                        </div>
 
-                                        <div className="pointer-events-none flex items-center mb-1 space-x-1 rtl:space-x-reverse">
-                                            <StarRatings
-                                                rating={review.rating}
-                                                numberOfStars={5}
-                                                name='rating'
-                                                starRatedColor="yellow"
-                                                starHoverColor="yellow"
-                                                ignoreInlineStyles={false}
-                                                starDimension="14px"
-                                                starSpacing="0px"
-                                            />
-
-                                            <h3 className="ms-2 text-sm pt-1">
-                                                {review.title}
-                                            </h3>
-                                        </div>
-
-                                        <article className="break-words break-all whitespace-normal">
-                                            <p className="mb-2 whitespace-pre-line">
-                                                {review.review}
-                                            </p>
-                                        </article>
-                                    </article>
-                                )
-                            }
-                        </div>
-                    )
-                }
-
-                {
-                    !Array.isArray(reviewsData?.reviews) || reviewsData.reviews.length === 0 && (
-                        <div className="px-5">
-                            <p className="text-lg mb-4 border-b-2">
-                                まだコメントは投稿されていません
-                            </p>
-                        </div>
-                    )
-                }
-
+                <Reviews
+                    id={id}
+                    page={page}
+                />
                 <div className="mb-5">
                     {
                         reviewsMetaDataIsAfterMount
