@@ -1,17 +1,19 @@
+import { Dispatch, SetStateAction } from "react";
 import StarRatings from "react-star-ratings";
+import { usePostReview } from "../hooks/usePostReview";
 
 type Props = {
-    postData: any
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-    onChangeRating: (rating: number) => void
-    onInputChange: (e: React.ChangeEvent<HTMLInputElement>, element: string) => void
-    onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>, element: string) => void
-    reviewChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+    id: string
+    setSnackbarData: Dispatch<SetStateAction<any>>
 }
 
 //コメント投稿
 export default function PostReview(props: Props) {
-    const { postData, onSubmit, onChangeRating, onInputChange, onSelectChange, reviewChange } = props;
+
+    const { id, setSnackbarData } = props;
+    const [{ postReviewSubmit, postReviewInputOnChange,
+        postReviewData, setPostReviewData,
+        postReviewSelectOnChange, changeReviewRating, reviewChange }] = usePostReview(id, setSnackbarData);
     //名前最大文字数
     const nameMaxLength: number = 30;
     //性別最大文字数
@@ -20,7 +22,7 @@ export default function PostReview(props: Props) {
     const reviewMaxLength: number = 400;
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={postReviewSubmit}>
             <div>
                 <div className="flex">
                     <p>名前</p>
@@ -31,8 +33,8 @@ export default function PostReview(props: Props) {
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         maxLength={nameMaxLength}
                         required
-                        value={postData.name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e, "name")}
+                        value={postReviewData.name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => postReviewInputOnChange(e, "name")}
                     >
 
                     </input>
@@ -43,8 +45,8 @@ export default function PostReview(props: Props) {
                     <p>評価</p>
                     <div className="flex">
                         <StarRatings
-                            rating={postData.reviewRating}
-                            changeRating={onChangeRating}
+                            rating={postReviewData.reviewRating}
+                            changeRating={changeReviewRating}
                             numberOfStars={5}
                             name='rating'
                             starRatedColor="yellow"
@@ -54,7 +56,7 @@ export default function PostReview(props: Props) {
                             starSpacing="0px"
                         />
 
-                        <p className="text-xs px-2 py-1.5">{postData.reviewRating}</p>
+                        <p className="text-xs px-2 py-1.5">{postReviewData.reviewRating}</p>
                     </div>
                 </div>
             </div>
@@ -65,10 +67,10 @@ export default function PostReview(props: Props) {
                 </div>
                 <select
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSelectChange(e, "gender")}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => postReviewSelectOnChange(e, "gender")}
                 >
-                    <option value="MEN" selected={postData.gender === "MEN"}>男性</option>
-                    <option value="WOMEN" selected={postData.gender === "WOMEN"}>女性</option>
+                    <option value="MEN" selected={postReviewData.gender === "MEN"}>男性</option>
+                    <option value="WOMEN" selected={postReviewData.gender === "WOMEN"}>女性</option>
                 </select>
             </div>
             <div className="mt-3">
@@ -81,8 +83,8 @@ export default function PostReview(props: Props) {
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         maxLength={genderMaxLength}
                         required
-                        value={postData.title}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputChange(e, "title")}
+                        value={postReviewData.title}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => postReviewInputOnChange(e, "title")}
                     />
 
                 </div>
@@ -101,12 +103,12 @@ export default function PostReview(props: Props) {
                         placeholder=""
                         maxLength={reviewMaxLength}
                         onChange={reviewChange}
-                        value={postData.review}
+                        value={postReviewData.review}
                         required>
                     </textarea>
                 </div>
                 <div className="">
-                    <p className="text-xs">{postData.reviewCharacterCount}/{reviewMaxLength}文字</p>
+                    <p className="text-xs">{postReviewData.reviewCharacterCount}/{reviewMaxLength}文字</p>
                 </div>
                 <div className="flex justify-end">
                     <button
