@@ -1,15 +1,11 @@
 "use client";
 import Breadcrumbs from "@/components/breadcrumbs";
 import ErrorSnackbar from "@/components/ErrorSnackbar";
-import OfficialWebsiteButton from "@/components/OfficialWebsiteButton";
-import Pagination from "@/components/pagination";
 import PartialLoading from "@/components/partialLoading";
 import PromotionMessage from "@/components/promotionMessage";
 import Snackbar from "@/components/snackbar";
 import SimilarServicesSwiper from "@/components/swiper";
-import { Tag } from "@/components/tag";
 import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceResponse";
-import { Paths } from "@/constants/common/paths";
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { useService } from "@/hooks/reactQuery/service";
@@ -22,6 +18,8 @@ import StarRatings from "react-star-ratings";
 import PostReview from "./postReview";
 import ProgressReview from "./progressReview";
 import Reviews from "./reviews";
+import ServiceDetails from "./serviceDetails";
+import ServiceTags from "./serviceTags";
 
 export default function Service() {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
@@ -142,16 +140,6 @@ export default function Service() {
             setBreadcrumbs(breadcrumbs);
         }
     }
-
-    /**
-     * タグ名クリック時処理
-     * @param tagName タグ名
-     */
-    const tagNameClick = (tagName: string) => {
-        //ページ遷移
-        router.push(`${Paths.TAGS}/${tagName}`);
-    }
-
     const closeSuccessSnackbar = () => {
         setSnackbarData({
             state: "",
@@ -210,88 +198,13 @@ export default function Service() {
 
             </div>
 
-            <div className="">
-                {
-                    service && Array.isArray(tags) && (
-                        <div className="">
-                            <div className="flex items-center justify-center">
-                                <img
-                                    src={service.imgUrl}
-                                    className="hover:scale-105 w-11/12"
-                                    style={{
-                                        maxHeight: "180px"
-                                    }}
-                                >
-                                </img>
-                            </div>
+            <ServiceDetails
+                service={service}
+            />
 
-                            <div className="flex items-center justify-center">
-                                <table className="table-auto w-11/12 mt-8">
-                                    <tbody>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">料金</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.price}円</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">運営元</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.managementName}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">連絡先</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.contactInformationNames}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">無料相談</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.freeConsultation}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">送金保証</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.guaranteeSystem}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">無料プレゼント</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.freeGift}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">24時間受付</td>
-                                            <td className="border px-4 py-2 w-3/4">{service.hourService}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="border px-4 py-2 bg-gray-200 w-1/4">タグ</td>
-                                            <td className="border px-4 py-2 w-3/4">
-                                                <div className="flex">
-                                                    {
-                                                        tags.map((tag: TagsResponse, index: number) => {
-                                                            return (
-                                                                <Tag
-                                                                    key={index}
-                                                                    tagName={tag.tagName}
-                                                                    tagNameClick={tagNameClick}
-                                                                >
-
-                                                                </Tag>
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                            </div>
-
-                            <div className="">
-                                <OfficialWebsiteButton
-                                    url={service.officialWebsite}
-                                />
-                            </div>
-                        </div>
-
-                    )
-                }
-
-            </div>
+            <ServiceTags
+                tags={tags}
+            />
 
             <div className="p-4">
                 <h1 className="text-2xl font-bold mt-0 mb-4">
@@ -332,31 +245,12 @@ export default function Service() {
 
                 <Reviews
                     id={id}
-                    page={page}
-                />
-                <div className="mb-5">
-                    {
-                        reviewsMetaDataIsAfterMount
-                            && reviewsMetaDataData?.lastPage
-                            && reviewsMetaDataData?.totalCount ? (
-                            <Pagination
-                                currentPage={currentPage}
-                                lastPage={reviewsMetaDataData.lastPage}
-                                path={path}
-                                params={params}
-                            />
-                        ) : (
-                            <></>
-                        )
-                    }
-                </div>
+                    page={page} reviewsMetaDataIsAfterMount={false} reviewsMetaDataData={undefined} path={path} currentPage={0} params={params} />
 
-                <div className="px-5">
-                    <PostReview
-                        id={id}
-                        setSnackbarData={setSnackbarData}
-                    />
-                </div>
+                <PostReview
+                    id={id}
+                    setSnackbarData={setSnackbarData}
+                />
             </div>
 
             <Snackbar

@@ -1,3 +1,4 @@
+import Pagination from "@/components/pagination";
 import PartialLoading from "@/components/partialLoading";
 import Snackbar from "@/components/snackbar";
 import { ServiceReview } from "@/constants/api/response/serviceResponse";
@@ -9,10 +10,17 @@ import Review from "./review";
 type Props = {
     id: string
     page: string
+    reviewsMetaDataIsAfterMount: boolean
+    reviewsMetaDataData: any
+    path: string
+    currentPage: number
+    params: string
 }
 
 export default function Reviews(props: Props) {
-    const { id, page } = props;
+    const { id, page, reviewsMetaDataIsAfterMount, reviewsMetaDataData,
+        currentPage, path, params
+    } = props;
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [{ fetchReviews }] = useQueryReviews();
     const { data, isLoading, isError, isFetchedAfterMount } = fetchReviews(id, Take.REVIEWS, page);
@@ -65,6 +73,23 @@ export default function Reviews(props: Props) {
                     </div>
                 )
             }
+
+            <div className="mb-5">
+                {
+                    reviewsMetaDataIsAfterMount
+                        && reviewsMetaDataData?.lastPage
+                        && reviewsMetaDataData?.totalCount ? (
+                        <Pagination
+                            currentPage={currentPage}
+                            lastPage={reviewsMetaDataData.lastPage}
+                            path={path}
+                            params={params}
+                        />
+                    ) : (
+                        <></>
+                    )
+                }
+            </div>
         </div>
     )
 }
