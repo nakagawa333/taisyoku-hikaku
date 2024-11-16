@@ -11,6 +11,8 @@ import { createReviews } from "./createReviews";
 export const createReviewsHandleTransaction = async (
     selectUniqueQuery: Prisma.servicesFindUniqueArgs,
     createQuery: Prisma.reviewsCreateArgs) => {
+    let reviews;
+
     await prisma.$transaction(async (prisma: any) => {
         let service: services | null = null;
         try {
@@ -25,10 +27,12 @@ export const createReviewsHandleTransaction = async (
         }
 
         try {
-            await createReviews(createQuery);
+            reviews = await createReviews(createQuery);
         } catch (error: any) {
             console.error(error);
             throw new Error("口コミの新規作成に失敗しました");
         }
     });
+
+    return reviews;
 }

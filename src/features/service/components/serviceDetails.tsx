@@ -1,4 +1,3 @@
-import OfficialWebsiteButton from "@/components/OfficialWebsiteButton";
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { Paths } from "@/constants/common/paths";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -27,17 +26,6 @@ export default function ServiceDetails(props: Props) {
             {
                 service && (
                     <div className="">
-                        <div className="flex items-center justify-center">
-                            <img
-                                src={service.imgUrl}
-                                className="hover:scale-105 w-11/12"
-                                style={{
-                                    maxHeight: "180px"
-                                }}
-                            >
-                            </img>
-                        </div>
-
                         <div className="flex items-center justify-center">
                             <table className="table-auto w-11/12 mt-8">
                                 <tbody>
@@ -73,14 +61,7 @@ export default function ServiceDetails(props: Props) {
 
                             </table>
                         </div>
-
-                        <div className="">
-                            <OfficialWebsiteButton
-                                url={service.officialWebsite}
-                            />
-                        </div>
                     </div>
-
                 )
             }
 

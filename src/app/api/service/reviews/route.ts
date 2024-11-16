@@ -56,15 +56,27 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         take = Number(params.get("limit"));
     }
 
-    let query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
+    let reviews_query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
         select: {
             review_id: true,
             name: true,
             title: true,
-            review: true,
-            rating: true,
             created_at: true,
-            gender: true
+            gender: true,
+            good_title: true,
+            good_detail: true,
+            concern_title: true,
+            concern_detail: true,
+            reviews_satisfaction_scores: {
+                select: {
+                    satisfaction_scores_id: true,
+                    price_satisfaction: true,
+                    speed_satisfaction: true,
+                    response_satisfaction: true,
+                    cost_performance_satisfaction: true,
+                    // created_at: true
+                }
+            }
         },
         where: {
             service_id: serviceId
@@ -76,12 +88,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (params.has("p")) {
         let page: number = Number(params.get("p"));
         let skip: number = (page - 1) * take;
-        query.skip = skip;
+        reviews_query.skip = skip;
     }
 
-    let reviews;
+    let reviews: any;
     try {
-        reviews = await fetchReviews(query);
+        reviews = await fetchReviews(reviews_query);
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
         console.error("口コミ一覧の取得に失敗しました");
@@ -89,17 +101,34 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ "msg": "口コミ一覧の取得に失敗しました" }, { status: 400 });
     }
 
+    let reviewIds: string[] = [];
+
+    if (Array.isArray(reviews)) {
+        reviewIds = reviews.map((review) => review.review_id);
+    }
+
+
     let modifiedReviews: ServiceReview[] = [];
     if (Array.isArray(reviews)) {
-        modifiedReviews = reviews.map(review => ({
-            reviewId: review.review_id,
-            name: review.name,
-            title: review.title,
-            review: review.review,
-            rating: review.rating,
-            createDay: formatDateToYMD(review.created_at),
-            gender: review.gender
-        }));
+        modifiedReviews = reviews.map((review) => {
+
+            return {
+                reviewId: review.review_id,
+                name: review.name,
+                title: review.title,
+                goodTitle: review.good_title,
+                goodDetail: review.good_detail,
+                concernTitle: review.concern_title,
+                concernDetail: review.concern_detail,
+                createDay: formatDateToYMD(review.created_at),
+                gender: review.gender,
+                price_satisfaction: review?.reviews_satisfaction_scores?.price_satisfaction,
+                speed_satisfaction: review?.reviews_satisfaction_scores?.speed_satisfaction,
+                response_satisfaction: review?.reviews_satisfaction_scores?.response_satisfaction,
+                cost_performance_satisfaction: review?.reviews_satisfaction_scores?.cost_performance_satisfaction,
+                comprehensive_evaluation: 3
+            }
+        })
     }
 
     return NextResponse.json({
@@ -146,7 +175,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const json = await request.json();
 
     //バリデーションチェック
-    let validateError = createCommentValidate(json.serviceId, json.name, json.review, json.rating, json.title, json.gender);
+    let validateError = createCommentValidate(json.serviceId, json.name, json.title, json.gender,
+        json.priceSatisfactionRating,
+        json.satisfactionWithSpeedRating, json.satisfactionWithResponseRating, json.satisfactionWithCostPerformanceRating
+    );
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
     //サービスID
@@ -170,10 +202,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             service_id: serviceId,
             review_id: reviewId,
             name: json.name.trim(),
-            review: json.review.trim(),
-            rating: json.rating,
             title: json.title.trim(),
             gender: json.gender,
+            good_title: json.good_title,
+            good_detail: json.good_detail,
+            concern_title: json.concern_title,
+            concern_detail: json.concern_detail,
             created_at: now,
             updated_at: now
         }

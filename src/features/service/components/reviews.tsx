@@ -17,7 +17,7 @@ type Props = {
     params: string
 }
 
-export default function Reviews(props: Props) {
+export default function Reviewos(props: Props) {
     const { id, page, reviewsMetaDataIsAfterMount, reviewsMetaDataData,
         currentPage, path, params
     } = props;
@@ -54,10 +54,12 @@ export default function Reviews(props: Props) {
                     <div className="px-5">
                         {
                             data.reviews.map((review: ServiceReview) =>
-                                <Review
-                                    review={review}
-                                    key={review.reviewId}
-                                />
+
+                                <div className="mt-3" key={review.reviewId}>
+                                    <Review
+                                        review={review}
+                                    />
+                                </div>
                             )
                         }
                     </div>

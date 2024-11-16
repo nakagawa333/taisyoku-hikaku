@@ -95,15 +95,31 @@ enum Gender {
 }
 
 model reviews {
-  id         Int      @id @default(autoincrement())
-  service_id String   @unique
-  review_id  String   @unique
-  name       String   @db.VarChar(30)
-  title      String   @db.VarChar(50)
-  review     String   @db.VarChar(400)
-  rating     Int
-  gender     Gender
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  services   services @relation(fields: [service_id], references: [service_id])
+  id                          Int                          @id @default(autoincrement())
+  service_id                  String                       @unique
+  review_id                   String                       @unique
+  name                        String                       @db.VarChar(30)
+  title                       String                       @db.VarChar(50)
+  gender                      Gender
+  good_title                  String                       @db.VarChar(255)
+  good_detail                 String
+  concern_title               String                       @db.VarChar(255)
+  concern_detail              String
+  created_at                  DateTime                     @default(now())
+  updated_at                  DateTime                     @default(now())
+  services                    services                     @relation(fields: [service_id], references: [service_id])
+  reviews_satisfaction_scores reviews_satisfaction_scores?
+}
+
+model reviews_satisfaction_scores {
+  id                            Int     @id @default(autoincrement())
+  satisfaction_scores_id        String  @unique
+  review_id                     String  @unique
+  price_satisfaction            Int
+  speed_satisfaction            Int
+  response_satisfaction         Int
+  cost_performance_satisfaction Int
+  created_at                    String
+  updated_at                    String
+  reviews                       reviews @relation(fields: [review_id], references: [review_id])
 }

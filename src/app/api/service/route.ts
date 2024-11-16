@@ -1,6 +1,5 @@
 import { ServiceResponse } from "@/constants/api/response/serviceResponse";
 import { fetchUniqueService } from "@/hooks/prisma/services/fetchUniqueService";
-import { avgReviews } from "@/hooks/prisma/services/reviews/avgReviews";
 import { getStoragePublicUrl } from "@/hooks/supabase/storage/images/getStoragePublicUrl";
 import { DataPublicUrl } from "@/types/common/supabase/dataPublicUrl";
 import validate from "@/utils/api/validate/service";
@@ -128,19 +127,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let avgRating: number | null = null;
     //サービスの平均点取得
     try {
-        const query: Prisma.ReviewsAggregateArgs = {
-            _avg: {
-                rating: true
-            },
-            where: {
-                service_id: serviceId
-            }
-        }
+        // const query: Prisma.ReviewsAggregateArgs = {
+        //     _avg: {
+        //         rating: true
+        //     },
+        //     where: {
+        //         service_id: serviceId
+        //     }
+        // }
 
-        const res = await avgReviews(query);
-        if (res._avg?.rating) {
-            avgRating = Math.floor(res._avg.rating * 100) / 100;
-        }
+        // const res = await avgReviews(query);
+        // if (res._avg?.rating) {
+        //     avgRating = Math.floor(res._avg.rating * 100) / 100;
+        // }
 
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);
