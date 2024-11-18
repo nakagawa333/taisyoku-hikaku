@@ -15,7 +15,7 @@ export default function Review(props: Props) {
                     <p className="text-sm col-start-2 text-right">回答日: {review.createDay}</p>
                 </div>
 
-                <div className="grid grid-cols-[auto,1fr] gap-4 items-center">
+                <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
                     {
                         review.gender === "MEN" ? (
                             <img className="w-10 h-10 rounded-full" src="/men.jpg" alt="" />
@@ -29,7 +29,7 @@ export default function Review(props: Props) {
                 </div>
 
                 <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
-                    <p className="text-sm">30代</p>
+                    <p className="text-sm">{review.age}</p>
                     <p className="text-sm">{review.gender === "MEN" ? "男性" : "女性"}</p>
                 </div>
 
@@ -67,7 +67,14 @@ export default function Review(props: Props) {
                 />
 
                 <article className="break-words whitespace-normal">
-                    <p className="mb-2 whitespace-pre-line"></p>
+                    <div className="mb-2 whitespace-pre-line">
+                        <p className="text-pink-300">良い点:{review.goodTitle}</p>
+                        <p className="text-pink-300">{review.goodDetail}</p>
+                    </div>
+                    <div className="">
+                        <p className="text-sky-500">悪い点:{review.concernTitle}</p>
+                        <p className="text-sky-500">{review.concernDetail}</p>
+                    </div>
                 </article>
             </article>
         </div>

@@ -45,4 +45,5 @@ export type ServiceReview = {
     response_satisfaction: number, // 対応の満足度
     cost_performance_satisfaction: number //コスパの満足度
     comprehensive_evaluation: number //総合評価
+    age: string
 }

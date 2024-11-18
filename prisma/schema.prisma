@@ -108,7 +108,9 @@ model reviews {
   created_at                  DateTime                     @default(now())
   updated_at                  DateTime                     @default(now())
   services                    services                     @relation(fields: [service_id], references: [service_id])
+  contributor_years_id        Int?
   reviews_satisfaction_scores reviews_satisfaction_scores?
+  contributor_years           contributor_years?           @relation(fields: [contributor_years_id], references: [id])
 }
 
 model reviews_satisfaction_scores {
@@ -119,7 +121,14 @@ model reviews_satisfaction_scores {
   speed_satisfaction            Int
   response_satisfaction         Int
   cost_performance_satisfaction Int
+  comprehensive_evaluation      Int
   created_at                    String
   updated_at                    String
   reviews                       reviews @relation(fields: [review_id], references: [review_id])
+}
+
+model contributor_years {
+  id      Int       @id @default(autoincrement())
+  age     String    @unique
+  reviews reviews[]
 }

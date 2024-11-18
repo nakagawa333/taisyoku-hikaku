@@ -65,7 +65,6 @@ export default function Service() {
 
             <PromotionMessage />
 
-
             <div className="p-4">
 
                 {

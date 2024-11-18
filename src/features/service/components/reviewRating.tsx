@@ -9,7 +9,7 @@ export default function ReviewRating(props: Props) {
     const { label, rating } = props;
 
     return (
-        <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
+        <div className="grid grid-cols-3 items-center gap-2 rtl:space-x-reverse">
             <p className="text-sm pt-1">{label}</p>
             <StarRatings
                 rating={rating}
@@ -20,6 +20,7 @@ export default function ReviewRating(props: Props) {
                 starDimension="16px"
                 starSpacing="0px"
             />
+            <p className="text-sm pt-1">{rating}</p>
         </div>
     )
 }

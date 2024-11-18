@@ -1,5 +1,4 @@
 import { countReviews } from "@/hooks/prisma/services/reviews/countReviews";
-import { groupByReviews } from "@/hooks/prisma/services/reviews/groupByReviews";
 import { PercentageByRating } from "@/types/api/response/reviewsResponse";
 import percentageByRatingValidate from "@/utils/api/validate/percentageByRatingValidate";
 import { Prisma } from "@prisma/client";
@@ -30,22 +29,26 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     let groupByRes: any;
     try {
-        const query: Prisma.reviewsGroupByArgs
-            & { orderBy: Prisma.reviewsOrderByWithAggregationInput | Prisma.reviewsOrderByWithAggregationInput[] } = {
-            by: ["rating"],
-            _count: {
-                _all: true,
-                rating: true
-            },
-            where: {
-                service_id: serviceId
-            },
-            orderBy: {
-                rating: "desc"
-            }
+        // const query: Prisma.reviewsGroupByArgs
+        //     & { orderBy: Prisma.reviewsOrderByWithAggregationInput | Prisma.reviewsOrderByWithAggregationInput[] } = {
+        //     by: ["rating"],
+        //     _count: {
+        //         _all: true,
+        //         rating: true
+        //     },
+        //     where: {
+        //         service_id: serviceId
+        //     },
+        //     orderBy: {
+        //         rating: "desc"
+        //     }
+        // }
+
+        const query = {
+
         }
 
-        groupByRes = await groupByReviews(query);
+        // groupByRes = await groupByReviews(query);
 
     } catch (error: any) {
         console.error("取得失敗時のサービスID", serviceId);

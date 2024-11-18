@@ -74,7 +74,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     speed_satisfaction: true,
                     response_satisfaction: true,
                     cost_performance_satisfaction: true,
-                    // created_at: true
+                    comprehensive_evaluation: true
+                }
+            },
+            contributor_years: {
+                select: {
+                    age: true
                 }
             }
         },
@@ -107,11 +112,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         reviewIds = reviews.map((review) => review.review_id);
     }
 
-
     let modifiedReviews: ServiceReview[] = [];
     if (Array.isArray(reviews)) {
         modifiedReviews = reviews.map((review) => {
-
             return {
                 reviewId: review.review_id,
                 name: review.name,
@@ -126,7 +129,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 speed_satisfaction: review?.reviews_satisfaction_scores?.speed_satisfaction,
                 response_satisfaction: review?.reviews_satisfaction_scores?.response_satisfaction,
                 cost_performance_satisfaction: review?.reviews_satisfaction_scores?.cost_performance_satisfaction,
-                comprehensive_evaluation: 3
+                comprehensive_evaluation: review?.reviews_satisfaction_scores?.comprehensive_evaluation,
+                age: review.contributor_years.age
             }
         })
     }

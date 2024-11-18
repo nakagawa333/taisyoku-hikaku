@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import StarRatings from "react-star-ratings";
 import { usePostReview } from "../hooks/usePostReview";
+import ContributorInformation from "./contributorInformation";
+import ReviewContent from "./reviewContent";
+import Satisfactions from "./satisfactions";
 
 type Props = {
     id: string
@@ -25,7 +27,19 @@ export default function PostReview(props: Props) {
         <div className="px-5">
 
             <form onSubmit={postReviewSubmit}>
-                <div>
+
+                <Satisfactions
+                />
+
+                <ReviewContent
+
+                />
+
+                <ContributorInformation
+
+                />
+
+                {/* <div>
                     <div className="flex">
                         <p>名前</p>
                         <p className="text-red-500">(必須)</p>
@@ -120,7 +134,7 @@ export default function PostReview(props: Props) {
                             投稿
                         </button>
                     </div>
-                </div>
+                </div> */}
             </form>
         </div>
     )

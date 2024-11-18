@@ -17,7 +17,7 @@ type Props = {
     params: string
 }
 
-export default function Reviewos(props: Props) {
+export default function Reviews(props: Props) {
     const { id, page, reviewsMetaDataIsAfterMount, reviewsMetaDataData,
         currentPage, path, params
     } = props;
