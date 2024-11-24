@@ -28,6 +28,9 @@ export const useService = () => {
     const [{ fetchService, fetchSimilarServices }] = useQueryervice();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
+    //口コミを投稿する表示状態
+    const [openWriteReview, setOpenWriteReview] = useState<boolean>(false);
+
     const [postReviewData, setPostReviewData] = useState<any>({
         reviewCharacterCount: 0,
         name: "",
@@ -117,6 +120,13 @@ export const useService = () => {
         }
     }
 
+    /**
+     * 口コミを書くボタンクリック
+     */
+    const reviewWriteButtonClick = () => {
+        setOpenWriteReview(true);
+    }
+
     const closeSuccessSnackbar = () => {
         setSnackbarData({
             state: "",
@@ -124,6 +134,13 @@ export const useService = () => {
             time: 0,
             isOpen: false
         })
+    }
+
+    /**
+     * 口コミを書くボタンクリック時
+     */
+    const writeReview = () => {
+
     }
 
     return {
@@ -138,6 +155,7 @@ export const useService = () => {
         resSimilarServices, similarServicesData, similarServicesIsLoading, similarServicesIsError, similarServicesIsFetchedAfterMount,
         fetchReviews, fetchReviewsMetaData, createReview, resReviewsMetaData, reviewsMetaDataData, reviewsMetaDataIsLoading, reviewsMetaDataIsError, reviewsMetaDataIsAfterMount,
         reviewWithArgs, reviewWriteButtonStyle, reviewRef, closeSuccessSnackbar,
-        service, tags, id, path
+        service, tags, id, path,
+        openWriteReview, setOpenWriteReview, reviewWriteButtonClick
     }
 }

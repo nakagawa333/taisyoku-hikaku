@@ -31,7 +31,8 @@ export default function Service() {
         resSimilarServices, similarServicesData, similarServicesIsLoading, similarServicesIsError, similarServicesIsFetchedAfterMount,
         fetchReviews, fetchReviewsMetaData, createReview, resReviewsMetaData, reviewsMetaDataData, reviewsMetaDataIsLoading, reviewsMetaDataIsError, reviewsMetaDataIsAfterMount,
         reviewWithArgs, reviewWriteButtonStyle, reviewRef, closeSuccessSnackbar,
-        service, tags, id, path
+        service, tags, id, path,
+        openWriteReview, setOpenWriteReview, reviewWriteButtonClick
     } = useService();
 
     if (serviceIsLoading || similarServicesIsLoading || reviewsMetaDataIsLoading
@@ -135,6 +136,7 @@ export default function Service() {
                     <button
                         className="border bg-white font-bold py-2 px-4 rounded"
                         style={reviewWriteButtonStyle}
+                        onClick={() => reviewWriteButtonClick()}
                     >
                         口コミを書く
                     </button>
@@ -173,6 +175,8 @@ export default function Service() {
                 <PostReview
                     id={id}
                     setSnackbarData={setSnackbarData}
+                    openWriteReview={openWriteReview}
+                    setOpenWriteReview={setOpenWriteReview}
                 />
             </div>
 

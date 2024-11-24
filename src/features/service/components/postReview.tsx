@@ -1,4 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
+import CloseButton from "@/components/button/closeButton";
+import Heading from "@/components/heading";
+import { NotesForReviewSubmission } from "@/components/precautions/NotesForReviewSubmission";
+import { PostReviewType } from "@/types/ui/service/postPreview";
+import { createContext, Dispatch, SetStateAction } from "react";
 import { usePostReview } from "../hooks/usePostReview";
 import ContributorInformation from "./contributorInformation";
 import ReviewContent from "./reviewContent";
@@ -7,135 +11,107 @@ import Satisfactions from "./satisfactions";
 type Props = {
     id: string
     setSnackbarData: Dispatch<SetStateAction<any>>
+    openWriteReview: boolean
+    setOpenWriteReview: Dispatch<SetStateAction<boolean>>
 }
+
+export const PostReviewContext = createContext<PostReviewType | null>(null);
 
 //コメント投稿
 export default function PostReview(props: Props) {
 
-    const { id, setSnackbarData } = props;
-    const [{ postReviewSubmit, postReviewInputOnChange,
-        postReviewData, setPostReviewData,
-        postReviewSelectOnChange, changeReviewRating, reviewChange }] = usePostReview(id, setSnackbarData);
-    //名前最大文字数
-    const nameMaxLength: number = 30;
-    //性別最大文字数
-    const genderMaxLength: number = 50;
-    //レビュー最大文字数
-    const reviewMaxLength: number = 400;
+    const { id, setSnackbarData, openWriteReview, setOpenWriteReview } = props;
+    const { options, selectAgeId, setSelectAgeId,
+        postReviewSubmit, nickName, setNickName, gender, setGender,
+        goodPoint, setGoodPoint, goodPointDetail, setGoodPointDetail,
+        badPoint, setbadPoint, badPointDetail, setbadPointDetail, closeButtonClick
+    } = usePostReview(id, setSnackbarData, setOpenWriteReview);
+
 
     return (
-        <div className="px-5">
-
-            <form onSubmit={postReviewSubmit}>
-
-                <Satisfactions
-                />
-
-                <ReviewContent
-
-                />
-
-                <ContributorInformation
-
-                />
-
-                {/* <div>
-                    <div className="flex">
-                        <p>名前</p>
-                        <p className="text-red-500">(必須)</p>
-                    </div>
-                    <div>
-                        <input
-                            className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            maxLength={nameMaxLength}
-                            required
-                            value={postReviewData.name}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => postReviewInputOnChange(e, "name")}
-                        >
-
-                        </input>
-                    </div>
-                </div>
-                <div>
-                    <div className="mt-3">
-                        <p>評価</p>
-                        <div className="flex">
-                            <StarRatings
-                                rating={postReviewData.reviewRating}
-                                changeRating={changeReviewRating}
-                                numberOfStars={5}
-                                name='rating'
-                                starRatedColor="yellow"
-                                starHoverColor="yellow"
-                                ignoreInlineStyles={false}
-                                starDimension="14px"
-                                starSpacing="0px"
-                            />
-
-                            <p className="text-xs px-2 py-1.5">{postReviewData.reviewRating}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-3">
-                    <div className="flex">
-                        <p>性別</p>
-                        <p className="text-red-500">(必須)</p>
-                    </div>
-                    <select
-                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => postReviewSelectOnChange(e, "gender")}
+        <>
+            {
+                openWriteReview ? (
+                    <div
+                        className="px-5"
+                        style={{
+                            position: "fixed",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            zIndex: 1000,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "flex-end",
+                            transition: "transform 0.3s ease-in-out",
+                            transform: openWriteReview ? "translateY(0)" : "translateY(100%)"
+                        }}
                     >
-                        <option value="MEN" selected={postReviewData.gender === "MEN"}>男性</option>
-                        <option value="WOMEN" selected={postReviewData.gender === "WOMEN"}>女性</option>
-                    </select>
-                </div>
-                <div className="mt-3">
-                    <div className="flex">
-                        <p>タイトル</p>
-                        <p className="text-red-500">(必須)</p>
-                    </div>
-                    <div>
-                        <input
-                            className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            maxLength={genderMaxLength}
-                            required
-                            value={postReviewData.title}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => postReviewInputOnChange(e, "title")}
-                        />
 
+                        <PostReviewContext.Provider value={{
+                            selectAgeId, setSelectAgeId, options,
+                            nickName, setNickName, gender, setGender,
+                            goodPoint, setGoodPoint, goodPointDetail, setGoodPointDetail,
+                            badPoint, setbadPoint, badPointDetail, setbadPointDetail
+                        }}>
+                            <form
+                                onSubmit={postReviewSubmit}
+                                style={{
+                                    backgroundColor: "#fff",
+                                    padding: "20px",
+                                    width: "100%",
+                                    maxWidth: "500px",
+                                    maxHeight: "100%", // モーダルの最大高さを指定
+                                    overflowY: "auto", // 高さが超えた場合にスクロール可能に
+                                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                                    borderRadius: "8px",
+                                }}
+                            >
+
+                                <div className="flex justify-end">
+                                    <CloseButton
+                                        closeButtonClick={closeButtonClick}
+                                    />
+                                </div>
+
+                                <Heading
+                                    title="口コミを投稿する"
+                                />
+
+                                <Satisfactions
+                                />
+
+                                <ReviewContent
+
+                                />
+
+                                <ContributorInformation
+
+                                />
+                                <div className="mt-2">
+                                    <NotesForReviewSubmission />
+                                </div>
+
+
+                                <div className="self-stretch bg-white-fff overflow-hidden flex flex-row items-start justify-start py-[30px] px-5">
+                                    <button
+                                        className="text-white cursor-pointer [border:none] py-4 px-5 bg-blue-289cac flex-1 flex flex-row items-start justify-center"
+                                        style={{
+                                            background: "#289CAC",
+                                            color: "white"
+                                        }}
+                                    >
+                                        <b className="relative text-lg inline-block font-yugothic text-left min-w-[72px]">
+                                            口コミを投稿する
+                                        </b>
+                                    </button>
+                                </div>
+                            </form>
+
+                        </PostReviewContext.Provider>
                     </div>
-                </div>
-                <div className="mt-3">
-                    <div className="flex">
-                        <p>口コミ</p>
-                        <p className="text-red-500">(必須)</p>
-                    </div>
-                    <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
-                        <label className="sr-only">口コミを投稿</label>
-                        <textarea
-                            id="comment"
-                            rows={6}
-                            className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
-                            placeholder=""
-                            maxLength={reviewMaxLength}
-                            onChange={reviewChange}
-                            value={postReviewData.review}
-                            required>
-                        </textarea>
-                    </div>
-                    <div className="">
-                        <p className="text-xs">{postReviewData.reviewCharacterCount}/{reviewMaxLength}文字</p>
-                    </div>
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            className="bg-stone-300 inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-                        >
-                            投稿
-                        </button>
-                    </div>
-                </div> */}
-            </form>
-        </div>
+                ) : null}
+        </>
     )
 }

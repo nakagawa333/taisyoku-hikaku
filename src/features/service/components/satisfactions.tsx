@@ -10,9 +10,9 @@ export default function Satisfactions() {
     } = useSatisfactions();
 
     return (
-        <div className="bg-gray-50 mx-auto max-w-sm mx-auto shadow-md rounded-lg overflow-hidden">
+        <div className="bg-gray-50 mx-auto max-w-sm shadow-md rounded-lg overflow-hidden">
 
-            <div className="w-11/12">
+            <div className="w-11/12 mx-auto mb-2">
                 <SatisfactionsReview
                     label="価格の満足度"
                     satisfaction={priceSatisfaction}
