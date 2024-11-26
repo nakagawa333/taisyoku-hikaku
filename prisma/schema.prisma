@@ -99,7 +99,6 @@ model reviews {
   service_id                  String                       @unique
   review_id                   String                       @unique
   name                        String                       @db.VarChar(30)
-  title                       String                       @db.VarChar(50)
   gender                      Gender
   good_title                  String                       @db.VarChar(255)
   good_detail                 String
@@ -114,17 +113,17 @@ model reviews {
 }
 
 model reviews_satisfaction_scores {
-  id                            Int     @id @default(autoincrement())
-  satisfaction_scores_id        String  @unique
-  review_id                     String  @unique
+  id                            Int      @id @default(autoincrement())
+  satisfaction_scores_id        String   @unique
+  review_id                     String   @unique
   price_satisfaction            Int
   speed_satisfaction            Int
   response_satisfaction         Int
   cost_performance_satisfaction Int
   comprehensive_evaluation      Int
-  created_at                    String
-  updated_at                    String
-  reviews                       reviews @relation(fields: [review_id], references: [review_id])
+  created_at                    DateTime @default(now())
+  updated_at                    DateTime @default(now())
+  reviews                       reviews  @relation(fields: [review_id], references: [review_id])
 }
 
 model contributor_years {

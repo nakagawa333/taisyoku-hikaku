@@ -3,7 +3,7 @@ import { Take } from "@/constants/db/take";
 import { createReviewsHandleTransaction } from "@/hooks/prisma/services/reviews/createCommentsHandleTransaction";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
 import commentsValidate from "@/utils/api/validate/comments";
-import createCommentValidate from "@/utils/api/validate/createComments";
+import createReviewsValidate from "@/utils/api/validate/createReviewsValidate";
 import { formatDateToYMD } from "@/utils/common/date";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
@@ -60,7 +60,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         select: {
             review_id: true,
             name: true,
-            title: true,
             created_at: true,
             gender: true,
             good_title: true,
@@ -158,30 +157,45 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *                 type: string
  *               name:
  *                 type: string
- *               review:
- *                 type: string
- *               rating:
- *                 type: integer
- *               title:
- *                 type: string
  *               gender:
  *                 type: string
+ *               goodTitle:
+ *                 type: string 
+ *               goodDetail:
+ *                 type: string
+ *               concernTitle:
+ *                 type: string 
+ *               concernDetail:
+ *                 type: string
+ *               priceSatisfaction:
+ *                 type: number
+ *               responseSatisfaction:
+ *                 type: number
+ *               costPerformanceSatisfaction:
+ *                 type: number
+ *               comprehensiveEvaluation:
+ *                 type: number
+  *               contributorYearsId:
+ *                 type: number
+ * 
  *     responses:
  *       200:
  *         description: 成功時のレスポンス
  *       400:
  *         description: バリデーションチェックエラー時のレスポンス
  *       500:
- *         description: 退職代行サービス 口コミ一覧取得失敗時のレスポンス
+ *         description: 退職代行サービス 口コミ作成失敗時のレスポンス
  */
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
     const json = await request.json();
 
     //バリデーションチェック
-    let validateError = createCommentValidate(json.serviceId, json.name, json.title, json.gender,
-        json.priceSatisfactionRating,
-        json.satisfactionWithSpeedRating, json.satisfactionWithResponseRating, json.satisfactionWithCostPerformanceRating
+    let validateError = createReviewsValidate(json.serviceId, json.name,
+        json.gender, json.goodTitle, json.concernTitle,
+        json.priceSatisfaction,
+        json.speedSatisfaction, json.responseSatisfaction, json.costPerformanceSatisfaction,
+        json.comprehensiveEvaluation
     );
     if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
 
@@ -189,6 +203,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const serviceId: string = json.serviceId;
     //口コミID
     const reviewId: string = crypto.randomUUID();
+
+    //スコアID
+    const satisfactionScoresId: string = crypto.randomUUID();
     //現在時刻
     const now = new Date().toISOString();
 
@@ -201,24 +218,38 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
     }
 
-    const createQuery: Prisma.reviewsCreateArgs = {
+    const createReviewsQuery: Prisma.reviewsCreateArgs = {
         data: {
             service_id: serviceId,
             review_id: reviewId,
             name: json.name.trim(),
-            title: json.title.trim(),
             gender: json.gender,
-            good_title: json.good_title,
-            good_detail: json.good_detail,
-            concern_title: json.concern_title,
-            concern_detail: json.concern_detail,
+            good_title: json.goodTitle,
+            good_detail: json.goodDetail,
+            concern_title: json.concernTitle,
+            concern_detail: json.concernDetail,
             created_at: now,
-            updated_at: now
+            updated_at: now,
+            contributor_years_id: json.contributorYearsId
         }
     };
 
+    const createReviewsSatisfactionScoresQuery: Prisma.reviews_satisfaction_scoresCreateArgs = {
+        data: {
+            satisfaction_scores_id: satisfactionScoresId,
+            review_id: reviewId,
+            price_satisfaction: json.priceSatisfaction,
+            speed_satisfaction: json.speedSatisfaction,
+            response_satisfaction: json.responseSatisfaction,
+            cost_performance_satisfaction: json.costPerformanceSatisfaction,
+            comprehensive_evaluation: json.comprehensiveEvaluation,
+            created_at: now,
+            updated_at: now,
+        }
+    }
+
     try {
-        await createReviewsHandleTransaction(selectUniqueQuery, createQuery);
+        await createReviewsHandleTransaction(selectUniqueQuery, createReviewsQuery, createReviewsSatisfactionScoresQuery);
     } catch (error: any) {
         console.error(error);
         return NextResponse.json({ "msg": error.message }, { status: 500 });
