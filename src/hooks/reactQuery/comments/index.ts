@@ -66,26 +66,39 @@ export const useQueryReviews = () => {
     /**
      * 口コミを新規作成する
      * @param serviceId サービスID
-     * @param name 名前
-     * @param rating 評価
+     * @param name ニックネーム
+     * @param goodTitle 良い点
+     * @param goodDetail 良い点詳細
+     * @param concernTitle 悪い点
+     * @param concernDetail 悪い詳細
      * @param gender 性別
+     * @param priceSatisfaction 価格の満足度
+     * @param 
      * @param title タイトル
      * @param review レビュー
      * @returns 
      */
     const createReview = () => {
-
         const mutationFn: MutationFunction<any, any> = async ({
-            serviceId, name, rating, gender, title, review
+            serviceId, name, goodTitle, goodDetail, concernTitle, concernDetail,
+            gender, priceSatisfaction, speedSatisfaction, responseSatisfaction, costPerformanceSatisfaction,
+            comprehensiveEvaluation, contributorYearsId
         }) => {
             const reqUrl = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}`;
             const data = {
                 serviceId,
                 name,
-                rating,
+                goodTitle,
+                goodDetail,
+                concernTitle,
+                concernDetail,
                 gender,
-                title,
-                review
+                priceSatisfaction,
+                speedSatisfaction,
+                responseSatisfaction,
+                costPerformanceSatisfaction,
+                comprehensiveEvaluation,
+                contributorYearsId
             };
             const res = await axios.post(reqUrl, data);
             return res.data;

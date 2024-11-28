@@ -23,8 +23,10 @@ export default function PostReview(props: Props) {
     const { id, setSnackbarData, openWriteReview, setOpenWriteReview } = props;
     const { options, selectAgeId, setSelectAgeId,
         postReviewSubmit, nickName, setNickName, gender, setGender,
-        goodPoint, setGoodPoint, goodPointDetail, setGoodPointDetail,
-        badPoint, setbadPoint, badPointDetail, setbadPointDetail, closeButtonClick
+        goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
+        concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail, closeButtonClick,
+        priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
+        responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
     } = usePostReview(id, setSnackbarData, setOpenWriteReview);
 
 
@@ -52,8 +54,10 @@ export default function PostReview(props: Props) {
                         <PostReviewContext.Provider value={{
                             selectAgeId, setSelectAgeId, options,
                             nickName, setNickName, gender, setGender,
-                            goodPoint, setGoodPoint, goodPointDetail, setGoodPointDetail,
-                            badPoint, setbadPoint, badPointDetail, setbadPointDetail
+                            goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
+                            concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail,
+                            priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
+                            responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
                         }}>
                             <form
                                 onSubmit={postReviewSubmit}

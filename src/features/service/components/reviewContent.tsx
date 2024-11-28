@@ -9,8 +9,8 @@ export default function ReviewContent() {
     const postReviewType: PostReviewType | null = useContext(PostReviewContext);
 
     const {
-        goodPointMaxLength, goodPointDetailMaxLength, badPointMaxLength, badPointDetailMaxLength,
-        goodPointChange, goodPointDetailChange, badPointChange, badPointDetailChange
+        goodTitleMaxLength, goodTitleDetailMaxLength, concernTitleMaxLength, concernTitleDetailMaxLength,
+        goodTitleChange, goodTitleDetailChange, concernTitleChange, concernTitleDetailChange
     } = useReviewContent();
 
     return (
@@ -20,18 +20,18 @@ export default function ReviewContent() {
                 <input
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"
-                    maxLength={goodPointMaxLength}
+                    maxLength={goodTitleMaxLength}
                     required
-                    value={postReviewType?.goodPoint}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => goodPointChange(e.target.value)}
+                    value={postReviewType?.goodTitle}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => goodTitleChange(e.target.value)}
                 />
 
                 <p className="mt-2 text-base">詳細</p>
                 <textarea
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                    maxLength={goodPointDetailMaxLength}
-                    value={postReviewType?.goodPointDetail}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => goodPointDetailChange(e.target.value)}
+                    maxLength={goodTitleDetailMaxLength}
+                    value={postReviewType?.goodTitleDetail}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => goodTitleDetailChange(e.target.value)}
 
                 ></textarea>
             </div>
@@ -41,10 +41,10 @@ export default function ReviewContent() {
                 <input
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"
-                    maxLength={badPointMaxLength}
+                    maxLength={concernTitleMaxLength}
                     required
-                    value={postReviewType?.badPoint}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => badPointChange(e.target.value)}
+                    value={postReviewType?.concernTitle}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => concernTitleChange(e.target.value)}
 
                 />
 
@@ -52,9 +52,9 @@ export default function ReviewContent() {
 
                 <textarea
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                    maxLength={badPointDetailMaxLength}
-                    value={postReviewType?.badPointDetail}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => badPointDetailChange(e.target.value)}
+                    maxLength={concernTitleDetailMaxLength}
+                    value={postReviewType?.concernTitleDetail}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => concernTitleDetailChange(e.target.value)}
 
                 ></textarea>
             </div>

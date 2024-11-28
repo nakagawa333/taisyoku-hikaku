@@ -7,59 +7,59 @@ export const useReviewContent = () => {
 
     if (!postReviewType) {
         return {
-            goodPointChange: () => { },
-            goodPointDetailChange: () => { },
-            badPointChange: () => { },
-            badPointDetailChange: () => { },
+            goodTitleChange: () => { },
+            goodTitleDetailChange: () => { },
+            concernTitleChange: () => { },
+            concernTitleDetailChange: () => { },
         }
     }
 
     //良い点最大文字数
-    const goodPointMaxLength: number = 30;
+    const goodTitleMaxLength: number = 30;
 
     //良い点詳細
-    const goodPointDetailMaxLength: number = 100;
+    const goodTitleDetailMaxLength: number = 100;
 
     //悪い点最大文字数
-    const badPointMaxLength: number = 30;
+    const concernTitleMaxLength: number = 30;
 
     //悪い点詳細
-    const badPointDetailMaxLength: number = 100;
+    const concernTitleDetailMaxLength: number = 100;
 
     /**
      * 良い点変更時
-     * @param goodPoint 良い点
+     * @param goodTitle 良い点
      */
-    const goodPointChange = (goodPoint: string) => {
-        postReviewType.setGoodPoint(goodPoint);
+    const goodTitleChange = (goodTitle: string) => {
+        postReviewType.setgoodTitle(goodTitle);
     }
 
     /**
      * 良い点詳細変更時
-     * @param goodPointDetail 良い点詳細
+     * @param goodTitleDetail 良い点詳細
      */
-    const goodPointDetailChange = (goodPointDetail: string) => {
-        postReviewType.setGoodPointDetail(goodPointDetail);
+    const goodTitleDetailChange = (goodTitleDetail: string) => {
+        postReviewType.setgoodTitleDetail(goodTitleDetail);
     }
 
     /**
      * 悪い変更時
-     * @param badPoint 悪い点
+     * @param concernTitle 悪い点
      */
-    const badPointChange = (badPoint: string) => {
-        postReviewType.setbadPoint(badPoint);
+    const concernTitleChange = (concernTitle: string) => {
+        postReviewType.setconcernTitle(concernTitle);
     }
 
     /**
      * 悪い点詳細変更時
-     * @param badPointDetail 悪い点詳細
+     * @param concernTitleDetail 悪い点詳細
      */
-    const badPointDetailChange = (badPointDetail: string) => {
-        postReviewType.setbadPointDetail(badPointDetail);
+    const concernTitleDetailChange = (concernTitleDetail: string) => {
+        postReviewType.setconcernTitleDetail(concernTitleDetail);
     }
 
     return {
-        goodPointMaxLength, goodPointDetailMaxLength, badPointMaxLength, badPointDetailMaxLength,
-        goodPointChange, goodPointDetailChange, badPointChange, badPointDetailChange
+        goodTitleMaxLength, goodTitleDetailMaxLength, concernTitleMaxLength, concernTitleDetailMaxLength,
+        goodTitleChange, goodTitleDetailChange, concernTitleChange, concernTitleDetailChange
     }
 }

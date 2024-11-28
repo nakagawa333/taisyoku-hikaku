@@ -38,7 +38,7 @@ export default function ContributorInformation() {
                         {
                             postReviewType?.options.map((option: ContributorInformationAgeOption) => {
                                 return (
-                                    <option key={option.id}>{option.age}</option>
+                                    <option key={option.id} value={option.id}>{option.age}</option>
                                 )
                             })
                         }

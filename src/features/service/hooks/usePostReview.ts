@@ -1,5 +1,8 @@
+import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { ContributorInformationAgeOption, ContributorInformationAgeOptions } from "@/constants/ui/contributorInformation";
+import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { Gender } from "@/types/ui/service/gender";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
@@ -27,16 +30,33 @@ export function usePostReview(id: string, setSnackbarData: Dispatch<SetStateActi
     const [gender, setGender] = useState<Gender>("MEN");
 
     //良い点
-    const [goodPoint, setGoodPoint] = useState<string>("");
+    const [goodTitle, setgoodTitle] = useState<string>("");
 
     //良い点詳細
-    const [goodPointDetail, setGoodPointDetail] = useState<string>("");
+    const [goodTitleDetail, setgoodTitleDetail] = useState<string>("");
 
     //悪い点
-    const [badPoint, setbadPoint] = useState<string>("");
+    const [concernTitle, setconcernTitle] = useState<string>("");
 
     //悪い点詳細
-    const [badPointDetail, setbadPointDetail] = useState<string>("");
+    const [concernTitleDetail, setconcernTitleDetail] = useState<string>("");
+
+    //価格の満足度
+    const [priceSatisfaction, setPriceSatisfaction] = useState<number>(0);
+
+    //スピードの満足度
+    const [speedSatisfaction, setSpeedSatisfaction] = useState<number>(0);
+
+    //対応の満足度
+    const [responseSatisfaction, setResponseSatisfaction] = useState<number>(0);
+
+    //コスパの満足度
+    const [costPerformanceSatisfaction, setCostPerformanceSatisfaction] = useState<number>(0);
+
+    const queryClient = useQueryClient();
+
+    const [{ createReview }] = useQueryReviews();
+    const reviewWithArgs = createReview();
 
     /**
      * 閉じるアイコンクリック時
@@ -45,145 +65,67 @@ export function usePostReview(id: string, setSnackbarData: Dispatch<SetStateActi
         setOpenWriteReview(false)
     }
 
-    const postReviewSubmit = () => {
+    /**
+     * 口コミ投稿
+     * @param e イベント
+     * @returns 
+     */
+    const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        //総合評価
+        const comprehensiveEvaluation = (priceSatisfaction + speedSatisfaction + responseSatisfaction + costPerformanceSatisfaction) / 4
+        const reviewData = {
+            serviceId: id,
+            name: nickName,
+            goodTitle: goodTitle,
+            goodDetail: goodTitleDetail,
+            concernTitle: concernTitle,
+            concernDetail: concernTitleDetail,
+            gender: gender,
+            priceSatisfaction: priceSatisfaction,
+            speedSatisfaction: speedSatisfaction,
+            responseSatisfaction: responseSatisfaction,
+            costPerformanceSatisfaction: costPerformanceSatisfaction,
+            comprehensiveEvaluation: comprehensiveEvaluation,
+            contributorYearsId: selectAgeId
+        }
 
+        try {
+            const res = await reviewWithArgs.mutateAsync(reviewData);
+        } catch (error: any) {
+            console.error(error);
+            setSnackbarData({
+                state: "error",
+                message: "口コミ投稿に失敗しました",
+                time: 5000,
+                isOpen: true
+            })
+            return;
+        }
+
+        setSnackbarData({
+            state: "success",
+            message: "口コミ投稿に成功しました",
+            time: 5000,
+            isOpen: true
+        })
+
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS] })
+        setOpenWriteReview(false);
     }
 
-
-    // const [postReviewData, setPostReviewData] = useState<any>({
-    //     reviewCharacterCount: 0,
-    //     name: "",
-    //     reviewRating: 5,
-    //     gender: "MEN",
-    //     title: "",
-    //     review: "",
-    // });
-
-    // const queryClient = useQueryClient();
-
-    // const [{ createReview }] = useQueryReviews();
-    // const reviewWithArgs = createReview();
-
-    // /**
-    //  * 口コミ投稿する
-    //  * @param e 
-    //  * @returns 
-    //  */
-    // const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-
-    //     const reviewData = {
-    //         serviceId: id,
-    //         name: postReviewData.name.trim(),
-    //         rating: postReviewData.reviewRating,
-    //         gender: postReviewData.gender,
-    //         title: postReviewData.title.trim(),
-    //         review: postReviewData.review.trim()
-    //     }
-
-    //     try {
-    //         const res = await reviewWithArgs.mutateAsync(reviewData);
-    //     } catch (error: any) {
-    //         console.error(error);
-    //         setSnackbarData({
-    //             state: "error",
-    //             message: "口コミ投稿に失敗しました",
-    //             time: 5000,
-    //             isOpen: true
-    //         })
-    //         return;
-    //     }
-
-    //     setSnackbarData({
-    //         state: "success",
-    //         message: "口コミ投稿に成功しました",
-    //         time: 5000,
-    //         isOpen: true
-    //     })
-
-    //     //値の初期化
-    //     setPostReviewData({
-    //         reviewCharacterCount: 0,
-    //         name: "",
-    //         reviewRating: 5,
-    //         gender: "MEN",
-    //         title: "",
-    //         review: "",
-    //     });
-
-    //     queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
-    //     queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
-    //     queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS] });
-    // }
-
-    // /**
-    //  * 口コミ入力値変更イベント
-    //  * @param e 変更イベント
-    //  * @param element 要素
-    //  */
-    // const postReviewInputOnChange = (e: React.ChangeEvent<HTMLInputElement>, element: string) => {
-    //     const value: string = e.target.value;
-    //     if (postReviewData.hasOwnProperty(element)) {
-    //         const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
-    //         copyPostReviewData[element] = value;
-    //         setPostReviewData(copyPostReviewData);
-    //     }
-    // }
-
-    // /**
-    //  * 口コミセレクトボックス変更時イベント
-    //  * @param e 変更イベント
-    //  * @param element 要素
-    //  */
-    // const postReviewSelectOnChange = (e: React.ChangeEvent<HTMLSelectElement>, element: string) => {
-    //     const value: string = e.target.value;
-    //     if (postReviewData.hasOwnProperty(element)) {
-    //         const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
-    //         copyPostReviewData[element] = value;
-    //         setPostReviewData(copyPostReviewData);
-    //     }
-    // }
-
-    // /**
-    //  * レビュー入力欄変更時
-    //  * @param value 入力値
-    //  */
-    // const reviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    //     const value: string = e.target.value;
-    //     const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
-    //     copyPostReviewData["review"] = value;
-    //     copyPostReviewData["reviewCharacterCount"] = value.length
-    //     setPostReviewData(copyPostReviewData);
-    // }
-
-    // /**
-    //  * 口コミ評価変更イベント
-    //  * @param rating 評価
-    //  */
-    // const changeReviewRating = (rating: number) => {
-    //     const copyPostReviewData = JSON.parse(JSON.stringify(postReviewData));
-    //     copyPostReviewData["reviewRating"] = rating;
-
-    //     setPostReviewData(copyPostReviewData)
-    // }
-
-    // return [{
-    //     postReviewData,
-    //     setPostReviewData,
-    //     postReviewSubmit,
-    //     postReviewInputOnChange,
-    //     postReviewSelectOnChange,
-    //     changeReviewRating,
-    //     reviewChange
-    // }]
 
     return {
         options, selectAgeId, setSelectAgeId,
         postReviewSubmit,
         nickName, setNickName,
         gender, setGender,
-        goodPoint, setGoodPoint, goodPointDetail, setGoodPointDetail,
-        badPoint, setbadPoint, badPointDetail, setbadPointDetail,
-        closeButtonClick
+        goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
+        concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail,
+        closeButtonClick,
+        priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
+        responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
     }
 }
