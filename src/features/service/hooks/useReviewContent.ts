@@ -31,7 +31,7 @@ export const useReviewContent = () => {
      * @param goodTitle 良い点
      */
     const goodTitleChange = (goodTitle: string) => {
-        postReviewType.setgoodTitle(goodTitle);
+        postReviewType?.updateFormField("goodTitle", goodTitle);
     }
 
     /**
@@ -39,7 +39,7 @@ export const useReviewContent = () => {
      * @param goodTitleDetail 良い点詳細
      */
     const goodTitleDetailChange = (goodTitleDetail: string) => {
-        postReviewType.setgoodTitleDetail(goodTitleDetail);
+        postReviewType?.updateFormField("goodTitleDetail", goodTitleDetail);
     }
 
     /**
@@ -47,7 +47,7 @@ export const useReviewContent = () => {
      * @param concernTitle 悪い点
      */
     const concernTitleChange = (concernTitle: string) => {
-        postReviewType.setconcernTitle(concernTitle);
+        postReviewType?.updateFormField("concernTitle", concernTitle);
     }
 
     /**
@@ -55,7 +55,7 @@ export const useReviewContent = () => {
      * @param concernTitleDetail 悪い点詳細
      */
     const concernTitleDetailChange = (concernTitleDetail: string) => {
-        postReviewType.setconcernTitleDetail(concernTitleDetail);
+        postReviewType?.updateFormField("concernTitleDetail", concernTitleDetail);
     }
 
     return {

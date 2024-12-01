@@ -22,7 +22,7 @@ export default function ReviewContent() {
                     focus:border-blue-500 block w-full p-2.5"
                     maxLength={goodTitleMaxLength}
                     required
-                    value={postReviewType?.goodTitle}
+                    value={postReviewType?.reviewForm.goodTitle}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => goodTitleChange(e.target.value)}
                 />
 
@@ -30,7 +30,7 @@ export default function ReviewContent() {
                 <textarea
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                     maxLength={goodTitleDetailMaxLength}
-                    value={postReviewType?.goodTitleDetail}
+                    value={postReviewType?.reviewForm.goodTitleDetail}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => goodTitleDetailChange(e.target.value)}
 
                 ></textarea>
@@ -43,7 +43,7 @@ export default function ReviewContent() {
                     focus:border-blue-500 block w-full p-2.5"
                     maxLength={concernTitleMaxLength}
                     required
-                    value={postReviewType?.concernTitle}
+                    value={postReviewType?.reviewForm.concernTitle}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => concernTitleChange(e.target.value)}
 
                 />
@@ -53,7 +53,7 @@ export default function ReviewContent() {
                 <textarea
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                     maxLength={concernTitleDetailMaxLength}
-                    value={postReviewType?.concernTitleDetail}
+                    value={postReviewType?.reviewForm.concernTitleDetail}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => concernTitleDetailChange(e.target.value)}
 
                 ></textarea>

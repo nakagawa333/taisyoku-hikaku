@@ -1,5 +1,6 @@
 import CloseButton from "@/components/button/closeButton";
 import Heading from "@/components/heading";
+import BackLoadingScreen from "@/components/loading/BackLoadingScreen";
 import { NotesForReviewSubmission } from "@/components/precautions/NotesForReviewSubmission";
 import { PostReviewType } from "@/types/ui/service/postPreview";
 import { createContext, Dispatch, SetStateAction } from "react";
@@ -21,17 +22,18 @@ export const PostReviewContext = createContext<PostReviewType | null>(null);
 export default function PostReview(props: Props) {
 
     const { id, setSnackbarData, openWriteReview, setOpenWriteReview } = props;
-    const { options, selectAgeId, setSelectAgeId,
-        postReviewSubmit, nickName, setNickName, gender, setGender,
-        goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
-        concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail, closeButtonClick,
-        priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
-        responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
+    const {
+        partialLoadingFlag, options,
+        postReviewSubmit, closeButtonClick, reviewForm, updateFormField
     } = usePostReview(id, setSnackbarData, setOpenWriteReview);
 
 
     return (
         <>
+
+            <BackLoadingScreen
+                isOpen={partialLoadingFlag}
+            />
             {
                 openWriteReview ? (
                     <div
@@ -52,12 +54,7 @@ export default function PostReview(props: Props) {
                     >
 
                         <PostReviewContext.Provider value={{
-                            selectAgeId, setSelectAgeId, options,
-                            nickName, setNickName, gender, setGender,
-                            goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
-                            concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail,
-                            priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
-                            responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
+                            options, reviewForm, updateFormField
                         }}>
                             <form
                                 onSubmit={postReviewSubmit}

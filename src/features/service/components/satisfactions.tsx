@@ -17,26 +17,26 @@ export default function Satisfactions() {
             <div className="w-11/12 mx-auto mb-2">
                 <SatisfactionsReview
                     label="価格の満足度"
-                    satisfaction={postReviewType.priceSatisfaction}
-                    setSatisfaction={postReviewType.setPriceSatisfaction}
+                    field="priceSatisfaction"
+                    satisfaction={postReviewType.reviewForm.priceSatisfaction}
                 />
 
                 <SatisfactionsReview
                     label="スピードの満足度"
-                    satisfaction={postReviewType.speedSatisfaction}
-                    setSatisfaction={postReviewType.setSpeedSatisfaction}
+                    field="speedSatisfaction"
+                    satisfaction={postReviewType.reviewForm.speedSatisfaction}
                 />
 
                 <SatisfactionsReview
                     label="対応の満足度"
-                    satisfaction={postReviewType.responseSatisfaction}
-                    setSatisfaction={postReviewType.setResponseSatisfaction}
+                    field="responseSatisfaction"
+                    satisfaction={postReviewType.reviewForm.responseSatisfaction}
                 />
 
                 <SatisfactionsReview
                     label="コスパの満足度"
-                    satisfaction={postReviewType.costPerformanceSatisfaction}
-                    setSatisfaction={postReviewType.setCostPerformanceSatisfaction}
+                    field="costPerformanceSatisfaction"
+                    satisfaction={postReviewType.reviewForm.costPerformanceSatisfaction}
                 />
             </div>
         </div>

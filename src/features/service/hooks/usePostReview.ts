@@ -6,89 +6,126 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
-    initialData: any
-}
+    initialData: any;
+};
 
-export function usePostReview(id: string, setSnackbarData: Dispatch<SetStateAction<any>>,
-    setOpenWriteReview: Dispatch<SetStateAction<boolean>>) {
+type ReviewFormState = {
+    selectAgeId: number;
+    nickName: string;
+    gender: Gender;
+    goodTitle: string;
+    goodTitleDetail: string;
+    concernTitle: string;
+    concernTitleDetail: string;
+    priceSatisfaction: number;
+    speedSatisfaction: number;
+    responseSatisfaction: number;
+    costPerformanceSatisfaction: number;
+};
+
+// 初期値の定義
+const initialReviewFormState: ReviewFormState = {
+    selectAgeId: ContributorInformationAgeOptions.lateTeens.id,
+    nickName: "",
+    gender: "MEN",
+    goodTitle: "",
+    goodTitleDetail: "",
+    concernTitle: "",
+    concernTitleDetail: "",
+    priceSatisfaction: 0,
+    speedSatisfaction: 0,
+    responseSatisfaction: 0,
+    costPerformanceSatisfaction: 0,
+};
+
+export function usePostReview(
+    id: string,
+    setSnackbarData: Dispatch<SetStateAction<any>>,
+    setOpenWriteReview: Dispatch<SetStateAction<boolean>>
+) {
     const options: ContributorInformationAgeOption[] = [
         ContributorInformationAgeOptions.lateTeens,
         ContributorInformationAgeOptions.twentiy,
         ContributorInformationAgeOptions.third,
         ContributorInformationAgeOptions.four,
         ContributorInformationAgeOptions.five,
-        ContributorInformationAgeOptions.beyond
-    ]
+        ContributorInformationAgeOptions.beyond,
+    ];
 
-    //選択した年齢
-    const [selectAgeId, setSelectAgeId] = useState<number>(ContributorInformationAgeOptions.lateTeens.id);
-
-    //ニックーネーム
-    const [nickName, setNickName] = useState<string>("");
-
-    //性別
-    const [gender, setGender] = useState<Gender>("MEN");
-
-    //良い点
-    const [goodTitle, setgoodTitle] = useState<string>("");
-
-    //良い点詳細
-    const [goodTitleDetail, setgoodTitleDetail] = useState<string>("");
-
-    //悪い点
-    const [concernTitle, setconcernTitle] = useState<string>("");
-
-    //悪い点詳細
-    const [concernTitleDetail, setconcernTitleDetail] = useState<string>("");
-
-    //価格の満足度
-    const [priceSatisfaction, setPriceSatisfaction] = useState<number>(0);
-
-    //スピードの満足度
-    const [speedSatisfaction, setSpeedSatisfaction] = useState<number>(0);
-
-    //対応の満足度
-    const [responseSatisfaction, setResponseSatisfaction] = useState<number>(0);
-
-    //コスパの満足度
-    const [costPerformanceSatisfaction, setCostPerformanceSatisfaction] = useState<number>(0);
+    const [partialLoadingFlag, setPartialLoadingFlag] = useState<boolean>(false);
+    const [reviewForm, setReviewForm] = useState<ReviewFormState>(initialReviewFormState);
 
     const queryClient = useQueryClient();
-
     const [{ createReview }] = useQueryReviews();
     const reviewWithArgs = createReview();
+
+    /**
+     * フォームのフィールドを更新する関数
+     */
+    const updateFormField = <T extends keyof ReviewFormState>(field: T, value: ReviewFormState[T]) => {
+        setReviewForm((prevState) => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+    /**
+     * フォームリセット
+     */
+    const resetForm = () => {
+        setReviewForm(initialReviewFormState);
+    };
 
     /**
      * 閉じるアイコンクリック時
      */
     const closeButtonClick = () => {
-        setOpenWriteReview(false)
-    }
+        setOpenWriteReview(false);
+        resetForm();
+    };
 
     /**
      * 口コミ投稿
      * @param e イベント
-     * @returns 
+     * @returns
      */
     const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        setPartialLoadingFlag(true);
         e.preventDefault();
-        //総合評価
-        const comprehensiveEvaluation = (priceSatisfaction + speedSatisfaction + responseSatisfaction + costPerformanceSatisfaction) / 4
+
+        const {
+            selectAgeId,
+            nickName,
+            gender,
+            goodTitle,
+            goodTitleDetail,
+            concernTitle,
+            concernTitleDetail,
+            priceSatisfaction,
+            speedSatisfaction,
+            responseSatisfaction,
+            costPerformanceSatisfaction,
+        } = reviewForm;
+
+        // 総合評価
+        const comprehensiveEvaluation =
+            (priceSatisfaction + speedSatisfaction + responseSatisfaction + costPerformanceSatisfaction) / 4;
+
         const reviewData = {
             serviceId: id,
             name: nickName,
-            goodTitle: goodTitle,
+            goodTitle,
             goodDetail: goodTitleDetail,
-            concernTitle: concernTitle,
+            concernTitle,
             concernDetail: concernTitleDetail,
-            gender: gender,
-            priceSatisfaction: priceSatisfaction,
-            speedSatisfaction: speedSatisfaction,
-            responseSatisfaction: responseSatisfaction,
-            costPerformanceSatisfaction: costPerformanceSatisfaction,
-            comprehensiveEvaluation: comprehensiveEvaluation,
-            contributorYearsId: selectAgeId
-        }
+            gender,
+            priceSatisfaction,
+            speedSatisfaction,
+            responseSatisfaction,
+            costPerformanceSatisfaction,
+            comprehensiveEvaluation,
+            contributorYearsId: selectAgeId,
+        };
 
         try {
             const res = await reviewWithArgs.mutateAsync(reviewData);
@@ -98,8 +135,10 @@ export function usePostReview(id: string, setSnackbarData: Dispatch<SetStateActi
                 state: "error",
                 message: "口コミ投稿に失敗しました",
                 time: 5000,
-                isOpen: true
-            })
+                isOpen: true,
+            });
+
+            setPartialLoadingFlag(false);
             return;
         }
 
@@ -107,25 +146,24 @@ export function usePostReview(id: string, setSnackbarData: Dispatch<SetStateActi
             state: "success",
             message: "口コミ投稿に成功しました",
             time: 5000,
-            isOpen: true
-        })
+            isOpen: true,
+        });
 
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
-        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS] })
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.PERCENTAGEBYRATINGS] });
         setOpenWriteReview(false);
-    }
-
+        setPartialLoadingFlag(false);
+        resetForm(); // フォームのリセット
+    };
 
     return {
-        options, selectAgeId, setSelectAgeId,
+        partialLoadingFlag,
+        options,
+        reviewForm,
+        setReviewForm,
+        updateFormField,
         postReviewSubmit,
-        nickName, setNickName,
-        gender, setGender,
-        goodTitle, setgoodTitle, goodTitleDetail, setgoodTitleDetail,
-        concernTitle, setconcernTitle, concernTitleDetail, setconcernTitleDetail,
         closeButtonClick,
-        priceSatisfaction, setPriceSatisfaction, speedSatisfaction, setSpeedSatisfaction,
-        responseSatisfaction, setResponseSatisfaction, costPerformanceSatisfaction, setCostPerformanceSatisfaction
-    }
+    };
 }

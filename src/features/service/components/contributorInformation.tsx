@@ -13,7 +13,7 @@ export default function ContributorInformation() {
 
     const { ageChange, nickNameChange, genderChange } = useContributorInformation();
     return (
-        <div className="mt-3 w-full bg-cyan-50 bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="mt-3 w-full bg-cyan-50 bg-white shadow-md rounded-lg overflow-hidden bg-sky-100">
             <div className="mt-3 mb-3 w-11/12 max-w-sm mx-auto">
                 <p className="text-center">投稿者情報</p>
 
@@ -22,7 +22,7 @@ export default function ContributorInformation() {
                     <input
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"
-                        value={postReviewType?.nickName}
+                        value={postReviewType?.reviewForm.nickName}
                         onChange={(e: any) => nickNameChange(e.target.value)}
                         maxLength={nickNameMaxLength}
                         required
@@ -53,7 +53,7 @@ export default function ContributorInformation() {
                             <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
-                                    checked={postReviewType?.gender === "MEN"}
+                                    checked={postReviewType?.reviewForm.gender === "MEN"}
                                     onChange={() => genderChange("MEN")}
                                 />
                                 <label htmlFor="male">男性</label>
@@ -62,7 +62,7 @@ export default function ContributorInformation() {
                                 <input
                                     type="radio"
                                     id="female"
-                                    checked={postReviewType?.gender === "WOMEN"}
+                                    checked={postReviewType?.reviewForm.gender === "WOMEN"}
                                     onChange={() => genderChange("WOMEN")}
 
                                 />

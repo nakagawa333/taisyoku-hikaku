@@ -1,16 +1,22 @@
-import { Dispatch } from "react"
+import { PostReviewType } from "@/types/ui/service/postPreview"
+import { ReviewFormState } from "@/types/ui/service/reviewFormState"
+import { useContext } from "react"
 import StarRatings from "react-star-ratings"
+import { PostReviewContext } from "./postReview"
 
 type Props = {
     label: string
+    field: keyof ReviewFormState
     satisfaction: number
-    setSatisfaction: Dispatch<number>
 }
 
 export default function SatisfactionsReview(props: Props) {
-    const { label, satisfaction, setSatisfaction } = props;
+    const { label, field, satisfaction } = props;
+
+    const postReviewType: PostReviewType | null = useContext(PostReviewContext);
+
     const onSatisfaction = (satisfaction: number) => {
-        setSatisfaction(satisfaction);
+        postReviewType?.updateFormField(field, satisfaction);
     }
 
     return (

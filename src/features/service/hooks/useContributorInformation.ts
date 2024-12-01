@@ -21,7 +21,7 @@ export default function useContributorInformation() {
      */
     const nickNameChange = (nickName: string) => {
         if (postReviewType) {
-            postReviewType.setNickName(nickName);
+            postReviewType?.updateFormField("nickName", nickName);
         }
     }
 
@@ -31,7 +31,7 @@ export default function useContributorInformation() {
      */
     const ageChange = (age: string) => {
         if (postReviewType) {
-            postReviewType.setSelectAgeId(Number(age));
+            postReviewType?.updateFormField("selectAgeId", Number(age));
         }
     };
 
@@ -41,7 +41,7 @@ export default function useContributorInformation() {
      */
     const genderChange = (gender: Gender) => {
         if (postReviewType) {
-            postReviewType.setGender(gender);
+            postReviewType?.updateFormField("gender", gender);
         }
     }
 
