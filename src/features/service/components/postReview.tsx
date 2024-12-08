@@ -2,6 +2,7 @@ import CloseButton from "@/components/button/closeButton";
 import Heading from "@/components/heading";
 import BackLoadingScreen from "@/components/loading/BackLoadingScreen";
 import { NotesForReviewSubmission } from "@/components/precautions/NotesForReviewSubmission";
+import InfoErrorSnackbar from "@/components/snackbar/InfoErrorSnackbar";
 import { PostReviewType } from "@/types/ui/service/postPreview";
 import { createContext, Dispatch, SetStateAction } from "react";
 import { usePostReview } from "../hooks/usePostReview";
@@ -23,6 +24,7 @@ export default function PostReview(props: Props) {
 
     const { id, setSnackbarData, openWriteReview, setOpenWriteReview } = props;
     const {
+        isOpenErrorSnackbar, setIsOpenErrorSnackbar,
         partialLoadingFlag, options,
         postReviewSubmit, closeButtonClick, reviewForm, updateFormField
     } = usePostReview(id, setSnackbarData, setOpenWriteReview);
@@ -30,6 +32,17 @@ export default function PostReview(props: Props) {
 
     return (
         <>
+
+            {
+                isOpenErrorSnackbar ? (
+                    <InfoErrorSnackbar
+                        message="満足度を入力してください"
+                        time={5000}
+                        isOpen={isOpenErrorSnackbar}
+                        setIsOpen={setIsOpenErrorSnackbar}
+                    />
+                ) : (null)
+            }
 
             <BackLoadingScreen
                 isOpen={partialLoadingFlag}

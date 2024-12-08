@@ -21,6 +21,7 @@ type ReviewFormState = {
     speedSatisfaction: number;
     responseSatisfaction: number;
     costPerformanceSatisfaction: number;
+    errorSatisfactionsMessage: string
 };
 
 // 初期値の定義
@@ -36,6 +37,7 @@ const initialReviewFormState: ReviewFormState = {
     speedSatisfaction: 0,
     responseSatisfaction: 0,
     costPerformanceSatisfaction: 0,
+    errorSatisfactionsMessage: "" //満足度 エラーメッセージ
 };
 
 export function usePostReview(
@@ -52,13 +54,14 @@ export function usePostReview(
         ContributorInformationAgeOptions.beyond,
     ];
 
+    //エラーメッセージ
+    const [isOpenErrorSnackbar, setIsOpenErrorSnackbar] = useState<boolean>(false);
     const [partialLoadingFlag, setPartialLoadingFlag] = useState<boolean>(false);
     const [reviewForm, setReviewForm] = useState<ReviewFormState>(initialReviewFormState);
 
     const queryClient = useQueryClient();
     const [{ createReview }] = useQueryReviews();
     const reviewWithArgs = createReview();
-
     /**
      * フォームのフィールドを更新する関数
      */
@@ -90,8 +93,16 @@ export function usePostReview(
      * @returns
      */
     const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        setPartialLoadingFlag(true);
         e.preventDefault();
+
+        if (!reviewForm.priceSatisfaction || !reviewForm.speedSatisfaction
+            || !reviewForm.responseSatisfaction || !reviewForm.costPerformanceSatisfaction
+        ) {
+            setIsOpenErrorSnackbar(true);
+            return;
+        }
+
+        setPartialLoadingFlag(true);
 
         const {
             selectAgeId,
@@ -158,6 +169,8 @@ export function usePostReview(
     };
 
     return {
+        isOpenErrorSnackbar,
+        setIsOpenErrorSnackbar,
         partialLoadingFlag,
         options,
         reviewForm,

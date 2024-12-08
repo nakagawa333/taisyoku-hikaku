@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect } from "react"
 
 type Props = {
     message: string
     time: number
+    isOpen: boolean
+    setIsOpen: Dispatch<boolean>
 }
 
-//エラー用Snackbar
-export default function ErrorSnackbar(props: Props) {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
-
+export default function InfoErrorSnackbar(props: Props) {
+    const { message, time, isOpen, setIsOpen } = props;
     const closeClick = () => {
         setIsOpen(false);
     }
@@ -17,12 +17,12 @@ export default function ErrorSnackbar(props: Props) {
         let timer: NodeJS.Timeout;
         timer = setTimeout(() => {
             setIsOpen(false);
-        }, props.time);
+        }, time);
 
         return (() => {
             clearTimeout(timer);
         })
-    }, []);
+    }, [])
 
     return (
         <>

@@ -12,4 +12,5 @@ export type ReviewFormState = {
     speedSatisfaction: number;
     responseSatisfaction: number;
     costPerformanceSatisfaction: number;
+    errorSatisfactionsMessage: string
 };
