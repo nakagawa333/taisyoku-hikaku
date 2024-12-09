@@ -35,7 +35,7 @@ export default function Review(props: Props) {
 
                 <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
                     <StarRatings
-                        rating={review?.comprehensive_evaluation}
+                        rating={review?.comprehensive_evaluation ? Number(review.comprehensive_evaluation) : 0}
                         numberOfStars={5}
                         name="rating"
                         starRatedColor="yellow"

@@ -120,7 +120,7 @@ model reviews_satisfaction_scores {
   speed_satisfaction            Int
   response_satisfaction         Int
   cost_performance_satisfaction Int
-  comprehensive_evaluation      Int
+  comprehensive_evaluation      Decimal
   created_at                    DateTime @default(now())
   updated_at                    DateTime @default(now())
   reviews                       reviews  @relation(fields: [review_id], references: [review_id])

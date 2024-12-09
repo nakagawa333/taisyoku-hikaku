@@ -1,5 +1,5 @@
 export type PercentageByRating = {
     rating: number;
-    percentage: number;
+    percentage?: number;
     count: number;
 };
