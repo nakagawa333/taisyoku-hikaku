@@ -9,34 +9,29 @@ export default function RatingProgress(props: Props) {
     return (
         <div className="flex w-full">
             <p
-                className="text-right w-1/6 pr-2"
+                className="text-center pr-2"
                 style={{
-                    width: "7%"
+                    width: "15%"
                 }}
             >
+                {'星' + percentageByRating.rating}
+            </p>
 
-                {percentageByRating.rating}</p>
             <div
-                className="bg-gray-200 h-6 mb-6 w-5/6"
+                className="bg-gray-200 h-6 mb-6"
+                style={{
+                    width: "80%"
+                }}
             >
                 <div
                     className="h-full"
                     style={{
                         width: `${percentageByRating.percentage}%`,
-                        backgroundColor: "yellow"
+                        backgroundColor: "yellow",
                     }}
                 >
                 </div>
             </div>
-
-            <p
-                className="text-left w-1/6 pl-1"
-                style={{
-                    width: "10%"
-                }}
-            >
-                ({percentageByRating.count})
-            </p>
         </div>
     )
 }
