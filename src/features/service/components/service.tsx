@@ -104,10 +104,20 @@ export default function Service() {
                                 starRatedColor="yellow"
                                 starHoverColor="yellow"
                                 ignoreInlineStyles={false}
-                                starDimension="30px"
+                                starDimension="20px"
                                 starSpacing="0px"
                             />
-                            <p className="pl-2.5 font-bold text-lg" style={{ paddingTop: "3px" }}>{service?.avgRating ? service.avgRating : 0}</p>
+
+                            {
+                                service.avgRating ? (
+                                    <p
+                                        className="pl-1.5 font-bold text-sm mt-0.5"
+                                        style={{ paddingTop: "3px" }}>
+                                        {service?.avgRating}
+                                    </p>
+                                ) : (null)
+                            }
+
                         </div>
                     ) : (
                         <StarRatings
@@ -117,7 +127,7 @@ export default function Service() {
                             starRatedColor="yellow"
                             starHoverColor="yellow"
                             ignoreInlineStyles={false}
-                            starDimension="30px"
+                            starDimension="20px"
                             starSpacing="0px"
                         />
                     )

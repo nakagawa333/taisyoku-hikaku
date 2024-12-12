@@ -54,7 +54,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const percentageByRatings: PercentageByRating[] = [];
 
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 5; i >= 1; i--) {
         let percentageByRating: PercentageByRating = {
             rating: i,
             count: 0,
