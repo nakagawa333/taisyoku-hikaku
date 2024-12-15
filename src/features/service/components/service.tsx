@@ -16,7 +16,7 @@ import Reviews from "./reviews";
 import SeeDetailedReviews from "./seeDetailedReviews";
 import ServiceDetails from "./serviceDetails";
 import ServiceTags from "./serviceTags";
-import TermsLists from "./TermsLists";
+import TermsLists from "./termsLists";
 
 export default function Service() {
 
