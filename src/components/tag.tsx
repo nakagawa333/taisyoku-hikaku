@@ -11,7 +11,7 @@ export const Tag = (props: Props) => {
     return (
         <div className="flex">
             <span
-                className="transform hover:bg-gray-50 inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                className="hover:bg-gray-50 px-1 py-1 text-sm text-gray-700 mr-1 mb-1"
                 onClick={() => tagNameClick(tagName)}
             >
                 #{tagName}
