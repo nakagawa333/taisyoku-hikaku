@@ -5,7 +5,7 @@ import ErrorSnackbar from "@/components/ErrorSnackbar";
 import PartialLoading from "@/components/partialLoading";
 import { Tag } from "@/components/tag";
 import { Paths } from "@/constants/common/paths";
-import { uesTags } from "@/hooks/reactQuery/tags";
+import { useTags } from "@/hooks/reactQuery/tags";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 export const Tags = () => {
     const router: AppRouterInstance = useRouter();
 
-    const [{ fetchTags }] = uesTags();
+    const [{ fetchTags }] = useTags();
     const resTags = fetchTags();
     const tagsData: any = resTags.data;
     const tagsIsLoading: boolean = resTags.isLoading;

@@ -11,11 +11,8 @@ export default function TermsTag(props: Props) {
     return (
         <div className="flex">
             <span
-                className="hover:bg-slate-50 transform px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                className="hover:bg-slate-50 transform px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 border border-gray-300"
                 onClick={() => tagNameClick(tagName)}
-                style={{
-                    borderWidth: "1px"
-                }}
             >
                 #{tagName}
 

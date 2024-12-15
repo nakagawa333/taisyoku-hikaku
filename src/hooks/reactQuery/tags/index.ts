@@ -3,7 +3,7 @@ import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 
-export const uesTags = () => {
+export const useTags = () => {
     const fetchTags = () => {
         return useQuery({
             queryKey: [ReactQueryKeys.TAGS],
