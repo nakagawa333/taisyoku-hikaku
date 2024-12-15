@@ -16,6 +16,7 @@ import Reviews from "./reviews";
 import SeeDetailedReviews from "./seeDetailedReviews";
 import ServiceDetails from "./serviceDetails";
 import ServiceTags from "./serviceTags";
+import TermsLists from "./TermsLists";
 
 export default function Service() {
 
@@ -165,6 +166,14 @@ export default function Service() {
                 service={service}
             />
 
+            <div className="flex items-center justify-center">
+                <div className="w-11/12 mt-8">
+                    <ServiceTags
+                        tags={tags}
+                    />
+                </div>
+            </div>
+
             {
                 service && (
                     <OfficialWebsiteButton
@@ -173,14 +182,15 @@ export default function Service() {
                 )
             }
 
-            <ServiceTags
-                tags={tags}
-            />
-
             <div className="container" ref={reviewRef}>
                 <Reviews
                     id={id}
-                    page={page} reviewsMetaDataIsAfterMount={false} reviewsMetaDataData={undefined} path={path} currentPage={0} params={params} />
+                    page={page}
+                    reviewsMetaDataIsAfterMount={reviewsMetaDataIsAfterMount}
+                    reviewsMetaDataData={reviewsMetaDataData}
+                    path={path}
+                    currentPage={currentPage}
+                    params={params} />
 
                 <PostReview
                     id={id}
@@ -214,6 +224,9 @@ export default function Service() {
                 time={snackbarData.time}
                 isOpen={snackbarData.isOpen}
                 onClose={closeSuccessSnackbar}
+            />
+
+            <TermsLists
             />
 
         </div >

@@ -76,7 +76,7 @@ export default function Reviews(props: Props) {
                 )
             }
 
-            <div className="mb-5">
+            <div className="mt-5">
                 {
                     reviewsMetaDataIsAfterMount
                         && reviewsMetaDataData?.lastPage

@@ -16,6 +16,7 @@ export type ServiceResponse = {
 
 export type TagsResponse = {
     tagName: string
+    count?:number
 }
 
 export type Gender = "MEN" | "WOMEN";
