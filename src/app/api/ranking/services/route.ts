@@ -6,6 +6,21 @@ import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * @swagger
+ * /api/ranking/services:
+ *   get:
+ *     summary: 退職代行サービス ランキング取得API
+ *     description: 退職代行サービス ランキング取得
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: 成功時のレスポンス
+ *　　　 400:
+           description: バリデーションチェックエラー時のレスポンス
+ * 　　　500:
+ *         description: 退職代行サービス ランキング取得取得失敗時のレスポンス
+ */
 export async function GET(request: NextRequest) {
 
     let services: any;
@@ -47,6 +62,8 @@ export async function GET(request: NextRequest) {
             try {
                 const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
                     select: {
+                        good_title: true,
+                        concern_title: true,
                         reviews_satisfaction_scores: {
                             select: {
                                 comprehensive_evaluation: true
@@ -75,6 +92,11 @@ export async function GET(request: NextRequest) {
             // サービスに評価とレビュー数を追加
             service.comprehensiveEvaluationAvg = comprehensiveEvaluationAvg;
             service.reviewCount = reviews.length;
+
+            if (Array.isArray(reviews) && 0 < reviews.length) {
+                service.goodTitle = reviews[0].good_title;
+                service.concernTitle = reviews[0].concern_title;
+            }
         }
     }
 
@@ -93,16 +115,25 @@ export async function GET(request: NextRequest) {
     });
 
     const resServices = rankingServices.map((rankingService) => {
+
+        const serviceTags = rankingService.service_tags.map((serviceTag: any) => {
+            return {
+                tagId: serviceTag.tag_id,
+                tagName: serviceTag.tags.tag_name
+            }
+        });
+
         return {
-            service_id: rankingService.service_id,
-            service_name: rankingService.service_name,
-            hour_service: rankingService.hour_service,
-            official_website: rankingService.official_website,
-            service_tags: [
-            ],
+            serviceId: rankingService.service_id,
+            serviceName: rankingService.service_name,
+            hourService: rankingService.hour_service,
+            officialWebsite: rankingService.official_website,
+            serviceTags: serviceTags,
             imgUrl: rankingService.imgUrl,
             comprehensiveEvaluationAvg: rankingService.comprehensiveEvaluationAvg,
             reviewCount: rankingService.reviewCount,
+            goodTitle: rankingService.goodTitle,
+            concernTitle: rankingService.concernTitle
         }
     });
     //TODO 評価を判定する加重平均の処理を実装

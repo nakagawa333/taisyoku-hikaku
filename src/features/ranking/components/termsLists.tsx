@@ -6,6 +6,7 @@ import useTermsLists from "../hooks/useTermsLists";
 
 //条件一覧
 export default function TermsLists() {
+
     const { resTags } = useTermsLists();
 
     if (resTags.isLoading || !resTags.isFetchedAfterMount) {
