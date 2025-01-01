@@ -1,5 +1,4 @@
 import SpeechBubble from "@/components/bubble/speechBubble";
-import OfficialWebsiteButton from "@/components/OfficialWebsiteButton";
 import { Tag } from "@/components/tag";
 import StarRatings from "react-star-ratings";
 import useCard from "../hooks/useCard";
@@ -12,7 +11,7 @@ type Props = {
 export default function Card(props: Props) {
     const { rank, service } = props;
 
-    const { tagNameClick, reviewButtonClick } = useCard();
+    const { tagNameClick, reviewButtonClick, viewSiteButtonClick } = useCard();
 
     return (
         <div
@@ -84,26 +83,28 @@ export default function Card(props: Props) {
                     }
                 </div>
 
-                <div className="flex self-stretch text-xs tracking-[0.04em] leading-[170%] font-medium text-gyar-6a6a6a">
+                <div className="flex justify-center w-full">
+                    <button
+                        className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        style={{
+                            background: "#289CAC",
+                            color: "white"
+                        }}
+                        onClick={() => viewSiteButtonClick(service.officialWebsite)}
+                    >
+                        サイトを見る
+                    </button>
 
-                    <OfficialWebsiteButton
-                        url={service.officialWebsite}
-                    />
-
-                    <div className="self-stretch bg-white-fff overflow-hidden flex flex-row items-start justify-start py-[30px] px-5">
-                        <button
-                            className="text-white cursor-pointer [border:none] py-4 px-5 bg-blue-289cac flex-1 flex flex-row items-start justify-center"
-                            style={{
-                                background: "#289CAC",
-                                color: "white"
-                            }}
-                            onClick={() => reviewButtonClick(service.serviceId)}
-                        >
-                            <b className="relative text-lg inline-block font-yugothic text-left min-w-[72px]">
-                                口コミを見る
-                            </b>
-                        </button>
-                    </div>
+                    <button
+                        className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        style={{
+                            background: "#289CAC",
+                            color: "white"
+                        }}
+                        onClick={() => reviewButtonClick(service.serviceId)}
+                    >
+                        口コミを見る
+                    </button>
                 </div>
             </div>
         </div>

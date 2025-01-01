@@ -6,6 +6,14 @@ export default function useCard() {
     const router: AppRouterInstance = useRouter();
 
     /**
+     * サイトを見るボタンクリック時
+     * @param url url
+     */
+    const viewSiteButtonClick = (url: string) => {
+        window.open(url)
+    }
+
+    /**
      * タグ名クリック時処理
      * @param tagName タグ名
      */
@@ -22,6 +30,7 @@ export default function useCard() {
     }
 
     return {
-        tagNameClick, reviewButtonClick
+        tagNameClick, reviewButtonClick,
+        viewSiteButtonClick
     }
 }
