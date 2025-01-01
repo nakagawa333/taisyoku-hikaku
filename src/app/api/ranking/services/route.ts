@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
                         }
                     },
                     where: {
-                        service_id: service.service_id
+                        service_id: rankService.service_id
                     }
                 }
                 reviews = await fetchReviews(query);
