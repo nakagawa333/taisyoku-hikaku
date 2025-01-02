@@ -9,10 +9,18 @@ export default function Ranking() {
     return (
         <>
             <HeaderTitle />
-            <Rankingservices
-            />
-            <TermsLists
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2">
+                    <Rankingservices
+                    />
+                </div>
+
+                <div className="">
+                    <TermsLists
+                    />
+                </div>
+
+            </div>
         </>
     )
 }

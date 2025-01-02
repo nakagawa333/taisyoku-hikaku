@@ -15,28 +15,32 @@ export default function Card(props: Props) {
 
     return (
         <div
-            className="m-auto rounded overflow-hidden shadow-lg max-w-xs mb-20"
+            className="m-auto rounded overflow-hidden shadow-lg max-w-xs md:max-w-3xl mb-20
+                grid grid-cols-1 sm:grid-cols-3 gap-1s"
             key={service.serviceId}
         >
 
-            <div className="p-4 flex">
-                <p>{rank}</p>
-                <b className="tracking-[0.04em] ml-3">{service.serviceName}</b>
+            <div className="sm:col-span-1">
+                <div className="p-4 flex">
+                    <p>{rank}</p>
+                    <b className="tracking-[0.04em] ml-3">{service.serviceName}</b>
+                </div>
+
+                <div className="self-stretch h-[200px] flex flex-col items-start justify-start pt-0 px-0 pb-0 box-border gap-[10px]">
+                    {
+                        service.imgUrl && (
+                            <img
+                                className="transform self-stretch h-full w-full max-w-full overflow-hidden shrink-0"
+                                alt="image"
+                                src={service.imgUrl}
+                            />
+                        )
+                    }
+                </div>
             </div>
 
-            <div className="self-stretch h-[200px] flex flex-col items-start justify-start pt-0 px-0 pb-0 box-border gap-[10px]">
-                {
-                    service.imgUrl && (
-                        <img
-                            className="transform self-stretch h-full w-full max-w-full overflow-hidden shrink-0"
-                            alt="image"
-                            src={service.imgUrl}
-                        />
-                    )
-                }
-            </div>
 
-            <div className="w-80 self-stretch bg-white-fff flex flex-col items-start justify-start py-6 px-5 gap-[5px]">
+            <div className="w-full sm:col-span-2 md:max-w-full self-stretch bg-white-fff flex flex-col items-start justify-start py-6 px-5 gap-[5px]">
 
                 <div className="flex">
                     <StarRatings

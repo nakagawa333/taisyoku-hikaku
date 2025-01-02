@@ -32,16 +32,15 @@ export default function Rankingservices() {
             {
                 Array.isArray(data.services) && data.services.map((service: any, index: number) => {
                     return (
-                        <>
-                            <Card
-                                key={service.serviceId}
-                                service={service}
-                                rank={index + 1}
-                            />
-                        </>
+                        <Card
+                            key={service.serviceId}
+                            service={service}
+                            rank={index + 1}
+                        />
                     )
                 })
             }
+
         </>
     )
 }
