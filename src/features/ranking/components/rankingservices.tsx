@@ -1,14 +1,18 @@
 import ErrorSnackbar from "@/components/ErrorSnackbar";
+import Pagination from "@/components/pagination";
 import PartialLoading from "@/components/partialLoading";
 import useRankingservices from "../hooks/useRankingservices";
 import Card from "./card";
 
 export default function Rankingservices() {
 
-    const { services,
-        data, isLoading, isError, isFetchedAfterMount } = useRankingservices();
+    const {
+        rankingServicesData, rankingServicesIsloading, rankingServicesIsError, rankingServicesIsFetchedAfterMount,
+        rankingServicesMetaDataData, rankingServicesMetaDataIsLoading, rankingServicesMetaDataIsError, rankingServicesMetaDataIsFetchedAfterMount,
+        currentPage, path, params
+    } = useRankingservices();
 
-    if (isLoading || !isFetchedAfterMount) {
+    if (rankingServicesIsloading || !rankingServicesIsFetchedAfterMount || rankingServicesMetaDataIsLoading || !rankingServicesMetaDataIsFetchedAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
@@ -16,7 +20,7 @@ export default function Rankingservices() {
         )
     }
 
-    if (isError) {
+    if (rankingServicesIsError || rankingServicesMetaDataIsError) {
         return (
             <div className="container m-auto min-h-screen">
                 <ErrorSnackbar
@@ -30,7 +34,7 @@ export default function Rankingservices() {
     return (
         <>
             {
-                Array.isArray(data.services) && data.services.map((service: any, index: number) => {
+                Array.isArray(rankingServicesData.services) && rankingServicesData.services.map((service: any, index: number) => {
                     return (
                         <Card
                             key={service.serviceId}
@@ -41,6 +45,18 @@ export default function Rankingservices() {
                 })
             }
 
+            {
+
+                rankingServicesMetaDataData.lastPage ? (
+                    <Pagination
+                        currentPage={currentPage}
+                        lastPage={rankingServicesMetaDataData.lastPage}
+                        path={path}
+                        params={params}
+                    />
+
+                ) : (null)
+            }
         </>
     )
 }

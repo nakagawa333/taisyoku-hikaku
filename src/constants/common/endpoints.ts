@@ -8,4 +8,5 @@ export class Endpoints {
     static readonly SERVICEREVIEWSMETADATA = "/api/service/reviews/metadata";
     static readonly PERCENTAGEBYRATINGS = "/api/service/reviews/percentageByRating";
     static readonly RANKINGSERVICES = "/api/ranking/services";
+    static readonly RANKINGSERVICESMETADATA = "/api/ranking/services/metadata";
 }

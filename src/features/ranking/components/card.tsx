@@ -39,7 +39,6 @@ export default function Card(props: Props) {
                 </div>
             </div>
 
-
             <div className="w-full sm:col-span-2 md:max-w-full self-stretch bg-white-fff flex flex-col items-start justify-start py-6 px-5 gap-[5px]">
 
                 <div className="flex">

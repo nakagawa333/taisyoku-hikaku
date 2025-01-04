@@ -19,7 +19,6 @@ export default function Ranking() {
                     <TermsLists
                     />
                 </div>
-
             </div>
         </>
     )

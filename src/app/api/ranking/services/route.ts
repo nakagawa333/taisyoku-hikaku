@@ -1,3 +1,4 @@
+import { Take } from "@/constants/db/take";
 import { fetchRankingServices } from "@/hooks/prisma/ranking/services/fetchRankingServices";
 import { fetchServices } from "@/hooks/prisma/services/fetchServices";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
@@ -8,7 +9,23 @@ import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+    const params: URLSearchParams = request.nextUrl.searchParams;
     let rankServices: any;
+
+    let orderBy: any = {
+        id: "asc"
+    }
+    let take: number = Take.RANKING_SERVICES;
+    let skip: number = 0;
+
+    if (params.has("limit")) {
+        take = Number(params.get("limit"));
+    }
+
+    if (params.has("p")) {
+        let page = Number(params.get("p"));
+        skip = (page - 1) * take;
+    }
 
     try {
         const query: Prisma.ranking_servicesFindManyArgs = {
@@ -34,8 +51,12 @@ export async function GET(request: NextRequest) {
                         }
                     }
                 }
-            }
+            },
+            orderBy: orderBy,
+            take: take,
+            skip: skip
         }
+
         rankServices = await fetchRankingServices(query);
     } catch (ex: any) {
         return NextResponse.json({ "msg": "退職サービス詳細情報の取得に失敗しました" }, { status: 400 });
