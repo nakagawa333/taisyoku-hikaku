@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen relative`}>
+    <html className="h-full" lang="en">
+      <body className={`${inter.className} h-full`}>
         <Providers>
           {children}
         </Providers>
