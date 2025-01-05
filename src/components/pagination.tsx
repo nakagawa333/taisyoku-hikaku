@@ -49,7 +49,7 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
             <Link
               href={`${path}${params}p=${currentPage - 1}`}
               aria-label="Previous Page"
-              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"
+              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
             >
               <button
 
@@ -61,20 +61,36 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
         }
 
         <div className="flex items-center gap-2">
-          {pageNumbers.map((number) => (
-            <Link
-              key={number}
-              href={`${path}${params}p=${number}`}
-              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"
-            >
-              <button
-                className={`${currentPage === number ? "bg-indigo-500 text-white" : ""
-                  }`}
-              >
-                {number}
-              </button>
-            </Link>
-          ))}
+          {
+            pageNumbers.map((pageNumber: number) =>
+              <div key={pageNumber}>
+                {
+                  pageNumber === currentPage ? (
+                    <span
+                      className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight 
+                      bg-gray-300 dark:text-white text-gray-700 border border-gray-300"
+                    >
+                      <button
+                        className={`text-white`}
+                      >
+                        {pageNumber}
+                      </button>
+                    </span>
+                  ) : (
+                    <Link
+                      href={`${path}${params}p=${pageNumber}`}
+                      className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
+                    >
+                      <button
+                      >
+                        {pageNumber}
+                      </button>
+                    </Link>
+                  )
+                }
+              </div>
+            )
+          }
         </div>
 
         {
@@ -93,7 +109,7 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
             <Link
               href={`${path}${params}p=${currentPage + 1}`}
               aria-label="Next Page"
-              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:hover:text-white"
+              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
             >
               <button
               >
@@ -103,6 +119,6 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
           )
         }
       </div>
-    </div>
+    </div >
   );
 };
