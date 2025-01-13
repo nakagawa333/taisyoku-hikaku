@@ -34,6 +34,7 @@ model services {
   similar_services            similar_services?
   reviews                     reviews?
   ranking_services            ranking_services?
+  ranking_services_history    ranking_services_history?
 }
 
 model managements {
@@ -134,6 +135,13 @@ model contributor_years {
 }
 
 model ranking_services {
+  id         Int      @id @default(autoincrement())
+  service_id String   @unique
+  rank       Int
+  services   services @relation(fields: [service_id], references: [service_id])
+}
+
+model ranking_services_history {
   id         Int      @id @default(autoincrement())
   service_id String   @unique
   rank       Int
