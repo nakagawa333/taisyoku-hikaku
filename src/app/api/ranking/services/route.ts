@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
                 })
             }
 
-            await prisma.ranking_services_history.createMany({ data: rankingServicesHistoryData });
+            await prisma.ranking_services_history.createMany({ data: await Promise.all(rankingServicesHistoryData) });
 
             const query: Prisma.servicesFindManyArgs<DefaultArgs> = {
                 select: {
@@ -220,10 +220,6 @@ export async function POST(request: NextRequest) {
 
             if (Array.isArray(services)) {
                 for (let service of services) {
-                    const res: DataPublicUrl = getStoragePublicUrl("images", service.image_file_path);
-                    const publicUrl = res.data.publicUrl;
-                    service["imgUrl"] = publicUrl;
-
                     let reviews: any;
 
                     try {
@@ -319,16 +315,14 @@ export async function POST(request: NextRequest) {
 
             //退職代行サービスランキングデータ作成
             await prisma.ranking_services.createMany({
-                data: rankingServicesData
+                data: await Promise.all(rankingServicesData)
             });
 
         } catch (error: any) {
             console.error(error);
             throw new Error(`トランザクション失敗: ${error.message}`);
         }
-
-    }
-    );
+    });
 
     return NextResponse.json({
         services: {}
