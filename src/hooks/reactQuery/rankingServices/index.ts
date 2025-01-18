@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useRankingServices = () => {
-    const fetchRankingServices = (limit: number = Take.RANKING_SERVICES, page?: string) => {
+    const fetchRankingServices = (limit: number = Take.RANKING_SERVICES, page: string) => {
         return useQuery({
-            queryKey: [ReactQueryKeys.RANKINGSERVICES],
+            queryKey: [ReactQueryKeys.RANKINGSERVICES, page],
             queryFn: async () => {
                 let reqUrl: string = `${process.env.NEXT_PUBLIC_URL}${Endpoints.RANKINGSERVICES}?limit=${limit}`
 
@@ -17,7 +17,8 @@ export const useRankingServices = () => {
 
                 let res = await axios.get(reqUrl);
                 return res.data;
-            }
+            },
+            staleTime: 0
         })
     }
 

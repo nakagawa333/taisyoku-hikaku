@@ -12,7 +12,8 @@ export default function Rankingservices() {
         currentPage, path, params
     } = useRankingservices();
 
-    if (rankingServicesIsloading || !rankingServicesIsFetchedAfterMount || rankingServicesMetaDataIsLoading || !rankingServicesMetaDataIsFetchedAfterMount) {
+    if (rankingServicesIsloading || !rankingServicesIsFetchedAfterMount
+        || rankingServicesMetaDataIsLoading || !rankingServicesMetaDataIsFetchedAfterMount) {
         return (
             <div className="min-h-screen">
                 <PartialLoading isOpen={true} />
