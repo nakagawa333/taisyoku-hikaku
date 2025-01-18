@@ -40,7 +40,7 @@ export default function Rankingservices() {
                         <Card
                             key={service.serviceId}
                             service={service}
-                            rank={index + 1}
+                            rank={service.rank}
                         />
                     )
                 })

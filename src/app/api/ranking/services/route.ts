@@ -138,6 +138,7 @@ export async function GET(request: NextRequest) {
         });
 
         return {
+            rank: rankingService.rank,
             serviceId: rankingService.service_id,
             serviceName: services.service_name,
             hourService: services.hour_service,
