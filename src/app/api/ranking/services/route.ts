@@ -1,3 +1,4 @@
+import { HttpStatus } from "@/constants/common/httpStatus";
 import { Take } from "@/constants/db/take";
 import { fetchRankingServices } from "@/hooks/prisma/ranking/services/fetchRankingServices";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
@@ -325,7 +326,5 @@ export async function POST(request: NextRequest) {
         }
     });
 
-    return NextResponse.json({
-        services: {}
-    });
+    return new NextResponse(null, { status: HttpStatus.NO_CONTENT });
 }
