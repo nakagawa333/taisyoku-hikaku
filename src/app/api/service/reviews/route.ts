@@ -1,4 +1,5 @@
 import { ServiceReview } from "@/constants/api/response/serviceResponse";
+import { HttpStatus } from "@/constants/common/httpStatus";
 import { Take } from "@/constants/db/take";
 import { createReviewsHandleTransaction } from "@/hooks/prisma/services/reviews/createCommentsHandleTransaction";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
@@ -7,6 +8,7 @@ import createReviewsValidate from "@/utils/api/validate/createReviewsValidate";
 import { formatDateToYMD } from "@/utils/common/date";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
+import axios from "axios";
 import crypto from 'crypto';
 import { NextRequest, NextResponse } from "next/server";
 
@@ -188,6 +190,29 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  */
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+    const headers = new Headers(request.headers);
+    const authorization = headers.get("Authorization");
+    const token = authorization?.replace("Bearer ", "");
+
+    const verifyURL: string = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+    try {
+        const body = {
+            secret: process.env.NEXT_PUBLIC_TURNSTILE_SECRET_KEY,
+            response: token,
+        }
+        const res = await axios.post(verifyURL, body);
+
+        if (!res?.data.success) {
+            return NextResponse.json({ "msg": "トークンが不正です" }, { status: HttpStatus.UNAUTHORIZED });
+        }
+
+    } catch (err: any) {
+        console.error("トークンが不正です");
+        console.error(err);
+        return NextResponse.json({ "msg": "トークンが不正です" }, { status: HttpStatus.BAD_REQUEST });
+    }
+
     const json = await request.json();
 
     //バリデーションチェック
