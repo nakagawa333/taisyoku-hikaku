@@ -3,7 +3,7 @@ import { ContributorInformationAgeOption, ContributorInformationAgeOptions } fro
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { Gender } from "@/types/ui/service/gender";
 import { useQueryClient } from "@tanstack/react-query";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 type Props = {
     initialData: any;
@@ -55,9 +55,13 @@ export function usePostReview(
     ];
 
     //エラーメッセージ
+    const [errorSnackbarMsg, setErrorSnackbarMsg] = useState<string>("入力されていない項目があります");
     const [isOpenErrorSnackbar, setIsOpenErrorSnackbar] = useState<boolean>(false);
     const [partialLoadingFlag, setPartialLoadingFlag] = useState<boolean>(false);
     const [reviewForm, setReviewForm] = useState<ReviewFormState>(initialReviewFormState);
+
+    const turnstileRef = useRef<any>(null);
+    const turnstileToken = useRef<string>("");
 
     const queryClient = useQueryClient();
     const [{ createReview }] = useQueryReviews();
@@ -94,6 +98,12 @@ export function usePostReview(
      */
     const postReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!turnstileToken || !turnstileToken.current) {
+            setErrorSnackbarMsg("認証に失敗しました");
+            setIsOpenErrorSnackbar(true);
+            return;
+        }
 
         if (!reviewForm.priceSatisfaction || !reviewForm.speedSatisfaction
             || !reviewForm.responseSatisfaction || !reviewForm.costPerformanceSatisfaction
@@ -136,6 +146,7 @@ export function usePostReview(
             costPerformanceSatisfaction,
             comprehensiveEvaluation,
             contributorYearsId: selectAgeId,
+            token: turnstileToken.current
         };
 
         try {
@@ -168,7 +179,15 @@ export function usePostReview(
         resetForm(); // フォームのリセット
     };
 
+    const onSuccess = (newToken: string) => {
+        if (turnstileRef?.current) {
+            turnstileToken.current = newToken
+        }
+    }
+
     return {
+        errorSnackbarMsg,
+        turnstileRef,
         isOpenErrorSnackbar,
         setIsOpenErrorSnackbar,
         partialLoadingFlag,
@@ -178,5 +197,6 @@ export function usePostReview(
         updateFormField,
         postReviewSubmit,
         closeButtonClick,
+        onSuccess
     };
 }

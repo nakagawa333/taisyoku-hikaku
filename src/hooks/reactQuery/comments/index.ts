@@ -4,7 +4,7 @@ import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { Take } from "@/constants/db/take";
 import { PercentageByRating } from "@/types/api/response/reviewsResponse";
 import { MutationFunction, useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 export const useQueryReviews = () => {
 
@@ -65,42 +65,34 @@ export const useQueryReviews = () => {
 
     /**
      * 口コミを新規作成する
-     * @param serviceId サービスID
-     * @param name ニックネーム
-     * @param goodTitle 良い点
-     * @param goodDetail 良い点詳細
-     * @param concernTitle 悪い点
-     * @param concernDetail 悪い詳細
-     * @param gender 性別
-     * @param priceSatisfaction 価格の満足度
-     * @param 
-     * @param title タイトル
-     * @param review レビュー
      * @returns 
      */
     const createReview = () => {
-        const mutationFn: MutationFunction<any, any> = async ({
-            serviceId, name, goodTitle, goodDetail, concernTitle, concernDetail,
-            gender, priceSatisfaction, speedSatisfaction, responseSatisfaction, costPerformanceSatisfaction,
-            comprehensiveEvaluation, contributorYearsId
-        }) => {
+        const mutationFn: MutationFunction<any, any> = async (data) => {
             const reqUrl = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}`;
-            const data = {
-                serviceId,
-                name,
-                goodTitle,
-                goodDetail,
-                concernTitle,
-                concernDetail,
-                gender,
-                priceSatisfaction,
-                speedSatisfaction,
-                responseSatisfaction,
-                costPerformanceSatisfaction,
-                comprehensiveEvaluation,
-                contributorYearsId
+
+            const config: AxiosRequestConfig = {
+                headers: {
+                    "Authorization": `Bearer ${data.token}`
+                }
+            }
+
+            const reqData = {
+                serviceId: data.serviceId,
+                name: data.name,
+                goodTitle: data.goodTitle,
+                goodDetail: data.goodDetail,
+                concernTitle: data.concernTitle,
+                concernDetail: data.concernDetail,
+                gender: data.gender,
+                priceSatisfaction: data.priceSatisfaction,
+                speedSatisfaction: data.speedSatisfaction,
+                responseSatisfaction: data.responseSatisfaction,
+                costPerformanceSatisfaction: data.costPerformanceSatisfaction,
+                comprehensiveEvaluation: data.comprehensiveEvaluation,
+                contributorYearsId: data.contributorYearsId
             };
-            const res = await axios.post(reqUrl, data);
+            const res = await axios.post(reqUrl, reqData, config);
             return res.data;
         };
         return useMutation({

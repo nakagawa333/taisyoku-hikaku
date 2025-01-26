@@ -4,6 +4,7 @@ import BackLoadingScreen from "@/components/loading/BackLoadingScreen";
 import { NotesForReviewSubmission } from "@/components/precautions/NotesForReviewSubmission";
 import InfoErrorSnackbar from "@/components/snackbar/InfoErrorSnackbar";
 import { PostReviewType } from "@/types/ui/service/postPreview";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { createContext, Dispatch, SetStateAction } from "react";
 import { usePostReview } from "../hooks/usePostReview";
 import ContributorInformation from "./contributorInformation";
@@ -24,9 +25,12 @@ export default function PostReview(props: Props) {
 
     const { id, setSnackbarData, openWriteReview, setOpenWriteReview } = props;
     const {
+        errorSnackbarMsg,
+        turnstileRef,
         isOpenErrorSnackbar, setIsOpenErrorSnackbar,
         partialLoadingFlag, options,
-        postReviewSubmit, closeButtonClick, reviewForm, updateFormField
+        postReviewSubmit, closeButtonClick, reviewForm, updateFormField,
+        onSuccess
     } = usePostReview(id, setSnackbarData, setOpenWriteReview);
 
 
@@ -36,7 +40,7 @@ export default function PostReview(props: Props) {
             {
                 isOpenErrorSnackbar ? (
                     <InfoErrorSnackbar
-                        message="満足度を入力してください"
+                        message={errorSnackbarMsg}
                         time={5000}
                         isOpen={isOpenErrorSnackbar}
                         setIsOpen={setIsOpenErrorSnackbar}
@@ -106,6 +110,16 @@ export default function PostReview(props: Props) {
                                 <div className="mt-2">
                                     <NotesForReviewSubmission />
                                 </div>
+
+                                {
+                                    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+                                        <Turnstile
+                                            ref={turnstileRef}
+                                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                                            onSuccess={onSuccess}
+                                        />
+                                    ) : (null)
+                                }
 
 
                                 <div className="self-stretch bg-white-fff overflow-hidden flex flex-row items-start justify-start py-[30px] px-5">
