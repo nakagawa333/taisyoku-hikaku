@@ -12,7 +12,6 @@ export const createReviewsHandleTransaction = async (
     createQuery: Prisma.reviewsCreateArgs,
     createReviewsSatisfactionScoresQuery: Prisma.reviews_satisfaction_scoresCreateArgs
 ) => {
-    let reviews;
 
     await prisma.$transaction(async (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => {
         let service: services | null = null;
@@ -26,6 +25,8 @@ export const createReviewsHandleTransaction = async (
         if (!service) {
             throw new Error("対象の退職代行サービスが存在しません");
         }
+
+        let reviews;
 
         try {
             reviews = await prisma.reviews.create(createQuery);
@@ -46,7 +47,9 @@ export const createReviewsHandleTransaction = async (
             console.error(error);
             throw new Error("各満足度の作成に失敗しました");
         }
-    });
 
-    return reviews;
+        if (!reviewsSatisfactionScore) {
+            throw new Error("各満足度の作成が存在しません");
+        }
+    });
 }
