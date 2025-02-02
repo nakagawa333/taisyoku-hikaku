@@ -2,6 +2,7 @@ import SpeechBubble from "@/components/bubble/speechBubble";
 import { Tag } from "@/components/tag";
 import StarRatings from "react-star-ratings";
 import useCard from "../hooks/useCard";
+import RankingIcon from "./rankingIcon";
 
 type Props = {
     service: any,
@@ -22,8 +23,15 @@ export default function Card(props: Props) {
 
             <div className="sm:col-span-1">
                 <div className="p-4 flex">
-                    <p>{rank}</p>
-                    <b className="tracking-[0.04em] ml-3">{service.serviceName}</b>
+
+                    <RankingIcon
+                        rank={rank}
+                    />
+
+                    <b
+                        className="tracking-[0.04em] ml-3 mt-2">
+                        {service.serviceName}
+                    </b>
                 </div>
 
                 <div className="self-stretch h-[200px] flex flex-col items-start justify-start pt-0 px-0 pb-0 box-border gap-[10px]">

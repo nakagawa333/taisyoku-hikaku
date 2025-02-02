@@ -15,6 +15,7 @@ export default function Header() {
                     alt=""
                 >
                 </img>
+
                 <Link
                     href={"/"}
                     className="[text-decoration:none] h-[27px] relative font-bold text-[inherit] inline-block"

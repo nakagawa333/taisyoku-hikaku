@@ -3,7 +3,7 @@ import { Prisma, PrismaClient, services } from "@prisma/client";
 import * as runtime from '@prisma/client/runtime/library.js';
 
 /**
- * 
+ * 口コミの新規作成を行う
  * @param selectUniqueQuery 
  * @param createQuery 
  */

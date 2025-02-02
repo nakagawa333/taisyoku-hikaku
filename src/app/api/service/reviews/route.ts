@@ -148,45 +148,89 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *     summary: 退職代行サービス 口コミ作成API
  *     description: 退職代行サービス 口コミ作成API
  *     requestBody:
- *       description: リクエストボディ
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - serviceId
+ *               - name
+ *               - gender
+ *               - goodTitle
+ *               - concernTitle
+ *               - priceSatisfaction
+ *               - speedSatisfaction
+ *               - responseSatisfaction
+ *               - costPerformanceSatisfaction
+ *               - comprehensiveEvaluation
+ *               - contributorYearsId
  *             properties:
  *               serviceId:
  *                 type: string
+ *                 example: "550e8400-e29b-41d4-a716-446655440000"
  *               name:
  *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 50
  *               gender:
  *                 type: string
+ *                 enum: [male, female, other]
  *               goodTitle:
- *                 type: string 
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
  *               goodDetail:
  *                 type: string
+ *                 maxLength: 1000
  *               concernTitle:
- *                 type: string 
+ *                 type: string
+ *                 minLength: 1
+ *                 maxLength: 100
  *               concernDetail:
  *                 type: string
+ *                 maxLength: 1000
  *               priceSatisfaction:
- *                 type: number
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
+ *               speedSatisfaction:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
  *               responseSatisfaction:
- *                 type: number
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
  *               costPerformanceSatisfaction:
- *                 type: number
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
  *               comprehensiveEvaluation:
- *                 type: number
-  *               contributorYearsId:
- *                 type: number
- * 
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 5
+ *               contributorYearsId:
+ *                 type: integer
+ *                 minimum: 1
  *     responses:
- *       200:
- *         description: 成功時のレスポンス
+ *       201:
+ *         description: 口コミ作成成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                 reviewId:
+ *                   type: string
  *       400:
- *         description: バリデーションチェックエラー時のレスポンス
+ *         description: リクエストが不正
+ *       404:
+ *         description: サービスが存在しない
  *       500:
- *         description: 退職代行サービス 口コミ作成失敗時のレスポンス
+ *         description: サーバー内部エラー
  */
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -198,22 +242,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     try {
         const body = {
-            secret: process.env.NEXT_PUBLIC_TURNSTILE_SECRET_KEY,
+            secret: process.env.TURNSTILE_SECRET_KEY,
             response: token,
         }
         const res = await axios.post(verifyURL, body);
 
         if (!res?.data.success) {
-            return NextResponse.json({ "msg": "トークンが不正です" }, { status: HttpStatus.UNAUTHORIZED });
+            return NextResponse.json(
+                { "msg": "認証に失敗しました" },
+                { status: HttpStatus.FORBIDDEN }
+            );
         }
 
     } catch (err: any) {
-        console.error("トークンが不正です");
-        console.error(err);
-        return NextResponse.json({ "msg": "トークンが不正です" }, { status: HttpStatus.BAD_REQUEST });
+        console.error('Turnstile検証エラー:', err)
+        return NextResponse.json(
+            { error: '認証処理に失敗しました' },
+            { status: HttpStatus.INTERNAL_SERVER_ERROR }
+        )
     }
 
-    const json = await request.json();
+    let json: any = {};
+
+    try {
+        json = await request.json();
+    } catch (err: any) {
+        return NextResponse.json(
+            { error: '不正なJSON形式です' },
+            { status: HttpStatus.BAD_REQUEST }
+        )
+    }
 
     //バリデーションチェック
     let validateError = createReviewsValidate(json.serviceId, json.name,
@@ -222,7 +280,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         json.speedSatisfaction, json.responseSatisfaction, json.costPerformanceSatisfaction,
         json.comprehensiveEvaluation
     );
-    if (validateError) return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
+    if (validateError) return NextResponse.json({ error: validateError.details[0].message }, { status: HttpStatus.BAD_REQUEST });
 
     //サービスID
     const serviceId: string = json.serviceId;
@@ -277,10 +335,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         await createReviewsHandleTransaction(selectUniqueQuery, createReviewsQuery, createReviewsSatisfactionScoresQuery);
     } catch (error: any) {
         console.error(error);
-        return NextResponse.json({ "msg": error.message }, { status: 500 });
+
+        if (error.message === "Service not found") {
+            return NextResponse.json(
+                { error: 'サービスが存在しない' },
+                { status: HttpStatus.NOT_FOUND }
+            );
+        }
+
+        return NextResponse.json(
+            { error: 'サーバー内部エラー' },
+            { status: HttpStatus.INTERNAL_SERVER_ERROR }
+        );
     }
 
-    return NextResponse.json({
-        msg: "成功しました"
-    })
+    return NextResponse.json(
+        { msg: "口コミ作成成功", reviewId: reviewId },
+        { status: HttpStatus.CREATED }
+    )
 }
