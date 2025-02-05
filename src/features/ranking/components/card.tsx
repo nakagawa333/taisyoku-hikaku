@@ -1,5 +1,6 @@
 import SpeechBubble from "@/components/bubble/speechBubble";
 import { Tag } from "@/components/tag";
+import Image from 'next/image';
 import StarRatings from "react-star-ratings";
 import useCard from "../hooks/useCard";
 import RankingIcon from "./rankingIcon";
@@ -75,8 +76,28 @@ export default function Card(props: Props) {
                 </div>
 
                 <div className="w-full">
-                    <p className="border-b-2">{service.goodTitle}</p>
-                    <p className="border-b-2">{service.concernTitle}</p>
+                    <div className="flex w-full border-b-2 mb-2">
+                        <Image
+                            src="/good.svg"
+                            alt="ヘッダーイメージ"
+                            width={20}
+                            height={20}
+                            quality={100}
+                            className="mb-2"
+                        />
+                        <p className="pl-2 mb-2">{service.goodTitle}</p>
+                    </div>
+                    <div className="flex w-full border-b-2">
+                        <Image
+                            src="/bad.svg"
+                            alt="ヘッダーイメージ"
+                            width={20}
+                            height={20}
+                            quality={100}
+                            className="mb-2"
+                        />
+                        <p className="pl-2 mb-2">{service.concernTitle}</p>
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap self-stretch text-xs tracking-[0.04em] leading-[170%] font-medium text-gyar-6a6a6a">
