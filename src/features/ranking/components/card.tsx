@@ -1,4 +1,3 @@
-import SpeechBubble from "@/components/bubble/speechBubble";
 import { Tag } from "@/components/tag";
 import Image from 'next/image';
 import StarRatings from "react-star-ratings";
@@ -68,10 +67,21 @@ export default function Card(props: Props) {
                         {service.comprehensiveEvaluationAvg}
                     </p>
 
-                    <div className="ml-3">
-                        <SpeechBubble
-                            count={service.reviewCount}
+                    <div className="ml-3 mt-1 relative inline-block">
+                        <Image
+                            src="/speech-bubble.svg"
+                            alt="口コミ数"
+                            width={60}
+                            height={60}
+                            quality={100}
+                            className="mb-2"
                         />
+
+                        <p
+                            className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-bold shadow-lg"
+                        >
+                            {service.reviewCount}
+                        </p>
                     </div>
                 </div>
 
