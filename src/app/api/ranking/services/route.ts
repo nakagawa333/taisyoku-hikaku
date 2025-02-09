@@ -263,12 +263,14 @@ export async function POST(request: NextRequest) {
                 }
             }
 
+            // 信頼度係数
+            const C = 10;
             //全サービスの平均評価
             const serviceAvg: number = services.reduce((sum: number, service: any) => sum + service.comprehensiveEvaluationAvg, 0) / services.length;
 
             // 各サービスのスコアを計算（加重平均）
             const servicesWithScore = services.map((service: any) => {
-                const score = (service.comprehensiveEvaluationAvg * (service.reviewCount + serviceAvg) * 10) / (service.reviewCount + 10);
+                const score = (service.comprehensiveEvaluationAvg * service.reviewCount + C * serviceAvg) / (service.reviewCount + C);
                 return { ...service, score };
             });
 
@@ -315,7 +317,7 @@ export async function POST(request: NextRequest) {
 
             //退職代行サービスランキングデータ作成
             await prisma.ranking_services.createMany({
-                data: await Promise.all(rankingServicesData)
+                data: rankingServicesData
             });
 
         } catch (error: any) {
