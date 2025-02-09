@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     const params: URLSearchParams = request.nextUrl.searchParams;
     let rankServices: any;
 
-    let orderBy: any = {
-        id: "asc"
+    let orderBy: Prisma.ranking_servicesOrderByWithRelationInput = {
+        rank: "asc"
     }
     let take: number = Take.RANKING_SERVICES;
     let skip: number = 0;
@@ -125,9 +125,7 @@ export async function GET(request: NextRequest) {
         return { ...service, score };
     });
 
-    const rankingServices = [...servicesWithScore].sort((serviceA, serviceB) => {
-        return serviceB.score - serviceA.score;
-    });
+    const rankingServices = [...servicesWithScore];
 
     const resServices = rankingServices.map((rankingService) => {
         const services = rankingService.services;
