@@ -16,12 +16,12 @@ export default function Card(props: Props) {
 
     return (
         <div
-            className="m-auto rounded overflow-hidden shadow-lg max-w-xs md:max-w-3xl mb-20
-                grid grid-cols-1 sm:grid-cols-3 gap-1s"
+            className="m-auto rounded overflow-hidden max-w-xs md:max-w-3xl mb-20
+                grid grid-cols-1 sm:grid-cols-3 gap-1s border border-gray-200"
             key={service.serviceId}
         >
 
-            <div className="sm:col-span-1">
+            <div className="sm:col-span-1 border border-gray-200">
                 <div className="p-4 flex">
 
                     <RankingIcon
@@ -67,7 +67,7 @@ export default function Card(props: Props) {
                         {service.comprehensiveEvaluationAvg}
                     </p>
 
-                    <div className="ml-3 mt-1 relative inline-block">
+                    <div className="ml-3 mt-px relative inline-block">
                         <Image
                             src="/speech-bubble.svg"
                             alt="口コミ数"
@@ -78,9 +78,9 @@ export default function Card(props: Props) {
                         />
 
                         <p
-                            className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-bold shadow-lg"
+                            className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm font-bold whitespace-nowrap overflow-hidden text-overflow-ellipsis"
                         >
-                            {service.reviewCount}
+                            {service.reviewCount + "件"}
                         </p>
                     </div>
                 </div>
@@ -127,10 +127,11 @@ export default function Card(props: Props) {
 
                 <div className="flex justify-center w-full">
                     <button
-                        className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        className="border text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                         style={{
-                            background: "#289CAC",
-                            color: "white"
+                            background: "white",
+                            color: "#289CAC",
+                            borderColor: "#289CAC"
                         }}
                         onClick={() => viewSiteButtonClick(service.officialWebsite)}
                     >
