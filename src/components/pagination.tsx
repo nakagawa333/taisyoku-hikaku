@@ -9,6 +9,15 @@ type Props = {
 
 //ページネーションコンポーネント
 export default function Pagination({ currentPage, lastPage, path, params }: Props) {
+
+  const buildQueryString = (params: string, page: number) => {
+    const searchParams = new URLSearchParams(params);
+    searchParams.delete("p");
+    searchParams.set("p", page.toString());
+    const query = searchParams.toString();
+    return query ? `?${query}` : "";
+  }
+
   let startPage = Math.max(1, currentPage - 1);
   let endPage = Math.min(lastPage, currentPage + 1);
 
@@ -47,9 +56,9 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
             </span>
           ) : (
             <Link
-              href={`${path}${params}p=${currentPage - 1}`}
+              href={`${path}${buildQueryString(params, currentPage - 1)}`}
               aria-label="Previous Page"
-              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
+              className="f  lex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
             >
               <button
 
@@ -78,7 +87,7 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
                     </span>
                   ) : (
                     <Link
-                      href={`${path}${params}p=${pageNumber}`}
+                      href={`${path}${buildQueryString(params, pageNumber)}`}
                       className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
                     >
                       <button
@@ -107,7 +116,7 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
             </span>
           ) : (
             <Link
-              href={`${path}${params}p=${currentPage + 1}`}
+              href={`${path}${buildQueryString(params, currentPage + 1)}`}
               aria-label="Next Page"
               className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
             >
