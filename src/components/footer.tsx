@@ -1,3 +1,6 @@
+import { Paths } from "@/constants/common/paths";
+import Link from "next/link";
+
 export default function Footer() {
 
     return (
@@ -21,7 +24,10 @@ export default function Footer() {
                     </div>
                     <div className="text-white flex flex-row items-start justify-start gap-[40px] text-3xs text-white-fff font-yugothic">
                         <div className="relative font-medium inline-block min-w-[100px]">
-                            プライバシーポリシー
+                            <Link href={Paths.TERMS_PRIVACY}>
+                                プライバシーポリシー
+
+                            </Link>
                         </div>
                         <div className="text-white relative font-medium inline-block min-w-[40px]">
                             免責事項
