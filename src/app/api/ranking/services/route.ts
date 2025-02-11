@@ -1,4 +1,5 @@
 import { HttpStatus } from "@/constants/common/httpStatus";
+import { RankingConstants } from "@/constants/common/rankingConstants";
 import { Take } from "@/constants/db/take";
 import { fetchRankingServices } from "@/hooks/prisma/ranking/services/fetchRankingServices";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
@@ -219,54 +220,66 @@ export async function POST(request: NextRequest) {
             services = await prisma.services.findMany(query);
 
             if (Array.isArray(services)) {
+
+                let reviewsTasks = [];
                 for (let service of services) {
-                    let reviews: any;
-
-                    try {
-                        const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
-                            select: {
-                                good_title: true,
-                                concern_title: true,
-                                reviews_satisfaction_scores: {
-                                    select: {
-                                        comprehensive_evaluation: true
-                                    }
+                    const query: Prisma.reviewsFindManyArgs<DefaultArgs> = {
+                        select: {
+                            good_title: true,
+                            concern_title: true,
+                            reviews_satisfaction_scores: {
+                                select: {
+                                    comprehensive_evaluation: true
                                 }
-                            },
-                            where: {
-                                service_id: service.service_id
                             }
+                        },
+                        where: {
+                            service_id: service.service_id
                         }
-                        reviews = await prisma.reviews.findMany(query);
-                    } catch (ex: any) {
-                        console.error(ex);
                     }
 
-                    // レビューがあれば、評価の平均値を計算
-                    let comprehensiveEvaluationAvg: number = 0;
-                    if (Array.isArray(reviews) && reviews.length > 0) {
-                        const totalEvaluation = reviews.reduce((sum, review) =>
-                            sum + (Number(review?.reviews_satisfaction_scores?.comprehensive_evaluation) || 0), 0);
+                    reviewsTasks.push(prisma.reviews.findMany(query));
+                }
 
-                        // 平均スコアを計算
-                        comprehensiveEvaluationAvg = Math.floor((totalEvaluation / reviews.length) * 100) / 100;
-                    }
+                const resReviews = await Promise.allSettled(reviewsTasks);
 
-                    // サービスに評価とレビュー数を追加
-                    service.comprehensiveEvaluationAvg = comprehensiveEvaluationAvg;
-                    service.reviewCount = reviews.length;
+                for (let i = 0, length = resReviews.length; i < length; i++) {
+                    let resReview = resReviews[i];
 
-                    if (Array.isArray(reviews) && 0 < reviews.length) {
-                        service.goodTitle = reviews[0].good_title;
-                        service.concernTitle = reviews[0].concern_title;
+                    let service = services[i];
+
+                    if (resReview.status === "fulfilled" && service) {
+                        let reviews: any = resReview.value
+                        // レビューがあれば、評価の平均値を計算
+                        let comprehensiveEvaluationAvg: number = 0;
+                        if (Array.isArray(reviews) && reviews.length > 0) {
+                            const totalEvaluation = reviews.reduce((sum, review) =>
+                                sum + (Number(review?.reviews_satisfaction_scores?.comprehensive_evaluation) || 0), 0);
+
+                            // 平均スコアを計算
+                            comprehensiveEvaluationAvg = Math.floor((totalEvaluation / reviews.length) * 100) / 100;
+                        }
+
+                        // サービスに評価とレビュー数を追加
+                        service.comprehensiveEvaluationAvg = comprehensiveEvaluationAvg;
+                        service.reviewCount = reviews.length;
+
+                        if (Array.isArray(reviews) && 0 < reviews.length) {
+                            service.goodTitle = reviews[0].good_title;
+                            service.concernTitle = reviews[0].concern_title;
+                        }
                     }
                 }
             }
 
-            // 信頼度係数
-            const C = 10;
+            //全レビューの総合評価
+            const totalReviews = services.reduce((sum: number, service: any) => sum + service.reviewCount, 0);
+
             //全サービスの平均評価
-            const serviceAvg: number = services.reduce((sum: number, service: any) => sum + service.comprehensiveEvaluationAvg, 0) / services.length;
+            const serviceAvg: number = services.reduce((sum: number, service: any) => sum + service.comprehensiveEvaluationAvg, 0) / totalReviews;
+
+            // 信頼度係数
+            const C = RankingConstants.BAYESIAN_CONSTANT;
 
             // 各サービスのスコアを計算（加重平均）
             const servicesWithScore = services.map((service: any) => {
