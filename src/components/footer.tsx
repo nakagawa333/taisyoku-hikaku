@@ -30,7 +30,9 @@ export default function Footer() {
                             </Link>
                         </div>
                         <div className="text-white relative font-medium inline-block min-w-[40px]">
-                            免責事項
+                            <Link href={Paths.DISCLAIMER}>
+                                免責事項
+                            </Link>
                         </div>
                         <div className="relative font-medium inline-block min-w-[40px]">
                             お問合せ

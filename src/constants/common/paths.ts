@@ -5,5 +5,6 @@ export class Paths {
     static readonly LOGIN = "/login";
     static readonly LOGOUT = "/logout";
     static readonly SIGNUP = "/signup";
-    static readonly TERMS_PRIVACY = "/terms/privacy"
+    static readonly TERMS_PRIVACY = "/terms/privacy";
+    static readonly DISCLAIMER = "/disclaimer";
 }
