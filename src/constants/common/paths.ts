@@ -7,4 +7,5 @@ export class Paths {
     static readonly SIGNUP = "/signup";
     static readonly TERMS_PRIVACY = "/terms/privacy";
     static readonly DISCLAIMER = "/disclaimer";
+    static readonly CONTACT = "/contact";
 }

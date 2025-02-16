@@ -51,7 +51,7 @@ export default function HamburgerMenu(props: Props) {
                                     }
                                     <Link href={Paths.TERMS_PRIVACY}>プライバシーポリシー</Link>
                                     <Link href={Paths.DISCLAIMER}>免責事項</Link>
-                                    <a href="#" className="py-2">お問い合わせ</a>
+                                    <Link href={Paths.CONTACT}>お問い合わせ</Link>
                                 </div>
                             )
                                 : null}
