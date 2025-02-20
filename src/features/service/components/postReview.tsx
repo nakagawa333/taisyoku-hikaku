@@ -54,7 +54,7 @@ export default function PostReview(props: Props) {
             {
                 openWriteReview ? (
                     <div
-                        className="px-5"
+                        className="px-5 inset-0 bg-gray-500 bg-opacity-50"
                         style={{
                             position: "fixed",
                             bottom: 0,
