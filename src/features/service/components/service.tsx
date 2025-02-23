@@ -8,6 +8,7 @@ import PartialLoading from "@/components/partialLoading";
 import PromotionMessage from "@/components/promotionMessage";
 import Snackbar from "@/components/snackbar";
 import SimilarServicesSwiper from "@/components/swiper";
+import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 import StarRatings from "react-star-ratings";
 import { useService } from "../hooks/useService";
 import PostReview from "./postReview";
@@ -35,6 +36,8 @@ export default function Service() {
         service, tags, id, path,
         openWriteReview, setOpenWriteReview, reviewWriteButtonClick
     } = useService();
+
+    const mathMedia: boolean = useMatchMedia("(min-width: 430px)");
 
     if (serviceIsLoading || similarServicesIsLoading || reviewsMetaDataIsLoading
         || !servicesIsFetchedAfterMount || !similarServicesIsFetchedAfterMount ||

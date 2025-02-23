@@ -1,5 +1,5 @@
 import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Header from "@/components/headers/header";
 import { Login } from "@/components/login/login";
 
 export default async function Page() {
