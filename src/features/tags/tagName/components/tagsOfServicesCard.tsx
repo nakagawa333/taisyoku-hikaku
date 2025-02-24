@@ -1,18 +1,18 @@
+import RankingIcon from "@/components/rankingIcon";
 import { Tag } from "@/components/tag";
 import Image from 'next/image';
 import StarRatings from "react-star-ratings";
-import RankingIcon from "../../../components/rankingIcon";
-import useCard from "../hooks/useCard";
+import useTagsOfServicesCard from "../hooks/useTagsOfServicesCard";
 
 type Props = {
     service: any,
     rank: number
 }
 
-export default function Card(props: Props) {
+export default function TagsOfServicesCard(props: Props) {
     const { rank, service } = props;
 
-    const { tagNameClick, reviewButtonClick, viewSiteButtonClick } = useCard();
+    const { tagNameClick, reviewButtonClick, viewSiteButtonClick } = useTagsOfServicesCard();
 
     return (
         <div

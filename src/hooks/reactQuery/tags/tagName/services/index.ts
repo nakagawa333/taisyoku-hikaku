@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 import { ReadonlyURLSearchParams } from "next/navigation";
 
-export const useTagsOfServices = () => {
+export const useQueryTagsOfServices = () => {
     const fetchTagsOfServices = (tagName: string, searchParams: ReadonlyURLSearchParams | null) => {
         return useQuery({
             queryKey: [ReactQueryKeys.TAGSOFSERVICES],
