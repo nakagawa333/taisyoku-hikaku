@@ -1,12 +1,12 @@
 import Footer from "@/components/footer";
 import Header from "@/components/headers/header";
-import Search from "@/components/search";
+import Ranking from "@/features/ranking/components/ranking";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <Search />
+      <Ranking />
       <Footer />
     </>
   );
