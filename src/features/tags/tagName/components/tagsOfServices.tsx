@@ -71,14 +71,14 @@ export const TagsOfServices = () => {
                         }
 
                         {
-                            tagsOfServicesIsFetchedAfterMount && Array.isArray(tagsOfServicesData?.tagsOfServices) && 0 === tagsOfServicesData.tagsOfServices.length && (
+                            tagsOfServicesIsFetchedAfterMount && Array.isArray(tagsOfServicesData?.services) && 0 === tagsOfServicesData.services.length && (
                                 <h1>条件を変更してもう一度検索してください</h1>
                             )
                         }
 
                         <div className="mb-5">
                             {
-                                tagsOfServicesIsFetchedAfterMount && Array.isArray(tagsOfServicesData?.tagsOfServices) && 0 < tagsOfServicesData.tagsOfServices.length ? (
+                                tagsOfServicesIsFetchedAfterMount && Array.isArray(tagsOfServicesData?.services) && 0 < tagsOfServicesData.services.length ? (
                                     <Pagination
                                         currentPage={currentPage}
                                         lastPage={tagsTagsOfServicesLastPageData.lastPage}
