@@ -14,7 +14,6 @@ export default function TagsOfServicesCard(props: Props) {
 
     const { tagNameClick, reviewButtonClick, viewSiteButtonClick } = useTagsOfServicesCard();
 
-    //TODO ページネーションの実装
     return (
         <div
             className="m-auto rounded overflow-hidden max-w-xs md:max-w-3xl mb-20
