@@ -47,10 +47,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let tagsOfServices: any;
 
     try {
-        const query = {
+        const query: Prisma.service_tagsFindManyArgs = {
             select: {
                 services: {
                     select: {
+                        ranking_services: {
+                            select: {
+                                rank: true
+                            }
+                        },
                         service_id: true,
                         service_name: true,
                         image_file_path: true,
@@ -61,12 +66,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             where: {
                 tags: {
                     tag_name: tagName
-                }
+                },
             },
             take: take,
             skip: skip,
             orderBy: {
-                id: "asc"
+                services: {
+                    ranking_services: {
+                        rank: "asc"
+                    }
+                }
             }
         }
         tagsOfServices = await fetchServiceTags(query);
@@ -125,10 +134,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                     in: serviceIds
                 }
             },
-            take: take,
-            skip: skip,
             orderBy: {
-                id: "asc"
+                rank: "asc"
             }
         }
 
