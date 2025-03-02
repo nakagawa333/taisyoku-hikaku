@@ -30,7 +30,7 @@ export default function Footer() {
                         </div>
                         <div className="relative font-medium inline-block min-w-[40px]">
                             <Link href={Paths.CONTACT}>
-                                お問合せ
+                                お問い合わせ
                             </Link>
                         </div>
                     </div>
