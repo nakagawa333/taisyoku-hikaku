@@ -26,7 +26,7 @@ export default function Header() {
                     href={"/"}
                     className="[text-decoration:none] h-[27px] relative font-bold text-[inherit] inline-block"
                 >
-                    退職代行比較.com
+                    退職代行口コミランキング
                 </Link>
 
             </header>
