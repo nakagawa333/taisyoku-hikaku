@@ -76,6 +76,12 @@ export default function useContact() {
         try {
             await contactInformationsWithArgs.mutateAsync(reviewData);
         } catch (error: any) {
+            //認証再度実施
+            turnstileRef.current?.reset();
+            //トークン初期化
+            if (turnstileToken?.current) {
+                turnstileToken.current = "";
+            }
             setIsPartialLoadingOpen(false);
             setSnackbarData({
                 state: "error",
