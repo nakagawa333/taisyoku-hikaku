@@ -1,5 +1,6 @@
 "use client";
 import Breadcrumbs from "@/components/breadcrumbs";
+import Loading from "@/components/loading";
 import Snackbar from "@/components/snackbar";
 import InfoErrorSnackbar from "@/components/snackbar/InfoErrorSnackbar";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -15,9 +16,9 @@ export default function Contact() {
         onSuccess, onSubmit,
         errorSnackbarMsg,
         isOpenErrorSnackbar, setIsOpenErrorSnackbar,
-        partialLoadingFlag,
         snackbarData,
-        closeSuccessSnackbar
+        closeSuccessSnackbar,
+        isPartialLoadingOpen
     } = useContact();
 
     return (
@@ -38,15 +39,8 @@ export default function Contact() {
                         setIsOpen={setIsOpenErrorSnackbar}
                     />
                 ) : (null)
-            }
 
-            <Snackbar
-                state={snackbarData.state}
-                message={snackbarData.message}
-                time={snackbarData.time}
-                isOpen={snackbarData.isOpen}
-                onClose={closeSuccessSnackbar}
-            />
+            }
 
 
             <div className="bg-gray-100 min-h-screen w-full">
@@ -103,6 +97,19 @@ export default function Contact() {
                     </div>
                 </div>
             </div>
+
+
+            <Snackbar
+                state={snackbarData.state}
+                message={snackbarData.message}
+                time={snackbarData.time}
+                isOpen={snackbarData.isOpen}
+                onClose={closeSuccessSnackbar}
+            />
+
+            <Loading
+                isOpen={isPartialLoadingOpen}
+            />
         </>
     )
 }

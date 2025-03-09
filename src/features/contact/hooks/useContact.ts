@@ -24,7 +24,9 @@ export default function useContact() {
     //エラーメッセージ
     const [errorSnackbarMsg, setErrorSnackbarMsg] = useState<string>("入力されていない項目があります");
     const [isOpenErrorSnackbar, setIsOpenErrorSnackbar] = useState<boolean>(false);
-    const [partialLoadingFlag, setPartialLoadingFlag] = useState<boolean>(false);
+
+    //ローディング
+    const [isPartialLoadingOpen, setIsPartialLoadingOpen] = useState<boolean>(false);
 
     const turnstileRef = useRef<any>(null);
     const turnstileToken = useRef<string>("");
@@ -63,7 +65,7 @@ export default function useContact() {
             return;
         }
 
-        setPartialLoadingFlag(true);
+        setIsPartialLoadingOpen(true);
 
         const reviewData = {
             mail: mailRef.current?.value,
@@ -74,7 +76,7 @@ export default function useContact() {
         try {
             await contactInformationsWithArgs.mutateAsync(reviewData);
         } catch (error: any) {
-            setPartialLoadingFlag(false);
+            setIsPartialLoadingOpen(false);
             setSnackbarData({
                 state: "error",
                 message: "お問い合わせの送信に失敗しました",
@@ -90,13 +92,15 @@ export default function useContact() {
             time: 5000,
             isOpen: true,
         })
-        setPartialLoadingFlag(false);
+
 
         //認証再度実施
         turnstileRef.current?.reset();
 
         //フォーム、トークン初期化
         clearForm();
+
+        setIsPartialLoadingOpen(false);
     }
 
     /**
@@ -135,8 +139,8 @@ export default function useContact() {
         onSuccess, onSubmit,
         errorSnackbarMsg,
         isOpenErrorSnackbar, setIsOpenErrorSnackbar,
-        partialLoadingFlag,
         snackbarData,
-        closeSuccessSnackbar
+        closeSuccessSnackbar,
+        isPartialLoadingOpen
     }
 }
