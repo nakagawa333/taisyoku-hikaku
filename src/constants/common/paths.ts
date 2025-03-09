@@ -1,4 +1,5 @@
 export class Paths {
+    static readonly HOME = "/";
     static readonly SERVICE = "/service";
     static readonly SERVICES = "/services";
     static readonly TAGS = "/tags";

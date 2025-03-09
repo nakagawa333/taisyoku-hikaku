@@ -26,7 +26,7 @@ export default function Terms() {
             </div>
 
             <div className="container mx-auto">
-                <div className="min-h-screen flex justify-center items-center">
+                <div className="min-h-screen">
                     <div className="bg-white rounded-lg p-8 w-full mx-4">
                         <Heading
                             title={"退職代行口コミランキング 利用規約"}
