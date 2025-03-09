@@ -1,12 +1,13 @@
 import { HttpStatus } from "@/constants/common/httpStatus";
 import contactInformationsValidate from "@/utils/api/validate/contactInformationsValidate";
 import axios, { AxiosRequestConfig } from "axios";
+import { ValidationError } from "joi";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
  * @swagger
  * /api/contactInformations:
- *   get:
+ *   post:
  *     summary: お問い合わせ送信API
  *     description: お問い合わせの送信を行う
  *     parameters:
@@ -31,9 +32,17 @@ import { NextRequest, NextResponse } from "next/server";
  *         description: 退職代行サービス取得失敗時のレスポンス
  */
 export async function POST(request: NextRequest) {
-    const headers = new Headers(request.headers);
-    const authorization = headers.get("Authorization");
-    const token = authorization?.replace("Bearer ", "");
+    const headers: Headers = new Headers(request.headers);
+    const authorization: string | null = headers.get("Authorization");
+
+    if (!authorization) {
+        return NextResponse.json(
+            { "msg": "認証トークンは必須です" },
+            { status: HttpStatus.FORBIDDEN }
+        );
+    }
+
+    const token: string = authorization?.replace("Bearer ", "");
 
     const verifyURL: string = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -70,19 +79,24 @@ export async function POST(request: NextRequest) {
         )
     }
 
-    const mail = json.mail;
-    const inquiryDetails = json.inquiryDetails;
+    const mail: string = json.mail;
+    const inquiryDetails: string = json.inquiryDetails;
 
-    let validateError = contactInformationsValidate(mail, inquiryDetails);
+    //バリデーションチェックを行う
+    let validateError: ValidationError | undefined = contactInformationsValidate(mail, inquiryDetails);
     if (validateError) {
-        return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
+        //エラーメッセージ取得成功時
+        if (Array.isArray(validateError.details) && 0 < validateError.details.length) {
+            return NextResponse.json({ "msg": validateError.details[0].message }, { status: 400 });
+        }
+        return NextResponse.json({ "msg": "リクエスト情報が不正です" }, { status: 400 });
     }
 
     const googleFormrReqUrl: string = `https://docs.google.com/forms/u/0/d/e/${process.env.GOOGLE_FORM_ID}/formResponse`;
 
-    const formData = new FormData();
-    formData.append("entry.1195360438", json.mail);
-    formData.append("entry.1402385736", json.inquiryDetails);
+    const params: URLSearchParams = new URLSearchParams();
+    params.append("entry.1195360438", json.mail);
+    params.append("entry.1402385736", json.inquiryDetails);
 
     const axiosRequestConfig: AxiosRequestConfig = {
         headers: {
@@ -92,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     //Google Formに入力内容を送信する
     try {
-        axios.post(googleFormrReqUrl, formData, axiosRequestConfig);
+        await axios.post(googleFormrReqUrl, params, axiosRequestConfig);
     } catch (err: any) {
         console.error('GoogleFormの送信に失敗しました:', err)
         return NextResponse.json(
@@ -102,6 +116,6 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-        { status: HttpStatus.NO_CONTENT }
+        { status: HttpStatus.CREATED }
     )
 }
