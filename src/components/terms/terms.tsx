@@ -1,10 +1,12 @@
 "use client";
 
+import { Paths } from "@/constants/common/paths";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
+import Link from "next/link";
 import Breadcrumbs from "../breadcrumbs";
 import Heading from "../heading";
 
-//プライバシーポリシー
+//退職代行口コミランキング 利用規約
 export default function Terms() {
 
     const breadcrumbs: Breadcrumb[] = [
@@ -165,10 +167,12 @@ export default function Terms() {
                             </div>
                         </div>
 
+
                         <div>
                             <h2 className="text-lg font-semibold mb-4">【お問い合わせ】</h2>
                             <li className="text-gray-700">
-                                本規約およびプライバシーポリシーに関するお問い合わせは、当サイトの「お問い合わせフォーム」よりご連絡ください。
+                                本規約およびプライバシーポリシーに関するお問い合わせは、当サイトの
+                                <Link href={Paths.CONTACT} className="underline text-blue-500">「お問い合わせフォーム」</Link>よりご連絡ください。
                             </li>
                         </div>
                     </div>
