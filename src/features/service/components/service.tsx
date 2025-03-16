@@ -70,168 +70,174 @@ export default function Service() {
 
             <PromotionMessage />
 
-            <div className="p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-                {
-                    service && (
-                        <Heading
-                            title={service.serviceName}
-                        />
-                    )
-                }
+                <div className="sm:col-span-2">
+                    <div className="p-4">
 
-            </div>
+                        {
+                            service && (
+                                <Heading
+                                    title={service.serviceName}
+                                />
+                            )
+                        }
 
-            {
-                service && (
-                    <div className="flex items-center justify-center">
-                        <img
-                            src={service.imgUrl}
-                            className="hover:scale-105 w-11/12"
-                            style={{
-                                maxHeight: "180px"
-                            }}
-                        >
-                        </img>
                     </div>
-                )
-            }
 
-            <div className="p-4 flex">
-                {
-                    service?.avgRating ? (
-                        <div className="flex">
-                            <StarRatings
-                                rating={service?.avgRating ? service.avgRating : 0}
-                                numberOfStars={5}
-                                name='rating'
-                                starRatedColor="yellow"
-                                starHoverColor="yellow"
-                                ignoreInlineStyles={false}
-                                starDimension="20px"
-                                starSpacing="0px"
-                            />
-
-                            {
-                                service.avgRating ? (
-                                    <p
-                                        className="pl-1.5 font-bold text-sm mt-0.5"
-                                        style={{ paddingTop: "3px" }}>
-                                        {service?.avgRating}
-                                    </p>
-                                ) : (null)
-                            }
-
-                        </div>
-                    ) : (
-                        <StarRatings
-                            rating={0}
-                            numberOfStars={5}
-                            name='rating'
-                            starRatedColor="yellow"
-                            starHoverColor="yellow"
-                            ignoreInlineStyles={false}
-                            starDimension="20px"
-                            starSpacing="0px"
-                        />
-                    )
-                }
-
-                <div className="ml-3">
                     {
-                        reviewsMetaDataIsAfterMount
-                        && reviewsMetaDataData?.totalCount && (
-                            <SpeechBubble count={reviewsMetaDataData?.totalCount} />
+                        service && (
+                            <div className="flex items-center justify-center">
+                                <img
+                                    src={service.imgUrl}
+                                    className="hover:scale-105 w-11/12"
+                                    style={{
+                                        maxHeight: "180px"
+                                    }}
+                                >
+                                </img>
+                            </div>
                         )
                     }
-                </div>
 
-                <div className="ml-auto">
-                    <button
-                        className="border bg-white font-bold py-2 px-4 rounded"
-                        style={reviewWriteButtonStyle}
-                        onClick={() => reviewWriteButtonClick()}
-                    >
-                        口コミを書く
-                    </button>
-                </div>
+                    <div className="p-4 flex">
+                        {
+                            service?.avgRating ? (
+                                <div className="flex">
+                                    <StarRatings
+                                        rating={service?.avgRating ? service.avgRating : 0}
+                                        numberOfStars={5}
+                                        name='rating'
+                                        starRatedColor="yellow"
+                                        starHoverColor="yellow"
+                                        ignoreInlineStyles={false}
+                                        starDimension="20px"
+                                        starSpacing="0px"
+                                    />
 
-            </div>
+                                    {
+                                        service.avgRating ? (
+                                            <p
+                                                className="pl-1.5 font-bold text-sm mt-0.5"
+                                                style={{ paddingTop: "3px" }}>
+                                                {service?.avgRating}
+                                            </p>
+                                        ) : (null)
+                                    }
 
-            <ProgressReview
-                serviceId={id}
-            />
+                                </div>
+                            ) : (
+                                <StarRatings
+                                    rating={0}
+                                    numberOfStars={5}
+                                    name='rating'
+                                    starRatedColor="yellow"
+                                    starHoverColor="yellow"
+                                    ignoreInlineStyles={false}
+                                    starDimension="20px"
+                                    starSpacing="0px"
+                                />
+                            )
+                        }
 
-            <SeeDetailedReviews
-                reviewRef={reviewRef}
-            />
-            <ServiceDetails
-                service={service}
-            />
+                        <div className="ml-3">
+                            {
+                                reviewsMetaDataIsAfterMount
+                                && reviewsMetaDataData?.totalCount && (
+                                    <SpeechBubble count={reviewsMetaDataData?.totalCount} />
+                                )
+                            }
+                        </div>
 
-            <div className="flex items-center justify-center">
-                <div className="w-11/12 mt-8">
-                    <ServiceTags
-                        tags={tags}
+                        <div className="ml-auto">
+                            <button
+                                className="border bg-white font-bold py-2 px-4 rounded"
+                                style={reviewWriteButtonStyle}
+                                onClick={() => reviewWriteButtonClick()}
+                            >
+                                口コミを書く
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <ProgressReview
+                        serviceId={id}
                     />
-                </div>
-            </div>
 
-            {
-                service && (
-                    <OfficialWebsiteButton
-                        url={service.officialWebsite}
+                    <SeeDetailedReviews
+                        reviewRef={reviewRef}
                     />
-                )
-            }
+                    <ServiceDetails
+                        service={service}
+                    />
 
-            <div className="container" ref={reviewRef}>
-                <Reviews
-                    id={id}
-                    page={page}
-                    reviewsMetaDataIsAfterMount={reviewsMetaDataIsAfterMount}
-                    reviewsMetaDataData={reviewsMetaDataData}
-                    path={path}
-                    currentPage={currentPage}
-                    params={params} />
+                    <div className="flex items-center justify-center">
+                        <div className="w-11/12 mt-8">
+                            <ServiceTags
+                                tags={tags}
+                            />
+                        </div>
+                    </div>
 
-                <PostReview
-                    id={id}
-                    setSnackbarData={setSnackbarData}
-                    openWriteReview={openWriteReview}
-                    setOpenWriteReview={setOpenWriteReview}
-                />
-            </div>
+                    {
+                        service && (
+                            <OfficialWebsiteButton
+                                url={service.officialWebsite}
+                            />
+                        )
+                    }
 
-            <div className="p-4">
-                <Heading
-                    title="似た条件のサービス"
-                />
-            </div>
+                    <div className="container" ref={reviewRef}>
+                        <Reviews
+                            id={id}
+                            page={page}
+                            reviewsMetaDataIsAfterMount={reviewsMetaDataIsAfterMount}
+                            reviewsMetaDataData={reviewsMetaDataData}
+                            path={path}
+                            currentPage={currentPage}
+                            params={params} />
 
-            <div
-                className="container"
-            >
-                {
-                    similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
-                        <SimilarServicesSwiper
-                            similarServices={similarServicesData.similarServices}
+                        <PostReview
+                            id={id}
+                            setSnackbarData={setSnackbarData}
+                            openWriteReview={openWriteReview}
+                            setOpenWriteReview={setOpenWriteReview}
                         />
-                    )
-                }
+                    </div>
+
+                    <div className="p-4">
+                        <Heading
+                            title="似た条件のサービス"
+                        />
+                    </div>
+
+                    <div
+                        className="container"
+                    >
+                        {
+                            similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (
+                                <SimilarServicesSwiper
+                                    similarServices={similarServicesData.similarServices}
+                                />
+                            )
+                        }
+                    </div>
+
+                    <Snackbar
+                        state={snackbarData.state}
+                        message={snackbarData.message}
+                        time={snackbarData.time}
+                        isOpen={snackbarData.isOpen}
+                        onClose={closeSuccessSnackbar}
+                    />
+                </div>
+
+                <div>
+                    <TermsLists
+                    />
+                </div>
             </div>
-
-            <Snackbar
-                state={snackbarData.state}
-                message={snackbarData.message}
-                time={snackbarData.time}
-                isOpen={snackbarData.isOpen}
-                onClose={closeSuccessSnackbar}
-            />
-
-            <TermsLists
-            />
-
         </div >
     )
 }
