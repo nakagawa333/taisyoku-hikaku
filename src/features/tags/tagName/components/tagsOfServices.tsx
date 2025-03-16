@@ -5,7 +5,7 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import ErrorSnackbar from "@/components/ErrorSnackbar";
 import Pagination from "@/components/pagination";
 import PartialLoading from "@/components/partialLoading";
-import TermsLists from "@/features/ranking/components/termsLists";
+import TermsLists from "@/components/terms/termsLists";
 import { useTagsOfServices } from "../hooks/useTagsOfServices";
 import TagsOfServicesCard from "./tagsOfServicesCard";
 
@@ -93,7 +93,7 @@ export const TagsOfServices = () => {
                     </div>
 
 
-                    <div className="">
+                    <div className="p-4 mb-4 border-b-2 mt-6">
                         <TermsLists
                         />
                     </div>

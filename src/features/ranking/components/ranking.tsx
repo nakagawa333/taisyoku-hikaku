@@ -1,9 +1,10 @@
 "use client";
 
+import TermsLists from "@/components/terms/termsLists";
 import HeaderImage from "./headerImage";
 import HeaderTitle from "./headerTitle";
 import Rankingservices from "./rankingservices";
-import TermsLists from "./termsLists";
+
 
 export default function Ranking() {
 
@@ -29,8 +30,10 @@ export default function Ranking() {
                     />
                 </div>
                 <div>
-                    <TermsLists
-                    />
+                    <div className="max-sm:p-4 max-sm:mt-6 w-96">
+                        <TermsLists
+                        />
+                    </div>
                 </div>
             </div>
         </>

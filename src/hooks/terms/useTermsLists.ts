@@ -1,4 +1,4 @@
-import { useTags } from "@/hooks/reactQuery/tags";
+import { useTags } from "../reactQuery/tags";
 
 export default function useTermsLists() {
     const [{ fetchTags }] = useTags();

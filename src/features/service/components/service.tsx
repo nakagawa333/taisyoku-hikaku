@@ -8,6 +8,7 @@ import PartialLoading from "@/components/partialLoading";
 import PromotionMessage from "@/components/promotionMessage";
 import Snackbar from "@/components/snackbar";
 import SimilarServicesSwiper from "@/components/swiper";
+import TermsLists from "@/components/terms/termsLists";
 import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 import StarRatings from "react-star-ratings";
 import { useService } from "../hooks/useService";
@@ -17,7 +18,7 @@ import Reviews from "./reviews";
 import SeeDetailedReviews from "./seeDetailedReviews";
 import ServiceDetails from "./serviceDetails";
 import ServiceTags from "./serviceTags";
-import TermsLists from "./termsLists";
+
 
 export default function Service() {
 
@@ -61,7 +62,7 @@ export default function Service() {
     }
 
     return (
-        <div className="container">
+        <div className="container mx-auto">
             <div className="p-4">
                 <Breadcrumbs
                     breadcrumbs={breadcrumbs}
@@ -78,7 +79,7 @@ export default function Service() {
                         {
                             service && (
                                 <Heading
-                                    title={service.serviceName}
+                                    title={service.serviceName + " 概要"}
                                 />
                             )
                         }
@@ -168,6 +169,17 @@ export default function Service() {
                     <SeeDetailedReviews
                         reviewRef={reviewRef}
                     />
+
+                    <div className="p-4">
+                        {
+                            service && (
+                                <Heading
+                                    title={service.serviceName}
+                                />
+                            )
+                        }
+                    </div>
+
                     <ServiceDetails
                         service={service}
                     />
@@ -180,6 +192,7 @@ export default function Service() {
                         </div>
                     </div>
 
+
                     {
                         service && (
                             <OfficialWebsiteButton
@@ -187,6 +200,12 @@ export default function Service() {
                             />
                         )
                     }
+
+                    <div className="p-4">
+                        <Heading
+                            title={"口コミ詳細"}
+                        />
+                    </div>
 
                     <div className="container" ref={reviewRef}>
                         <Reviews
@@ -233,7 +252,7 @@ export default function Service() {
                     />
                 </div>
 
-                <div>
+                <div className="p-4 mt-6">
                     <TermsLists
                     />
                 </div>
