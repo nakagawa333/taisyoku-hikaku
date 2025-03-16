@@ -11,14 +11,24 @@ export default function Ranking() {
         <>
 
             <HeaderImage />
-            <HeaderTitle />
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2 m-auto overflow-hidden max-w-xs md:max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-1s">
+                    <div className="flex">
+                        <HeaderTitle />
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+                <div></div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2">
                     <Rankingservices
                     />
                 </div>
-
-                <div className="">
+                <div>
                     <TermsLists
                     />
                 </div>
