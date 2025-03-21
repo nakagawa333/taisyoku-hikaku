@@ -46,20 +46,17 @@ export default function Reviews(props: Props) {
         )
     }
 
-
     return (
-        <div>
+        <>
             {
                 isFetchedAfterMount && Array.isArray(data?.reviews) && (
                     <div className="px-5">
                         {
                             data.reviews.map((review: ServiceReview) =>
-
-                                <div className="mt-3" key={review.reviewId}>
-                                    <Review
-                                        review={review}
-                                    />
-                                </div>
+                                <Review
+                                    review={review}
+                                    key={review.reviewId}
+                                />
                             )
                         }
                     </div>
@@ -92,6 +89,6 @@ export default function Reviews(props: Props) {
                     )
                 }
             </div>
-        </div>
+        </>
     )
 }

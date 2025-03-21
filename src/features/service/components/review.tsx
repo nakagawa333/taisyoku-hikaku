@@ -1,4 +1,5 @@
 import { ServiceReview } from "@/constants/api/response/serviceResponse";
+import Image from 'next/image';
 import StarRatings from "react-star-ratings";
 import ReviewRating from "./reviewRating";
 
@@ -9,74 +10,105 @@ type Props = {
 export default function Review(props: Props) {
     const { review } = props;
     return (
-        <div className="max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-            <article className="w-11/12 mx-auto grid gap-4">
-                <div className="grid grid-cols-2">
-                    <p className="text-sm col-start-2 text-right">回答日: {review.createDay}</p>
-                </div>
 
-                <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
-                    {
-                        review.gender === "MEN" ? (
-                            <img className="w-10 h-10 rounded-full" src="/men.jpg" alt="" />
-                        ) : (
-                            <img className="w-10 h-10 rounded-full" src="/women.jpg" alt="" />
-                        )
-                    }
-                    <div className="font-medium">
-                        <p>{review.name + "さん"}</p>
+        <div className="w-[90%] mt-5 rounded border border-gray-200 m-auto">
+            <div
+                className="m-auto w-full overflow-hidden max-w-xs md:max-w-3xl mb-10
+                grid grid-cols-1 sm:grid-cols-3 gap-1s"
+            >
+                <div className="sm:col-span-3 mt-5">
+                    <div className="flex items-center gap-2">
+
+                        {
+                            review.gender === "MEN" ? (
+                                <Image
+                                    width={40}
+                                    height={40}
+
+                                    className="rounded-full"
+                                    src="/men.jpg"
+                                    alt=""
+                                />
+                            ) : (
+                                <Image
+                                    width={40}
+                                    height={40}
+
+                                    className="rounded-full"
+                                    src="/women.jpg"
+                                    alt=""
+                                />
+                            )
+                        }
+                        <div className="font-medium">
+                            <p>{review.name + "さん"}</p>
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
-                    <p className="text-sm">{review.age}</p>
-                    <p className="text-sm">{review.gender === "MEN" ? "男性" : "女性"}</p>
+                <div className="sm:col-span-3 flex mt-2">
+                    <div className="flex gap-2">
+                        <p className="text-sm">{review.age}</p>
+                        <p className="text-sm">{review.gender === "MEN" ? "男性" : "女性"}</p>
+                    </div>
+
+                    <div className="ml-auto">
+                        <p className="text-sm col-start-2 text-right">回答日: {review.createDay}</p>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-[auto,1fr] items-center gap-2 rtl:space-x-reverse">
-                    <StarRatings
-                        rating={review?.comprehensive_evaluation ? Number(review.comprehensive_evaluation) : 0}
-                        numberOfStars={5}
-                        name="rating"
-                        starRatedColor="yellow"
-                        starHoverColor="yellow"
-                        starDimension="20px"
-                        starSpacing="0px"
-                    />
-                    <h3 className="text-sm pt-1">{review.comprehensive_evaluation}</h3>
+                <div className="grid sm:col-span-3 grid-cols-3 mt-5">
+                    <div className="sm:col-span-1 flex">
+                        <StarRatings
+                            rating={review?.comprehensive_evaluation ? Number(review.comprehensive_evaluation) : 0}
+                            numberOfStars={5}
+                            name="rating"
+                            starRatedColor="yellow"
+                            starHoverColor="yellow"
+                            starDimension="30px"
+                            starSpacing="0px"
+                        />
+                        <h1 className="text-lg pt-1 pl-2">{review.comprehensive_evaluation}</h1>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                        <ReviewRating
+                            label="価格の満足度"
+                            rating={review.price_satisfaction}
+                        />
+
+                        <ReviewRating
+                            label="スピードの満足度"
+                            rating={review.speed_satisfaction}
+                        />
+
+                        <ReviewRating
+                            label="対応の満足度"
+                            rating={review.response_satisfaction}
+                        />
+
+                        <ReviewRating
+                            label="コスパの満足度"
+                            rating={review.cost_performance_satisfaction}
+                        />
+                    </div>
                 </div>
 
-                <ReviewRating
-                    label="価格の満足度"
-                    rating={review.price_satisfaction}
-                />
+                <div className="border-b-2 grid sm:col-span-3 grid-cols-3 mt-5">
 
-                <ReviewRating
-                    label="スピードの満足度"
-                    rating={review.speed_satisfaction}
-                />
+                </div>
 
-                <ReviewRating
-                    label="対応の満足度"
-                    rating={review.response_satisfaction}
-                />
-
-                <ReviewRating
-                    label="コスパの満足度"
-                    rating={review.cost_performance_satisfaction}
-                />
-
-                <article className="break-words whitespace-normal">
+                <div className="break-words whitespace-normal grid sm:col-span-3 mt-5 mb-3">
                     <div className="mb-2 whitespace-pre-line">
                         <p className="text-pink-300">良い点:{review.goodTitle}</p>
-                        <p className="text-pink-300">{review.goodDetail}</p>
+                        <p className="">{review.goodDetail}</p>
                     </div>
                     <div className="">
                         <p className="text-sky-500">悪い点:{review.concernTitle}</p>
-                        <p className="text-sky-500">{review.concernDetail}</p>
+                        <p className="">{review.concernDetail}</p>
                     </div>
-                </article>
-            </article>
+                </div>
+            </div>
         </div>
     );
 }
