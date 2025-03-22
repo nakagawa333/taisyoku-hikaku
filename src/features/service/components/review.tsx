@@ -13,7 +13,7 @@ export default function Review(props: Props) {
 
         <div className="w-[90%] mt-5 rounded border border-gray-200 m-auto">
             <div
-                className="m-auto w-full overflow-hidden max-w-xs md:max-w-3xl mb-10
+                className="m-auto w-[95%] overflow-hidden max-w-xs md:max-w-3xl mb-10
                 grid grid-cols-1 sm:grid-cols-3 gap-1s"
             >
                 <div className="sm:col-span-3 mt-5">
@@ -58,7 +58,7 @@ export default function Review(props: Props) {
                 </div>
 
                 <div className="grid sm:col-span-3 grid-cols-3 mt-5">
-                    <div className="sm:col-span-1 flex">
+                    <div className="col-span-3 sm:col-span-1 flex">
                         <StarRatings
                             rating={review?.comprehensive_evaluation ? Number(review.comprehensive_evaluation) : 0}
                             numberOfStars={5}
@@ -71,7 +71,7 @@ export default function Review(props: Props) {
                         <h1 className="text-lg pt-1 pl-2">{review.comprehensive_evaluation}</h1>
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div className="col-span-3 sm:col-span-2">
                         <ReviewRating
                             label="価格の満足度"
                             rating={review.price_satisfaction}
