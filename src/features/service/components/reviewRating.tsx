@@ -24,7 +24,6 @@ export default function ReviewRating(props: Props) {
                     />
                 </div>
 
-
                 <p className="text-sm pt-1 pl-2 col-span-1 sm:col-span-1">{rating}</p>
             </div>
 

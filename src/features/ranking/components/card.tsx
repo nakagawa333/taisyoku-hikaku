@@ -9,8 +9,6 @@ type Props = {
     rank: number
 }
 
-
-//TODO PC用レイアウトの作成
 export default function Card(props: Props) {
     const { rank, service } = props;
 

@@ -7,6 +7,7 @@ type Props = {
     review: ServiceReview
 }
 
+//TODO 回答日の項目のスマホのデザインの対応
 export default function Review(props: Props) {
     const { review } = props;
     return (
@@ -16,7 +17,13 @@ export default function Review(props: Props) {
                 className="m-auto w-[95%] overflow-hidden max-w-xs md:max-w-3xl mb-10
                 grid grid-cols-1 sm:grid-cols-3 gap-1s"
             >
-                <div className="sm:col-span-3 mt-5">
+
+
+                <div className="sm:col-span-3 mt-5 flex">
+                    <p className="text-sm col-start-2 text-right ml-auto">回答日: {review.createDay}</p>
+                </div>
+
+                <div className="sm:col-span-3">
                     <div className="flex items-center gap-2">
 
                         {
@@ -50,10 +57,6 @@ export default function Review(props: Props) {
                     <div className="flex gap-2">
                         <p className="text-sm">{review.age}</p>
                         <p className="text-sm">{review.gender === "MEN" ? "男性" : "女性"}</p>
-                    </div>
-
-                    <div className="ml-auto">
-                        <p className="text-sm col-start-2 text-right">回答日: {review.createDay}</p>
                     </div>
                 </div>
 
