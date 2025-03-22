@@ -7,7 +7,6 @@ type Props = {
     review: ServiceReview
 }
 
-//TODO 回答日の項目のスマホのデザインの対応
 export default function Review(props: Props) {
     const { review } = props;
     return (
