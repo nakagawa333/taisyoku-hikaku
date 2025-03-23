@@ -32,11 +32,11 @@ export default function SatisfactionsReview(props: Props) {
                     starRatedColor="yellow"
                     starHoverColor="yellow"
                     ignoreInlineStyles={false}
-                    starDimension="18px"
+                    starDimension="20px"
                     starSpacing="0px"
                 />
 
-                <p className="text-sm pt-1">{satisfaction}</p>
+                <p className="text-sm pt-2">{satisfaction}</p>
             </div>
         </div>
     )
