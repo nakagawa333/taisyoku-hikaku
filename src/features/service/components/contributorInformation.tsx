@@ -13,12 +13,18 @@ export default function ContributorInformation() {
 
     const { ageChange, nickNameChange, genderChange } = useContributorInformation();
     return (
-        <div className="mt-3 w-full bg-cyan-50 bg-white shadow-md rounded-lg overflow-hidden bg-sky-100">
+        <div className="mt-3 w-full bg-sky-100 shadow-md rounded-lg overflow-hidden">
             <div className="mt-3 mb-3 w-11/12 max-w-sm mx-auto">
-                <p className="text-center">投稿者情報</p>
+                <div className="flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                    <p className="text-center pl-1">投稿者情報</p>
+
+                </div>
 
                 <div className="pt-1">
-                    <p className="text-sm font-bold">ニックネーム</p>
+                    <p className="text-sm font-bold mb-1">ニックネーム</p>
                     <input
                         className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"
@@ -29,8 +35,8 @@ export default function ContributorInformation() {
                     />
                 </div>
 
-                <div className="pt-1">
-                    <p className="text-sm border-gray-300 font-bold">年齢</p>
+                <div className="pt-1 mt-2">
+                    <p className="text-sm border-gray-300 font-bold mb-1">年齢</p>
                     <select
                         className="border w-full rounded-lg bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         onChange={(e) => ageChange(e.target.value)}
@@ -45,11 +51,11 @@ export default function ContributorInformation() {
                     </select>
                 </div>
 
-                <div className="pt-1">
-                    <p className="font-bold">性別</p>
+                <div className="pt-1 mt-2">
+                    <p className="text-sm border-gray-300 font-bold mb-1">性別</p>
 
-                    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                        <div className="grid grid-cols-2 gap-4 items-center">
+                    <div className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+                        <div className="w-[90%] m-auto grid grid-cols-2 gap-4 items-center p-[5px]">
                             <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
