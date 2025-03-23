@@ -113,11 +113,13 @@ export default function PostReview(props: Props) {
 
                                 {
                                     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
-                                        <Turnstile
-                                            ref={turnstileRef}
-                                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                                            onSuccess={onSuccess}
-                                        />
+                                        <div className="mt-2">
+                                            <Turnstile
+                                                ref={turnstileRef}
+                                                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                                                onSuccess={onSuccess}
+                                            />
+                                        </div>
                                     ) : (null)
                                 }
 

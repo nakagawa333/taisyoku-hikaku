@@ -3,7 +3,7 @@
  */
 export const NotesForReviewSubmission = () => {
     return (
-        <>
+        <div className="mt-3">
             <div>
                 <p className="text-sm font-bold">[口コミ投稿時の注意事項]</p>
             </div>
@@ -34,7 +34,6 @@ export const NotesForReviewSubmission = () => {
                 </div>
 
             </div>
-
-        </>
+        </div>
     )
 }
