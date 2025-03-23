@@ -16,8 +16,6 @@ export default function Review(props: Props) {
                 className="m-auto w-[95%] overflow-hidden max-w-xs md:max-w-3xl mb-10
                 grid grid-cols-1 sm:grid-cols-3 gap-1s"
             >
-
-
                 <div className="sm:col-span-3 mt-5 flex">
                     <p className="text-sm col-start-2 text-right ml-auto">回答日: {review.createDay}</p>
                 </div>
@@ -102,11 +100,41 @@ export default function Review(props: Props) {
 
                 <div className="break-words whitespace-normal grid sm:col-span-3 mt-5 mb-3">
                     <div className="mb-2 whitespace-pre-line">
-                        <p className="text-pink-300">良い点:{review.goodTitle}</p>
+                        <div className="flex">
+                            <Image
+                                width={20}
+                                height={20}
+                                className="rounded-full"
+                                src="/good.svg"
+                                alt=""
+                            />
+
+                            <div className="flex">
+                                <p className="text-pink-300 pl-1">良い点:</p>
+                                <p className="text-pink-300 pl-1">
+                                    {review.goodTitle}
+                                </p>
+                            </div>
+
+                        </div>
                         <p className="">{review.goodDetail}</p>
                     </div>
-                    <div className="">
-                        <p className="text-sky-500">悪い点:{review.concernTitle}</p>
+                    <div className="mb-2 whitespace-pre-line">
+                        <div className="flex">
+                            <Image
+                                width={20}
+                                height={20}
+                                className="rounded-full"
+                                src="/bad.svg"
+                                alt=""
+                            />
+                            <div className="flex">
+                                <p className="text-sky-500 pl-1">悪い点:</p>
+                                <p className="text-sky-500 pl-1">
+                                    {review.concernTitle}
+                                </p>
+                            </div>
+                        </div>
                         <p className="">{review.concernDetail}</p>
                     </div>
                 </div>
