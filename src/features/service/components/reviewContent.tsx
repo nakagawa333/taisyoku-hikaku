@@ -1,4 +1,5 @@
 import { PostReviewType } from "@/types/ui/service/postPreview";
+import Image from 'next/image';
 import { useContext } from "react";
 import { useReviewContent } from "../hooks/useReviewContent";
 import { PostReviewContext } from "./postReview";
@@ -16,7 +17,17 @@ export default function ReviewContent() {
     return (
         <div className="">
             <div className="mt-5">
-                <p className="text-pink-300 text-sm">良い点</p>
+                <div className="flex pb-2">
+                    <Image
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                        src="/good.svg"
+                        alt=""
+                    />
+                    <p className="text-pink-300 text-sm pl-1">良い点</p>
+                </div>
+
                 <input
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"
@@ -37,7 +48,17 @@ export default function ReviewContent() {
             </div>
 
             <div className="mt-5">
-                <p className="text-sky-500 text-sm">悪い点</p>
+                <div className="flex pb-2">
+                    <Image
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                        src="/bad.svg"
+                        alt=""
+                    />
+                    <p className="text-sky-500 text-sm pl-1">悪い点</p>
+                </div>
+
                 <input
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                     focus:border-blue-500 block w-full p-2.5"

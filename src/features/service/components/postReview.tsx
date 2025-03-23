@@ -121,7 +121,6 @@ export default function PostReview(props: Props) {
                                     ) : (null)
                                 }
 
-
                                 <div className="self-stretch bg-white-fff overflow-hidden flex flex-row items-start justify-start py-[30px] px-5">
                                     <button
                                         className="text-white cursor-pointer [border:none] py-4 px-5 bg-blue-289cac flex-1 flex flex-row items-start justify-center"
