@@ -13,7 +13,7 @@ export default function Review(props: Props) {
 
         <div className="w-[90%] mt-5 rounded border border-gray-200 m-auto">
             <div
-                className="m-auto w-[95%] overflow-hidden max-w-xs md:max-w-3xl mb-10
+                className="m-auto w-[95%] overflow-hidden max-w-xs md:max-w-3xl
                 grid grid-cols-1 sm:grid-cols-3 gap-1s"
             >
                 <div className="sm:col-span-3 mt-5 flex">
@@ -98,7 +98,7 @@ export default function Review(props: Props) {
 
                 </div>
 
-                <div className="break-words whitespace-normal grid sm:col-span-3 mt-5 mb-3">
+                <div className="break-words whitespace-normal grid sm:col-span-3 mt-5">
                     <div className="mb-2 whitespace-pre-line">
                         <div className="flex">
                             <Image
