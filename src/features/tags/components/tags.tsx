@@ -69,14 +69,11 @@ export const Tags = () => {
                             <Tag
                                 tagName={tag.tagName}
                                 count={tag.count}
-                                tagNameClick={tagNameClick}
-                            >
-
-                            </Tag>
+                            />
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
         </>
     )
 }

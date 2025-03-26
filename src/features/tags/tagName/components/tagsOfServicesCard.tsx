@@ -118,7 +118,6 @@ export default function TagsOfServicesCard(props: Props) {
                                 <Tag
                                     key={index}
                                     tagName={tag.tagName}
-                                    tagNameClick={tagNameClick}
                                 />
                             )
                         })

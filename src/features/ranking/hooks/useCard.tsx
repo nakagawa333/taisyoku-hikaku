@@ -14,15 +14,6 @@ export default function useCard() {
     }
 
     /**
-     * タグ名クリック時処理
-     * @param tagName タグ名
-     */
-    const tagNameClick = (tagName: string) => {
-        //ページ遷移
-        router.push(`${Paths.TAGS}/${tagName}`);
-    }
-
-    /**
      * レビューボタンクリック
      */
     const reviewButtonClick = (serviceId: string) => {
@@ -30,7 +21,7 @@ export default function useCard() {
     }
 
     return {
-        tagNameClick, reviewButtonClick,
+        reviewButtonClick,
         viewSiteButtonClick
     }
 }

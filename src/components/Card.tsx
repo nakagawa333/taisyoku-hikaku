@@ -1,6 +1,3 @@
-import { Paths } from "@/constants/common/paths";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
 import DetailButton from "./detailButton";
 import { Tag } from "./tag";
 
@@ -14,16 +11,6 @@ type Props = {
 export default function Card(props: Props) {
 
     const { imgUrl, serviceId, serviceName, tags } = props;
-    const router: AppRouterInstance = useRouter();
-
-    /**
-     * タグ名クリック時処理
-     * @param tagName タグ名
-     */
-    const tagNameClick = (tagName: string) => {
-        //ページ遷移
-        router.push(`${Paths.TAGS}/${tagName}`);
-    }
 
     return (
         <div
@@ -52,7 +39,6 @@ export default function Card(props: Props) {
                                 <Tag
                                     key={index}
                                     tagName={tag.tagName}
-                                    tagNameClick={tagNameClick}
                                 />
                             )
                         })

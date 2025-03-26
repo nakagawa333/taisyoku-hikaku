@@ -1,18 +1,21 @@
 import { EffectCoverflow, EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { SimilarServicesResponse } from '@/constants/api/response/similarServicesResponse';
 import { memo } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import DetailButton from './detailButton';
+import { Tag } from './tag';
 
 type Props = {
   similarServices: any
 }
 
-
+//TODO タグ一覧を取得するようにAPI側とフロント側を修正
+//TODO 似た条件のサービス
 //スライダーコンポーネント
 function SimilarServicesSwiper({
   similarServices
@@ -44,7 +47,7 @@ function SimilarServicesSwiper({
       className="mySwiper"
     >
       {
-        similarServices.map((similarService: any, index: number) => {
+        similarServices.map((similarService: SimilarServicesResponse, index: number) => {
 
           return (
             <SwiperSlide
@@ -68,16 +71,14 @@ function SimilarServicesSwiper({
                   </div>
                 </div>
 
-                <div className="px-6">
+                <div className="px-6 flex flex-wrap">
                   {
                     Array.isArray(similarService.tags) && similarService.tags.map((tag: any, index: number) => {
                       return (
-                        <span
+                        <Tag
                           key={index}
-                          className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                        >
-                          #{tag.tagName}
-                        </span>
+                          tagName={tag.tagName}
+                        />
                       )
                     })
                   }

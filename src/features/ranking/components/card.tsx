@@ -12,7 +12,7 @@ type Props = {
 export default function Card(props: Props) {
     const { rank, service } = props;
 
-    const { tagNameClick, reviewButtonClick, viewSiteButtonClick } = useCard();
+    const { reviewButtonClick, viewSiteButtonClick } = useCard();
 
     return (
         <div
@@ -118,7 +118,6 @@ export default function Card(props: Props) {
                                 <Tag
                                     key={index}
                                     tagName={tag.tagName}
-                                    tagNameClick={tagNameClick}
                                 />
                             )
                         })
