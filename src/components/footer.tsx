@@ -18,7 +18,7 @@ export default function Footer() {
                             </div>
                         </div>
                         <div className="mt-2 text-white relative text-3xs leading-[18.4px] font-medium font-yugothic text-white-fff inline-block min-w-[125px]">
-                            退職代行口コミランキング ALL rights reserved.
+                            🄫退職代行口コミランキング ALL rights reserved.
                         </div>
 
                     </div>
