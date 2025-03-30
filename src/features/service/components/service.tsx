@@ -232,7 +232,7 @@ export default function Service() {
                     </div>
 
                     <div
-                        className="container"
+                        className="w-4/5 m-auto"
                     >
                         {
                             similarServicesIsFetchedAfterMount && Array.isArray(similarServicesData?.similarServices) && (

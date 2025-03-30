@@ -1,4 +1,4 @@
-import { EffectCoverflow, EffectFade, Navigation, Pagination } from 'swiper/modules';
+import { A11y, EffectCoverflow, EffectFade, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { SimilarServicesResponse } from '@/constants/api/response/similarServicesResponse';
@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { Manipulation } from "swiper/modules";
 import DetailButton from './detailButton';
 import { Tag } from './tag';
 
@@ -14,8 +15,6 @@ type Props = {
   similarServices: any
 }
 
-//TODO タグ一覧を取得するようにAPI側とフロント側を修正
-//TODO 似た条件のサービス
 //スライダーコンポーネント
 function SimilarServicesSwiper({
   similarServices
@@ -24,14 +23,20 @@ function SimilarServicesSwiper({
   //TODO データが3件の場合、画面初期表示時左側のみカードが表示されない
   const loop: boolean = Array.isArray(similarServices) && 2 < similarServices.length;
 
+  //初期スライド位置
+  const initialSlide: number = similarServices.length === 0 ? 0 : similarServices.length - 1;
+
+  //スライドの数
+  const slidesPerView: number = similarServices.length === 0 ? 0 : 2;
+
   return (
     <Swiper
       effect={'coverflow'}
       grabCursor={true}
       centeredSlides={true}
       loop={loop}
-      slidesPerView={2}
-      initialSlide={1}
+      slidesPerView={slidesPerView}
+      initialSlide={initialSlide}
       coverflowEffect={{
         rotate: 0,
         stretch: 80,
@@ -42,8 +47,7 @@ function SimilarServicesSwiper({
       scrollbar={{ draggable: true }}
       pagination={{ el: '.swiper-pagination', clickable: true }}
       navigation={true}
-      modules={[EffectFade, EffectCoverflow, Pagination, Navigation]}
-
+      modules={[EffectFade, EffectCoverflow, Pagination, Navigation, Navigation, Pagination, Scrollbar, A11y, Manipulation]}
       className="mySwiper"
     >
       {
