@@ -58,10 +58,9 @@ export default function Pagination({ currentPage, lastPage, path, params }: Prop
             <Link
               href={`${path}${buildQueryString(params, currentPage - 1)}`}
               aria-label="Previous Page"
-              className="f  lex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
+              className="flex items-center justify-center rounded-lg px-3 h-8 leading-tight bg-white border border-gray-300 hover:bg-gray-300 hover:text-gray-700 dark:hover:text-white"
             >
               <button
-
               >
                 &lt;
               </button>
