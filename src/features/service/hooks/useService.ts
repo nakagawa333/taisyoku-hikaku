@@ -80,7 +80,8 @@ export const useService = () => {
         color: "#289CAC",
     }
 
-    const reviewRef = useRef<HTMLDivElement>(null)
+    //口コミ一覧
+    const reviewRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let params: string = "?";
@@ -102,6 +103,8 @@ export const useService = () => {
 
     useEffect(() => {
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
+        //口コミ詳細までスクロール
+        handleReviewRefScroll();
     }, [page])
 
     if (servicesIsFetchedAfterMount && serviceData?.service) {
@@ -119,6 +122,16 @@ export const useService = () => {
             setBreadcrumbs(breadcrumbs);
         }
     }
+
+    /**
+     * 口コミ詳細までスクロール
+     */
+    const handleReviewRefScroll = () => {
+        if (reviewRef.current) {
+            reviewRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+    }
+
 
     /**
      * 口コミを書くボタンクリック
