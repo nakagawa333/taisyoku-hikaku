@@ -49,12 +49,14 @@ export default function Rankingservices() {
             {
 
                 rankingServicesMetaDataData.lastPage ? (
-                    <Pagination
-                        currentPage={currentPage}
-                        lastPage={rankingServicesMetaDataData.lastPage}
-                        path={path}
-                        params={params}
-                    />
+                    <div className="mb-4">
+                        <Pagination
+                            currentPage={currentPage}
+                            lastPage={rankingServicesMetaDataData.lastPage}
+                            path={path}
+                            params={params}
+                        />
+                    </div>
 
                 ) : (null)
             }
