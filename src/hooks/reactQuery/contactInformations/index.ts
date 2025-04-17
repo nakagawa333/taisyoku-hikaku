@@ -10,7 +10,7 @@ export const useQueryContactInformations = () => {
 
             const config: AxiosRequestConfig = {
                 headers: {
-                    "Authorization": `Bearer ${data.token}`
+                    "X-Auth-Token": data.token
                 }
             }
 

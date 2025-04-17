@@ -46,10 +46,12 @@ export async function POST(request: NextRequest) {
 
     const verifyURL: string = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+    const xAuthToken = headers.get("X-Auth-Token");
+
     try {
         const body = {
             secret: process.env.TURNSTILE_SECRET_KEY,
-            response: token,
+            response: xAuthToken,
         }
         const res = await axios.post(verifyURL, body);
 
