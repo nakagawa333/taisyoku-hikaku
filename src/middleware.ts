@@ -16,7 +16,10 @@ export async function middleware(request: NextRequest) {
     }
 
     //口コミ投稿
-    if (Endpoints.SERVICEREVIEWS === pathname + "/" && request.method === HttpMethod.POST) {
+    if (
+        (Endpoints.SERVICEREVIEWS === pathname && request.method === HttpMethod.POST) ||
+        (Endpoints.AUTH_USER === pathname && request.method === HttpMethod.GET)
+    ) {
         //アクセストークン
         const accessToken: RequestCookie | undefined = request.cookies.get('sb-access-token');
 
