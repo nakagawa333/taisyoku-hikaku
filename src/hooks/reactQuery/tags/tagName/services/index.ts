@@ -10,7 +10,7 @@ export const useQueryTagsOfServices = () => {
         return useQuery({
             queryKey: [ReactQueryKeys.TAGSOFSERVICES, searchParams?.toString()],
             queryFn: async () => {
-                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.TAGS}${tagName}/services?${searchParams}`);
+                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.TAGS}/${tagName}/services?${searchParams}`);
                 return res.data;
             },
             staleTime: 0
@@ -21,7 +21,7 @@ export const useQueryTagsOfServices = () => {
         return useQuery({
             queryKey: [ReactQueryKeys.TAGSOFSERVICESLASTPAGE],
             queryFn: async () => {
-                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.TAGS}${tagName}/services/lastPage`);
+                let res = await axios.get(`${process.env.NEXT_PUBLIC_URL}${Endpoints.TAGS}/${tagName}/services/lastPage`);
                 return res.data;
             },
             staleTime: 0
