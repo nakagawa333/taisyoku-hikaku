@@ -17,8 +17,7 @@ export async function middleware(request: NextRequest) {
 
     //口コミ投稿
     if (
-        (Endpoints.SERVICEREVIEWS === pathname && request.method === HttpMethod.POST) ||
-        (Endpoints.AUTH_USER === pathname && request.method === HttpMethod.GET)
+        (Endpoints.SERVICEREVIEWS === pathname && request.method === HttpMethod.POST)
     ) {
         //アクセストークン
         const accessToken: RequestCookie | undefined = request.cookies.get('sb-access-token');
@@ -80,7 +79,7 @@ export async function middleware(request: NextRequest) {
                             {
                                 httpOnly: true,
                                 path: '/',
-                                maxAge: 60 * 60 * 24 * 30,
+                                maxAge: expiresIn,
                                 secure: true,
                                 sameSite: "strict"
                             });
