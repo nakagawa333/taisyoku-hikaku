@@ -11,5 +11,5 @@ export default class ReactQueryKeys {
     static readonly PERCENTAGEBYRATINGS = "/api/service/reviews/percentageByRating";
     static readonly RANKINGSERVICES = "/api/ranking/services";
     static readonly RANKINGSERVICESMETADATA = "/api/ranking/services/metadata";
-
+    static readonly AUTH_USER = "/api/auth/user";
 }

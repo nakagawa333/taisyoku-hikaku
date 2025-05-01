@@ -1,5 +1,6 @@
+import { HttpStatus } from "@/constants/common/httpStatus";
 import supabase from "@/libs/supabase/supabaseClient";
-import { User, UserMetadata, UserResponse } from "@supabase/supabase-js";
+import { AuthResponse, Session, User, UserMetadata, UserResponse } from "@supabase/supabase-js";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -26,7 +27,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (!accessToken || !refreshToken) {
         return NextResponse.json(
-            { message: "トークンがありません。" }
+            {
+                user: null,
+                isLogin: false
+            }
         )
     }
 
@@ -35,13 +39,88 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     //エラー発生時  
     if (getUser?.error) {
-        return NextResponse.json(
-            { message: getUser?.error?.message },
-            { status: getUser?.error?.status }
-        )
+        //403エラーの場合
+        if (getUser?.error?.status === HttpStatus.FORBIDDEN) {
+            if (refreshToken?.value) {
+                const authResponse: AuthResponse = await supabase.auth.refreshSession({ refresh_token: refreshToken?.value });
+
+                //リフレッシュトークンを取得する処理に失敗した場合
+                if (authResponse.error) {
+                    return NextResponse.json(
+                        {
+                            user: null,
+                            isLogin: false
+                        }
+                    )
+                }
+
+                const session: Session | null = authResponse?.data?.session;
+                //再度トークンを検証
+                const getSessionUser: UserResponse = await supabase.auth.getUser(session?.access_token);
+                if (getSessionUser.error) {
+                    return NextResponse.json(
+                        {
+                            user: null,
+                            isLogin: false
+                        }
+                    )
+                }
+
+                if (session && session.expires_at) {
+                    // 有効期限を秒単位で計算
+                    const expiresIn: number = session.expires_at - Math.floor(Date.now() / 1000);
+                    const sessionUser: User | null = getSessionUser?.data?.user;
+                    const userMetaData: UserMetadata = sessionUser.user_metadata;
+
+                    let userData = {
+                        email: null,
+                        fullName: null,
+                        picture: null
+                    }
+
+                    if (sessionUser && sessionUser?.user_metadata) {
+                        const sessionUserMetaData: UserMetadata = sessionUser.user_metadata;
+                        userData = {
+                            email: sessionUserMetaData?.email,
+                            fullName: sessionUserMetaData?.full_name,
+                            picture: sessionUserMetaData?.picture
+                        }
+                    }
+
+                    // 新しいクッキーを設定
+                    const response: NextResponse = NextResponse.json(userData);
+
+                    response.cookies.set('sb-access-token', session.access_token,
+                        {
+                            httpOnly: true,
+                            path: '/',
+                            maxAge: expiresIn,
+                            secure: true,
+                            sameSite: "strict"
+                        });
+                    response.cookies.set('sb-refresh-token', session.refresh_token,
+                        {
+                            httpOnly: true,
+                            path: '/',
+                            maxAge: expiresIn,
+                            secure: true,
+                            sameSite: "strict"
+                        });
+                    return response;
+                }
+            }
+
+        } else {
+            return NextResponse.json(
+                {
+                    user: null,
+                    isLogin: false
+                }
+            )
+        }
     }
 
-    const user: User = getUser?.data?.user;
+    const user: User | null = getUser?.data?.user;
 
     if (!getUser || !user || !user?.user_metadata) {
         return NextResponse.json(
@@ -53,17 +132,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     const userMetaData: UserMetadata = user.user_metadata;
-
-    const userData = {
-        email: userMetaData?.email,
-        fullName: userMetaData?.full_name,
-        picture: userMetaData?.picture
-    }
-
     return NextResponse.json(
         {
-            user: userData,
-            isLogin: true
+            email: userMetaData?.email,
+            fullName: userMetaData?.full_name,
+            picture: userMetaData?.picture
         }
     )
 }
