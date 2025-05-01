@@ -21,7 +21,7 @@ export default function useRankingservices() {
 
     useEffect(() => {
         let params: string = "?";
-        if (searchParams !== null) {
+        if (searchParams !== null && searchParams.size !== 0) {
             for (const [key, value] of searchParams) {
                 if (key === "p" && value !== page) {
                     if (value !== page) {
@@ -33,6 +33,9 @@ export default function useRankingservices() {
                     setParams(params);
                 }
             }
+        } else {
+            //アクセストークンなど削除
+            window.history.replaceState({}, document.title, "/");
         }
 
     }, [searchParams])
