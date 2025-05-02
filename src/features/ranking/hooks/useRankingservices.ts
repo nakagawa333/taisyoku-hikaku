@@ -2,10 +2,11 @@ import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { Take } from "@/constants/db/take";
 import { useRankingServices } from "@/hooks/reactQuery/rankingServices";
 import { useQueryClient } from "@tanstack/react-query";
-import { ReadonlyURLSearchParams, usePathname, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function useRankingservices() {
+    const router = useRouter();
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
     const pathname = usePathname();
     let pathnameSplit = pathname?.split("/");
@@ -35,7 +36,7 @@ export default function useRankingservices() {
             }
         } else {
             //アクセストークンなど削除
-            window.history.replaceState({}, document.title, "/");
+            router.replace("/");
         }
 
     }, [searchParams])
