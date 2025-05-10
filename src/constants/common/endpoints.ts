@@ -11,4 +11,6 @@ export class Endpoints {
     static readonly RANKINGSERVICESMETADATA = "/api/ranking/services/metadata";
     static readonly CONTACTINFORMATIONS = "/api/contactInformations";
     static readonly AUTH_USER = "/api/auth/user";
+    static readonly AUTH_STATE = "/api/auth/state";
+    static readonly SIGNOUT = "/api/signout";
 }

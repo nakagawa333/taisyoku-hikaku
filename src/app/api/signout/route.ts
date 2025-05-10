@@ -17,10 +17,8 @@ import { NextResponse } from "next/dist/server/web/spec-extension/response";
  *         description: サインアウト失敗時のレスポンス
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-
     //サインアウト
     const { error } = await supabase.auth.signOut();
-
 
     if (error) {
         return createErrorResponse("ログアウトに失敗しました", HttpStatus.INTERNAL_SERVER_ERROR);

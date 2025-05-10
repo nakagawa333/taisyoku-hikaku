@@ -12,4 +12,5 @@ export default class ReactQueryKeys {
     static readonly RANKINGSERVICES = "/api/ranking/services";
     static readonly RANKINGSERVICESMETADATA = "/api/ranking/services/metadata";
     static readonly AUTH_USER = "/api/auth/user";
+    static readonly AUTH_STATE = "/api/auth/state";
 }
