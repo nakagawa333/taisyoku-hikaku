@@ -1,7 +1,7 @@
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useQueryAuthUser } from "../reactQuery/auth/user";
+import { useQueryAuth } from "../reactQuery/auth";
 import { useQuerySignout } from "../reactQuery/signout";
 
 /**
@@ -9,7 +9,7 @@ import { useQuerySignout } from "../reactQuery/signout";
  * @returns 
  */
 export default function useHeaders() {
-    const { useAuthState } = useQueryAuthUser();
+    const { useAuthState } = useQueryAuth();
 
     const [partialLoadingFlag, setPartialLoadingFlag] = useState<boolean>(false);
 

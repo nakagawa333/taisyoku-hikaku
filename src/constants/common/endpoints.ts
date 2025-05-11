@@ -13,4 +13,5 @@ export class Endpoints {
     static readonly AUTH_USER = "/api/auth/user";
     static readonly AUTH_STATE = "/api/auth/state";
     static readonly SIGNOUT = "/api/signout";
+    static readonly AUTH_SEND_MAGICLINK = "/api/auth/send/magiclink";
 }
