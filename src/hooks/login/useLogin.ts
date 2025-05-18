@@ -1,3 +1,4 @@
+import { HttpStatus } from "@/constants/common/httpStatus";
 import { SnackbarData } from "@/types/ui/snackbar/snackbarData";
 import { FormEvent, useRef, useState } from "react";
 import { useQueryAuth } from "../reactQuery/auth";
@@ -75,6 +76,7 @@ export default function useLogin() {
             //マジックリンクを送信する
             await sendMagiclinkWithArgs.mutateAsync(data);
         } catch (error: any) {
+            const status = error.response?.status;
             //認証再度実施
             turnstileRef.current?.reset();
             //トークン初期化
@@ -82,9 +84,12 @@ export default function useLogin() {
                 turnstileToken.current = "";
             }
 
+            //エラーメッセージ
+            const errorMessage: string = status === HttpStatus.BAD_REQUEST ? "メールアドレスは既に登録されています" : "メールの送信に失敗しました";
+
             setSnackbarData({
                 state: "error",
-                message: "メールの送信に失敗しました",
+                message: errorMessage,
                 time: 5000,
                 isOpen: true,
             });
@@ -103,7 +108,6 @@ export default function useLogin() {
 
         //フォーム、トークン初期化
         clearForm();
-
     }
 
     /**

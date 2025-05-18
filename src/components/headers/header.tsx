@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useState } from "react";
 import BackLoadingScreen from "../loading/BackLoadingScreen";
+import Snackbar from "../snackbar";
 
 export default function Header() {
     const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -13,7 +14,9 @@ export default function Header() {
 
     const mathMedia: boolean = useMatchMedia("(min-width: 1025px)");
 
-    const { partialLoadingFlag, useAuthStateData, useAuthStateLoaing, useAuthStateIsError, useAuthStateIsFetchedAfterMount, logOutButtonClick } = useHeaders();
+    const { partialLoadingFlag, useAuthStateData, useAuthStateLoaing,
+        useAuthStateIsError, useAuthStateIsFetchedAfterMount, snackbarData,
+        closeSuccessSnackbar, logOutButtonClick } = useHeaders();
 
     return (
         <>
@@ -25,7 +28,7 @@ export default function Header() {
                 md:flex md:flex-row md:items-start md:justify-start md:pt-5 md:px-[68px] md:pb-[21px] md:sticky md:top-[0] 
                 md:text-left md:text-lg md:text-black333333 md:font-yugothic"
                 style={{
-                    position: "fixed"
+                    // position: "fixed"
                 }}
             >
 
@@ -68,6 +71,15 @@ export default function Header() {
                 }
 
             </header>
+
+            <Snackbar
+                state={snackbarData.state}
+                message={snackbarData.message}
+                time={snackbarData.time}
+                isOpen={snackbarData.isOpen}
+                onClose={closeSuccessSnackbar}
+            />
+
         </>
     )
 }
