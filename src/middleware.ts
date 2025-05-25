@@ -14,9 +14,9 @@ export async function middleware(request: NextRequest) {
         //ログイン画面
         if (pathname === Paths.LOGIN) {
             const response: NextResponse = await validateAndRefreshSession(request);
+            //urlをコピーする
+            const url = request.nextUrl.clone();
             if (response.status === HttpStatus.OK) {
-                //urlをコピーする
-                const url = request.nextUrl.clone();
                 url.pathname = Paths.HOME;
                 //既に認証済の場合、ホームページに遷移
                 return NextResponse.redirect(url);

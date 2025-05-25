@@ -9,4 +9,5 @@ export class Paths {
     static readonly TERMS = "/terms";
     static readonly DISCLAIMER = "/disclaimer";
     static readonly CONTACT = "/contact";
+    static readonly AUTH_INIT = "/auth/init";
 }

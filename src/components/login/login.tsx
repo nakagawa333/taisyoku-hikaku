@@ -1,4 +1,5 @@
 "use client"
+import { Paths } from "@/constants/common/paths";
 import useLogin from "@/hooks/login/useLogin";
 import supabase from "@/libs/supabase/supabaseClient";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -24,6 +25,7 @@ export const Login = () => {
                     localization={{
                         variables: ja
                     }}
+                    redirectTo={process.env.NEXT_PUBLIC_URL + Paths.AUTH_INIT}
                     onlyThirdPartyProviders
                     magicLink
                 />
