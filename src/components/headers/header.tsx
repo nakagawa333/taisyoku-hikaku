@@ -1,16 +1,17 @@
 "use client";
-import { Paths } from "@/constants/common/paths";
 import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 import useHeaders from "@/hooks/headers/useHeaders";
 import Image from 'next/image';
 import Link from "next/link";
 import { useState } from "react";
 import BackLoadingScreen from "../loading/BackLoadingScreen";
+import LoginModal from "../modal/login/loginModal";
 import Snackbar from "../snackbar";
 
 export default function Header() {
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isDisplay, setIsDisplay] = useState<boolean>(true);
+    const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
     const mathMedia: boolean = useMatchMedia("(min-width: 1025px)");
 
@@ -56,21 +57,24 @@ export default function Header() {
                         >
                             ログアウト</button>
                     ) : (
-                        <Link
-                            href={Paths.LOGIN}
-                            className="ml-auto"
-                        >
+                        <div className="ml-auto">
                             <button
                                 type="button"
                                 className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                onClick={() => setOpenLoginModal(!openLoginModal)}
                             >
                                 ログイン
                             </button>
-                        </Link>
+                        </div>
                     )
                 }
 
             </header>
+
+            <LoginModal
+                openLoginModal={openLoginModal}
+                setOpenLoginModal={setOpenLoginModal}
+            />
 
             <Snackbar
                 state={snackbarData.state}
