@@ -30,7 +30,9 @@ export async function middleware(request: NextRequest) {
         (Endpoints.SERVICEREVIEWS === pathname && request.method === HttpMethod.POST)
     ) {
         const response = await validateAndRefreshSession(request);
-        return response;
+        if (response.status !== HttpStatus.OK) {
+            return response;
+        }
     }
 
     return NextResponse.next();

@@ -3,13 +3,16 @@ import { HttpStatus } from "@/constants/common/httpStatus";
 import { Take } from "@/constants/db/take";
 import { createReviewsHandleTransaction } from "@/hooks/prisma/services/reviews/createCommentsHandleTransaction";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
+import supabase from "@/libs/supabase/supabaseClient";
 import commentsValidate from "@/utils/api/validate/comments";
 import createReviewsValidate from "@/utils/api/validate/createReviewsValidate";
 import { formatDateToYMD } from "@/utils/common/date";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
+import { UserResponse } from "@supabase/supabase-js";
 import axios from "axios";
 import crypto from 'crypto';
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -263,6 +266,38 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         )
     }
 
+    //アクセストークン
+    const accessToken: RequestCookie | undefined = request.cookies.get('sb-access-token');
+
+    //リフレッシュトークン
+    const refreshToken: RequestCookie | undefined = request.cookies.get('sb-refresh-token');
+
+    if (!accessToken || !refreshToken) {
+        console.error('ユーザー情報が存在しません');
+        return NextResponse.json(
+            { error: 'ユーザー情報が存在しません' },
+            { status: HttpStatus.BAD_REQUEST }
+        )
+    }
+
+    //ユーザー情報取得
+    const user: UserResponse = await supabase.auth.getUser(accessToken.value);
+    if (user && user.error) {
+        console.error('ユーザー情報の取得に失敗しました', user.error);
+        return NextResponse.json(
+            { error: 'ユーザー情報の取得に失敗しました' },
+            { status: HttpStatus.INTERNAL_SERVER_ERROR }
+        )
+    }
+
+    if (!user.data || !user.data.user) {
+        console.error('ユーザー情報が存在しません');
+        return NextResponse.json(
+            { error: 'ユーザー情報が存在しません' },
+            { status: HttpStatus.BAD_REQUEST }
+        )
+    }
+
     let json: any = {};
 
     try {
@@ -302,6 +337,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
     }
 
+    const selectReviewUniqueQuery: Prisma.reviewsFindUniqueArgs = {
+        select: {
+            review_id: true
+        },
+        where: {
+            user_id: user.data.user.id,
+            service_id: serviceId
+        }
+    }
+
     const createReviewsQuery: Prisma.reviewsCreateArgs = {
         data: {
             service_id: serviceId,
@@ -314,7 +359,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             concern_detail: json.concernDetail,
             created_at: now,
             updated_at: now,
-            contributor_years_id: json.contributorYearsId
+            contributor_years_id: json.contributorYearsId,
+            user_id: user.data.user.id
         }
     };
 
@@ -333,7 +379,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     try {
-        await createReviewsHandleTransaction(selectUniqueQuery, createReviewsQuery, createReviewsSatisfactionScoresQuery);
+        await createReviewsHandleTransaction(selectUniqueQuery, createReviewsQuery, selectReviewUniqueQuery, createReviewsSatisfactionScoresQuery);
     } catch (error: any) {
         console.error(error);
 

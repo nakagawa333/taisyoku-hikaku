@@ -110,6 +110,7 @@ model reviews {
   updated_at                  DateTime                     @default(now())
   services                    services                     @relation(fields: [service_id], references: [service_id])
   contributor_years_id        Int?
+  user_id                     String                       @unique @db.Uuid
   reviews_satisfaction_scores reviews_satisfaction_scores?
   contributor_years           contributor_years?           @relation(fields: [contributor_years_id], references: [id])
 }

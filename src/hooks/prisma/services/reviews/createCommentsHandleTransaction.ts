@@ -10,6 +10,7 @@ import * as runtime from '@prisma/client/runtime/library.js';
 export const createReviewsHandleTransaction = async (
     selectUniqueQuery: Prisma.servicesFindUniqueArgs,
     createQuery: Prisma.reviewsCreateArgs,
+    selectReviewUniqueQuery: Prisma.reviewsFindUniqueArgs,
     createReviewsSatisfactionScoresQuery: Prisma.reviews_satisfaction_scoresCreateArgs
 ) => {
 
@@ -24,6 +25,21 @@ export const createReviewsHandleTransaction = async (
 
         if (!service) {
             throw new Error("対象の退職代行サービスが存在しません");
+        }
+
+        let selectReviews;
+
+        //既にユーザーが口コミを投稿しているかを確認
+        try {
+            selectReviews = await prisma.reviews.findUnique(selectReviewUniqueQuery);
+        } catch (error: any) {
+            console.error(error);
+            throw new Error("口コミの取得に失敗しました");
+        }
+
+        //ユーザーIDに紐づく口コミが存在する場合
+        if (selectReviews) {
+            throw new Error("既に口コミを投稿しています");
         }
 
         let reviews;
