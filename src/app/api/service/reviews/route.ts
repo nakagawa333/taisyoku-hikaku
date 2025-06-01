@@ -7,6 +7,7 @@ import supabase from "@/libs/supabase/supabaseClient";
 import commentsValidate from "@/utils/api/validate/comments";
 import createReviewsValidate from "@/utils/api/validate/createReviewsValidate";
 import { formatDateToYMD } from "@/utils/common/date";
+import { getUser } from "@/utils/common/getUser";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { UserResponse } from "@supabase/supabase-js";
@@ -71,6 +72,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             good_detail: true,
             concern_title: true,
             concern_detail: true,
+            user_id: true,
             reviews_satisfaction_scores: {
                 select: {
                     satisfaction_scores_id: true,
@@ -110,6 +112,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ "msg": "口コミ一覧の取得に失敗しました" }, { status: 400 });
     }
 
+    //ユーザー情報取得
+    const userId: string | undefined = await getUser(request);
+
     let reviewIds: string[] = [];
 
     if (Array.isArray(reviews)) {
@@ -119,10 +124,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     let modifiedReviews: ServiceReview[] = [];
     if (Array.isArray(reviews)) {
         modifiedReviews = reviews.map((review) => {
+            const isUser: boolean = (userId && userId === review.user_id) ? true : false;
             return {
                 reviewId: review.review_id,
                 name: review.name,
-                title: review.title,
                 goodTitle: review.good_title,
                 goodDetail: review.good_detail,
                 concernTitle: review.concern_title,
@@ -134,7 +139,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 response_satisfaction: review?.reviews_satisfaction_scores?.response_satisfaction,
                 cost_performance_satisfaction: review?.reviews_satisfaction_scores?.cost_performance_satisfaction,
                 comprehensive_evaluation: review?.reviews_satisfaction_scores?.comprehensive_evaluation,
-                age: review.contributor_years.age
+                age: review.contributor_years.age,
+                isUser: isUser
             }
         })
     }

@@ -16,7 +16,7 @@ export type ServiceResponse = {
 
 export type TagsResponse = {
     tagName: string
-    count?:number
+    count?: number
 }
 
 export type Gender = "MEN" | "WOMEN";
@@ -34,7 +34,6 @@ export type ReviewRatings = {
 export type ServiceReview = {
     reviewId: string,
     name: string,
-    title: string,
     createDay: string,
     gender: Gender,
     goodTitle: string,
@@ -47,4 +46,5 @@ export type ServiceReview = {
     cost_performance_satisfaction: number //コスパの満足度
     comprehensive_evaluation: number //総合評価
     age: string
+    isUser: boolean //該当ユーザーであるかどうか
 }
