@@ -2,10 +2,12 @@ import { ServiceReview } from "@/constants/api/response/serviceResponse";
 import { HttpStatus } from "@/constants/common/httpStatus";
 import { Take } from "@/constants/db/take";
 import { createReviewsHandleTransaction } from "@/hooks/prisma/services/reviews/createCommentsHandleTransaction";
+import { deleteReviewHandleTransaction } from "@/hooks/prisma/services/reviews/deleteReviewHandleTransaction";
 import { fetchReviews } from "@/hooks/prisma/services/reviews/fetchReviews";
 import supabase from "@/libs/supabase/supabaseClient";
 import commentsValidate from "@/utils/api/validate/comments";
 import createReviewsValidate from "@/utils/api/validate/createReviewsValidate";
+import deleteReviewsValidate from "@/utils/api/validate/deleteReviewsValidate";
 import { formatDateToYMD } from "@/utils/common/date";
 import { getUser } from "@/utils/common/getUser";
 import { Prisma } from "@prisma/client";
@@ -406,4 +408,113 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { msg: "口コミ作成成功", reviewId: reviewId },
         { status: HttpStatus.CREATED }
     )
+}
+
+/**
+ * @swagger
+ * /api/service/reviews:
+ *   get:
+ *     summary: 退職代行サービス 口コミ削除API
+ *     description: 退職代行サービス 口コミ削除
+ *     parameters:
+ *      - in: query
+ *        name: serviceId
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: サービスID
+ *      - in: query
+ *        name: p
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: ページ番号
+ *     responses:
+ *       200:
+ *         description: 成功時のレスポンス
+ *　　　 400:
+ *         description: バリデーションチェックエラー時のレスポンス
+ * 　　　500:
+ *         description: 退職代行サービス 口コミ一覧取得失敗時のレスポンス
+ */
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
+    const userId = await getUser(request);
+    if (!userId) {
+        return NextResponse.json(
+            { error: 'ログインされていません' },
+            { status: HttpStatus.BAD_REQUEST }
+        )
+    }
+
+    let json: any = {};
+
+    try {
+        json = await request.json();
+    } catch (err: any) {
+        return NextResponse.json(
+            { error: '不正なJSON形式です' },
+            { status: HttpStatus.BAD_REQUEST }
+        )
+    }
+
+    //レビューID
+    const reviewId: string = json.reviewId;
+
+    let validateError = deleteReviewsValidate(reviewId);
+    if (validateError) return NextResponse.json({ error: validateError.details[0].message }, { status: HttpStatus.BAD_REQUEST });
+
+
+    //口コミの評価の取得クエリ
+    const reviewsSatisfactionScoresUniqueQuery: Prisma.reviews_satisfaction_scoresFindUniqueArgs = {
+        select: {
+            id: true
+        },
+        where: {
+            review_id: reviewId
+        }
+    }
+
+    //口コミ取得クエリ
+    const selectReviewUniqueQuery: Prisma.reviewsFindUniqueArgs = {
+        select: {
+            id: true
+        },
+        where: {
+            review_id: reviewId
+        }
+    }
+
+    //口コミ削除クエリ
+    const deleteReviewQuery: Prisma.reviewsDeleteArgs = {
+        select: {
+            id: true
+        },
+        where: {
+            review_id: reviewId
+        }
+    }
+
+    //口コミの評価の削除クエリ
+    const deleteReviewsSatisfactionScoresQuery: Prisma.reviews_satisfaction_scoresDeleteArgs = {
+        select: {
+            id: true
+        },
+        where: {
+            review_id: reviewId
+        }
+    }
+
+    try {
+        //口コミを削除
+        await deleteReviewHandleTransaction(reviewsSatisfactionScoresUniqueQuery, selectReviewUniqueQuery,
+            deleteReviewQuery, deleteReviewsSatisfactionScoresQuery
+        );
+    } catch (error: any) {
+        return NextResponse.json(
+            { error: '口コミの削除に失敗しました' },
+            { status: HttpStatus.INTERNAL_SERVER_ERROR }
+        )
+    }
+
+    return new NextResponse(null, { status: HttpStatus.NO_CONTENT })
 }
