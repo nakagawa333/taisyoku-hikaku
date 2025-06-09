@@ -4,6 +4,11 @@ import { AuthResponse, Session, UserResponse } from "@supabase/supabase-js";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextRequest } from "next/dist/server/web/spec-extension/request";
 
+/**
+ * ユーザー情報を取得する
+ * @param request リクエスト
+ * @returns userId ユーザーID
+ */
 export async function getUser(request: NextRequest): Promise<string | undefined> {
     //ユーザーID
     let userId: string | undefined;

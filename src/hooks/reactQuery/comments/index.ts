@@ -6,6 +6,10 @@ import { PercentageByRating } from "@/types/api/response/reviewsResponse";
 import { MutationFunction, useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig } from "axios";
 
+/**
+ * ReactQuery レビュー
+ * @returns 
+ */
 export const useQueryReviews = () => {
 
     /**
@@ -100,5 +104,32 @@ export const useQueryReviews = () => {
         });
     };
 
-    return [{ fetchReviews, fetchReviewsMetaData, fetchPercentageByRatings, createReview }]
+    /**
+     * 口コミを削除する
+     * @returns {void}
+     */
+    const useQueryDeleteReview = () => {
+        const mutationFn: MutationFunction<any, any> = async (data) => {
+            const reqUrl = `${process.env.NEXT_PUBLIC_URL}${Endpoints.SERVICEREVIEWS}`;
+
+            const payload = {
+                reviewId: data.reviewId
+            }
+            const config: AxiosRequestConfig = {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: payload
+            }
+
+            const res = await axios.delete(reqUrl, config);
+            return res.data;
+        }
+
+        return useMutation({
+            mutationFn: mutationFn
+        });
+    }
+
+    return [{ fetchReviews, fetchReviewsMetaData, fetchPercentageByRatings, createReview, useQueryDeleteReview }]
 }
