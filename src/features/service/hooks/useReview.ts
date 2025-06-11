@@ -24,7 +24,6 @@ export function useReview(props: Props) {
 
     const queryClient = useQueryClient();
 
-
     /**
      * ユーザーが削除の確認ダイアログで「はい」を押したときに呼ばれるハンドラー。
      * 実際の削除処理やAPIコールをここで実行する。
@@ -39,7 +38,7 @@ export function useReview(props: Props) {
         } catch (error: any) {
             setIsLoadingOpen(false);
 
-            //エラー用スナックバー表示
+            //エラー用スナックバー非表示
             setSnackbarData({
                 state: "error",
                 message: "口コミ削除に失敗しました",
@@ -50,6 +49,10 @@ export function useReview(props: Props) {
             return;
         }
 
+        //サービス詳細データ取得
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWSMETADATA] });
+        //サービス一覧
+        queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICE] });
         //口コミ一覧再取得
         queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.SERVICEREVIEWS] });
         //口コミの評価再取得
