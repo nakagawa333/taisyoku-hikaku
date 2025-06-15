@@ -3,6 +3,7 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import SpeechBubble from "@/components/bubble/speechBubble";
 import ErrorSnackbar from "@/components/ErrorSnackbar";
 import Heading from "@/components/heading";
+import LoginModal from "@/components/modal/login/loginModal";
 import OfficialWebsiteButton from "@/components/OfficialWebsiteButton";
 import PartialLoading from "@/components/partialLoading";
 import PromotionMessage from "@/components/promotionMessage";
@@ -35,7 +36,8 @@ export default function Service() {
         fetchReviews, fetchReviewsMetaData, createReview, resReviewsMetaData, reviewsMetaDataData, reviewsMetaDataIsLoading, reviewsMetaDataIsError, reviewsMetaDataIsAfterMount,
         reviewWithArgs, reviewWriteButtonStyle, reviewRef, closeSuccessSnackbar,
         service, tags, id, path,
-        openWriteReview, setOpenWriteReview, reviewWriteButtonClick
+        openWriteReview, setOpenWriteReview, reviewWriteButtonClick,
+        openLoginModal, setOpenLoginModal
     } = useService();
 
     const mathMedia: boolean = useMatchMedia("(min-width: 430px)");
@@ -266,6 +268,11 @@ export default function Service() {
                     />
                 </div>
             </div>
+
+            <LoginModal
+                openLoginModal={openLoginModal}
+                setOpenLoginModal={setOpenLoginModal}
+            />
         </div >
     )
 }

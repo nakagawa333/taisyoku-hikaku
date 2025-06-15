@@ -1,4 +1,5 @@
-import { Providers } from "@/providers";
+import { AuthProviders } from "@/providers/authProviders";
+import { Providers } from "@/providers/providers";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -15,11 +16,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html className="h-full" lang="en">
       <body className={`${inter.className} h-full`}>
         <Providers>
-          {children}
+          <AuthProviders>
+            {children}
+          </AuthProviders>
         </Providers>
       </body>
     </html>

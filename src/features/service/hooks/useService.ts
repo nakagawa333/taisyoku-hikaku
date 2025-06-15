@@ -2,11 +2,12 @@ import { ServiceResponse, TagsResponse } from "@/constants/api/response/serviceR
 import ReactQueryKeys from "@/constants/common/reactQueryKeys";
 import { useQueryReviews } from "@/hooks/reactQuery/comments";
 import { useQueryervice } from "@/hooks/reactQuery/service";
+import { AuthContext } from "@/providers/authProviders";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import { useQueryClient } from "@tanstack/react-query";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 export const useService = () => {
     const searchParams: ReadonlyURLSearchParams | null = useSearchParams();
@@ -30,6 +31,9 @@ export const useService = () => {
 
     //口コミを投稿する表示状態
     const [openWriteReview, setOpenWriteReview] = useState<boolean>(false);
+
+    //モーダルの表示状態
+    const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
     const [postReviewData, setPostReviewData] = useState<any>({
         reviewCharacterCount: 0,
@@ -83,6 +87,11 @@ export const useService = () => {
     //口コミ一覧
     const reviewRef = useRef<HTMLDivElement>(null);
 
+    //認証
+    const authCcontext = useContext(AuthContext);
+    //ログイン情報
+    const { isLoggedIn, setLoggedIn } = authCcontext;
+
     useEffect(() => {
         let params: string = "?";
         if (searchParams !== null) {
@@ -132,12 +141,19 @@ export const useService = () => {
         }
     }
 
-
     /**
      * 口コミを書くボタンクリック
      */
     const reviewWriteButtonClick = () => {
-        setOpenWriteReview(true);
+        //ログイン済
+        if (isLoggedIn) {
+            //ログインモーダルを表示
+            setOpenWriteReview(true);
+        } else {
+            //未ログイン
+            //ログインモーダルを表示
+            setOpenLoginModal(true);
+        }
     }
 
     const closeSuccessSnackbar = () => {
@@ -169,6 +185,7 @@ export const useService = () => {
         fetchReviews, fetchReviewsMetaData, createReview, resReviewsMetaData, reviewsMetaDataData, reviewsMetaDataIsLoading, reviewsMetaDataIsError, reviewsMetaDataIsAfterMount,
         reviewWithArgs, reviewWriteButtonStyle, reviewRef, closeSuccessSnackbar,
         service, tags, id, path,
-        openWriteReview, setOpenWriteReview, reviewWriteButtonClick
+        openWriteReview, setOpenWriteReview, reviewWriteButtonClick,
+        openLoginModal, setOpenLoginModal
     }
 }

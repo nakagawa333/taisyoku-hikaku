@@ -1,7 +1,7 @@
-import ReactQueryKeys from "@/constants/common/reactQueryKeys";
+import { AuthContext } from "@/providers/authProviders";
 import { SnackbarData } from "@/types/ui/snackbar/snackbarData";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQueryAuth } from "../reactQuery/auth";
 import { useQuerySignout } from "../reactQuery/signout";
 
@@ -21,21 +21,15 @@ export default function useHeaders() {
         isOpen: false
     });
 
-    //ログイン状態取得
-    const authState = useAuthState();
-    //データ
-    const useAuthStateData = authState.data;
-    //ローディング
-    const useAuthStateLoaing = authState.isLoading;
-    //エラー
-    const useAuthStateIsError = authState.isError;
-
-    const useAuthStateIsFetchedAfterMount = authState.isFetchedAfterMount;
-
     const { useQueryExeSignout } = useQuerySignout();
     //サインアウト
     const signoutWithArgs = useQueryExeSignout();
     const queryClient = useQueryClient();
+
+    //認証
+    const authCcontext = useContext(AuthContext);
+    //ログイン情報
+    const { isLoggedIn, setLoggedIn } = authCcontext;
 
     /**
      * ログアウトボタンクリック時
@@ -47,8 +41,6 @@ export default function useHeaders() {
             //サインアウトを行う
             await signoutWithArgs.mutateAsync({});
 
-            //ログイン可否情報再取得
-            queryClient.invalidateQueries({ queryKey: [ReactQueryKeys.AUTH_STATE] })
         } catch (ex: any) {
             setSnackbarData({
                 state: "error",
@@ -60,6 +52,8 @@ export default function useHeaders() {
             return;
         }
 
+        //ログイン状態をサインアウト状態に変更
+        setLoggedIn(false);
 
         setSnackbarData({
             state: "success",
@@ -83,8 +77,7 @@ export default function useHeaders() {
     }
 
     return {
-        partialLoadingFlag, useAuthStateData, useAuthStateLoaing,
-        useAuthStateIsError, useAuthStateIsFetchedAfterMount, snackbarData,
+        partialLoadingFlag, snackbarData,
         closeSuccessSnackbar, logOutButtonClick
     }
 }

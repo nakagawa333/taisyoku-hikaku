@@ -463,7 +463,6 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     let validateError = deleteReviewsValidate(reviewId);
     if (validateError) return NextResponse.json({ error: validateError.details[0].message }, { status: HttpStatus.BAD_REQUEST });
 
-
     //口コミの評価の取得クエリ
     const reviewsSatisfactionScoresUniqueQuery: Prisma.reviews_satisfaction_scoresFindUniqueArgs = {
         select: {

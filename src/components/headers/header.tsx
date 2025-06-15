@@ -1,9 +1,10 @@
 "use client";
 import { useMatchMedia } from "@/hooks/common/useMatchMedia";
 import useHeaders from "@/hooks/headers/useHeaders";
+import { AuthContext } from "@/providers/authProviders";
 import Image from 'next/image';
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import BackLoadingScreen from "../loading/BackLoadingScreen";
 import LoginModal from "../modal/login/loginModal";
 import Snackbar from "../snackbar";
@@ -15,9 +16,13 @@ export default function Header() {
 
     const mathMedia: boolean = useMatchMedia("(min-width: 1025px)");
 
-    const { partialLoadingFlag, useAuthStateData, useAuthStateLoaing,
-        useAuthStateIsError, useAuthStateIsFetchedAfterMount, snackbarData,
+    const { partialLoadingFlag, snackbarData,
         closeSuccessSnackbar, logOutButtonClick } = useHeaders();
+
+    //認証
+    const authCcontext = useContext(AuthContext);
+    //ログイン情報
+    const { isLoggedIn, setLoggedIn } = authCcontext;
 
     return (
         <>
@@ -49,7 +54,7 @@ export default function Header() {
                 </Link>
 
                 {
-                    useAuthStateData?.isLogin ? (
+                    isLoggedIn ? (
                         <button
                             type="button"
                             className="ml-auto px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
