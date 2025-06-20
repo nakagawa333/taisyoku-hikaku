@@ -1,4 +1,6 @@
 import CloseButton from "@/components/button/closeButton";
+import BackLoadingScreen from "@/components/loading/BackLoadingScreen";
+import Snackbar from "@/components/snackbar";
 import { Paths } from "@/constants/common/paths";
 import useLoginModal from "@/hooks/modal/login/useLoginModal";
 import supabase from "@/libs/supabase/supabaseClient";
@@ -15,8 +17,8 @@ type Props = {
 
 export default function LoginModal(props: Props) {
     const { openLoginModal, setOpenLoginModal } = props;
-    const { snackbarData, isDisplayMailForm, mailRef, turnstileRef,
-        onSubmit, onSuccess, showMagicLinkForm, closeSuccessSnackbar } = useLoginModal();
+    const { snackbarData, isDisplayMailForm, mailRef, turnstileRef, isOpenBackLoadingScreen, isSendButtonDisabled,
+        onSubmit, onSuccess, showMagicLinkForm, closeSuccessSnackbar, closeButtonClick } = useLoginModal({ setOpenLoginModal });
     return (
         <>
 
@@ -32,7 +34,7 @@ export default function LoginModal(props: Props) {
                             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
                                 <div className="flex justify-end">
                                     <CloseButton
-                                        closeButtonClick={() => setOpenLoginModal(false)}
+                                        closeButtonClick={() => closeButtonClick()}
                                     />
                                 </div>
 
@@ -77,7 +79,9 @@ export default function LoginModal(props: Props) {
                                             <div className="ml-auto flex items-center justify-between">
                                                 <button
                                                     type="submit"
-                                                    className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg 
+                                                    hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-blue-400"
+                                                    disabled={isSendButtonDisabled}
                                                 >
                                                     確認コード送信
                                                 </button>
@@ -102,6 +106,18 @@ export default function LoginModal(props: Props) {
                 )
             }
 
+
+            <BackLoadingScreen
+                isOpen={isOpenBackLoadingScreen}
+            />
+
+            <Snackbar
+                state={snackbarData.state}
+                message={snackbarData.message}
+                time={snackbarData.time}
+                isOpen={snackbarData.isOpen}
+                onClose={closeSuccessSnackbar}
+            />
         </>
     )
 }
