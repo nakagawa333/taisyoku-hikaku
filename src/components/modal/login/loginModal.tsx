@@ -31,11 +31,15 @@ export default function LoginModal(props: Props) {
                                 transform: openLoginModal ? "translateY(0)" : "translateY(100%)"
                             }}
                         >
-                            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                            <div className="bg-white rounded-lg shadow-lg p-6 max-w-md md:w-full">
                                 <div className="flex justify-end">
                                     <CloseButton
                                         closeButtonClick={() => closeButtonClick()}
                                     />
+                                </div>
+
+                                <div>
+                                    <p className="text-center text-xl font-bold">会員登録して口コミを記述</p>
                                 </div>
 
                                 <Auth
