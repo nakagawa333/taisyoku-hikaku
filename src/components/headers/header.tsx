@@ -29,13 +29,10 @@ export default function Header() {
             <BackLoadingScreen
                 isOpen={partialLoadingFlag}
             />
-            <header className="w-full z-10 self-stretch bg-white flex flex-row items-start justify-start pt-5 pl-[68px] pr-[30px] 
-                pb-[21px] sticky top-[0] text-left text-lg text-black333333 font-yugothic md:self-stretch md:bg-white-fff 
+            <header className="w-full relative self-stretch bg-white flex flex-row items-start justify-start pt-5 pl-[68px] pr-[30px] 
+                pb-[21px] max-sm:sticky top-0 text-left text-lg text-black333333 font-yugothic md:self-stretch md:bg-white-fff 
                 md:flex md:flex-row md:items-start md:justify-start md:pt-5 md:px-[68px] md:pb-[21px] md:sticky md:top-[0] 
-                md:text-left md:text-lg md:text-black333333 md:font-yugothic"
-                style={{
-                    // position: "fixed"
-                }}
+                md:text-left md:text-lg md:text-black333333 md:font-yugothic z-50"
             >
 
                 <Image
