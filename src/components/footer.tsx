@@ -2,7 +2,8 @@ import { Paths } from "@/constants/common/paths";
 import Link from "next/link";
 
 export default function Footer() {
-
+    //GoogleフォームのURL
+    const googleFormUrl: string = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL ? process.env.NEXT_PUBLIC_GOOGLE_FORM_URL : "";
     return (
         <div
             className={`sticky top-full w-full self-stretch flex flex-col items-start justify-start max-w-full text-left text-sm text-black333333 font-yugothic`}
@@ -22,7 +23,7 @@ export default function Footer() {
                             </Link>
                         </div>
                         <div className="relative font-medium inline-block min-w-[40px]">
-                            <Link href={Paths.CONTACT}>
+                            <Link href={googleFormUrl} target="_blank" rel="noopener noreferrer">
                                 お問い合わせ
                             </Link>
                         </div>

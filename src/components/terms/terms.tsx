@@ -1,6 +1,5 @@
 "use client";
 
-import { Paths } from "@/constants/common/paths";
 import { Breadcrumb } from "@/types/ui/breadcrumb";
 import Link from "next/link";
 import Breadcrumbs from "../breadcrumbs";
@@ -8,6 +7,8 @@ import Heading from "../heading";
 
 //退職代行口コミランキング 利用規約
 export default function Terms() {
+    //GoogleフォームのURL
+    const googleFormUrl: string = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL ? process.env.NEXT_PUBLIC_GOOGLE_FORM_URL : "";
 
     const breadcrumbs: Breadcrumb[] = [
         {
@@ -172,7 +173,8 @@ export default function Terms() {
                             <h2 className="text-lg font-semibold mb-4">【お問い合わせ】</h2>
                             <li className="text-gray-700">
                                 本規約およびプライバシーポリシーに関するお問い合わせは、当サイトの
-                                <Link href={Paths.CONTACT} className="underline text-blue-500">「お問い合わせフォーム」</Link>よりご連絡ください。
+                                <Link href={googleFormUrl} className="underline text-blue-500" target="_blank" rel="noopener noreferrer">
+                                    「お問い合わせフォーム」</Link>よりご連絡ください。
                             </li>
                         </div>
                     </div>
